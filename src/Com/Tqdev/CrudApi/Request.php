@@ -42,18 +42,42 @@ class Request {
     protected function parseParams(String $query = null) {
         if (!$query) {
             if (isset($_SERVER['QUERY_STRING'])) {
-                $query = str_replace('[][]=','[]=',str_replace('=','[]=',$_SERVER['QUERY_STRING']));
+                $query = $_SERVER['QUERY_STRING'];
             } else {
                 $query = '';
             }
         }
-        parse_str($query,$this->params);
+        $query = str_replace('[][]=', '[]=', str_replace('=', '[]=', $query));
+        parse_str($query, $this->params);
     }
 
     protected function parseBody(String $body = null) {
         if (!$body) {
             $body = file_get_contents('php://input');
         }
+        $this->body = $body;
+    }
+
+    public function getMethod(): String {
+        return $this->method;
+    }
+
+    public function getPath(int $part = -1): String {
+        if ($part == -1) {
+            return implode('/', $this->path);
+        }
+        if (count($this->path) <= $part) {
+            return '';
+        }
+        return $this->path[$part];
+    }
+
+    public function getParams(): array {
+        return $this->params;
+    }
+
+    public function getBody() {
+        $body = $this->body;
         $first = substr($body,0,1);
         if ($first=='[' || $first=='{') {
             $body = json_decode($body);
@@ -71,29 +95,7 @@ class Request {
             }
             $body = (object)$input;
         }
-        $this->body = $body;
-    }
-
-    public function getMethod(): String {
-        return $this->method;
-    }
-
-    public function getPath(int $part = -1): String {
-        if ($part == -1) {
-            return implode('/',$this->path);
-        }
-        if (count($this->path)>$part) {
-            return $this->path[$part];
-        }
-        return '';
-    }
-
-    public function getParams(): array {
-        return $this->params;
-    }
-
-    public function getBody(): String {
-        return $this->body;
+        return $body;
     }
 
     public function addHeader(String $key, String $value = null) {
