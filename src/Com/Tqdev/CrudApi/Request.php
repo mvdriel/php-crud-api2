@@ -62,8 +62,8 @@ class Request {
         return $this->method;
     }
 
-    public function getPath(int $part = -1): String {
-        if ($part == -1) {
+    public function getPath(int $part = 0): String {
+        if ($part == 0) {
             return implode('/', $this->path);
         }
         if (count($this->path) <= $part) {
