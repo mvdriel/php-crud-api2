@@ -14,7 +14,7 @@ class CorsProtectedRouter extends Router {
         parent::__construct();
     }
 
-    protected function isOriginAllowed(String $origin, String $allowedOrigins): boolean {
+    protected function isOriginAllowed(String $origin, String $allowedOrigins): bool {
         $found = false;
         foreach (explode(',',$allowedOrigins) as $allowedOrigin) {
             $hostname = preg_quote(strtolower(trim($allowedOrigin)));

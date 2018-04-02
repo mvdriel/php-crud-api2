@@ -17,5 +17,5 @@ tee -a target/api.txt <<'EOF'
  **/
 EOF
 echo 'namespace Com\Tqdev\CrudApi;' >> target/api.txt
-find . -iname '*.php' -exec cat {} \; -exec echo \; | grep -v "^<?php\|^namespace \|^use \|spl_autoload_register\|//" >> target/api.txt
+find . -iname '*.php' -exec cat {} \; -exec echo \; | grep -v "^<?php\|^namespace \|^use \|spl_autoload_register\|^\s*//" >> target/api.txt
 mv target/api.txt target/api.php
