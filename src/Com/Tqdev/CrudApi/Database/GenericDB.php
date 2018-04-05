@@ -51,8 +51,8 @@ class GenericDB {
     }
 
     public function selectSingle(array $columns, String $table, String $pk, String $id)/*: ?array*/ {
-        $stmt = $this->pdo->prepare('SELECT "'.implode('","',$columns).'" FROM "'.$table.'" WHERE "'.$pk.'" = :id');
-        $stmt->execute(['id' => $id]);
+        $stmt = $this->pdo->prepare('SELECT "'.implode('","',$columns).'" FROM "'.$table.'" WHERE "'.$pk.'" = ?');
+        $stmt->execute([$id]);
         return $stmt->fetch()?:null; 
     }
 
