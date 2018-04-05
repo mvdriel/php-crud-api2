@@ -8,7 +8,7 @@ class GenericDB {
     protected $pdo;
     protected $meta;
 
-    private function getDsn(String $driver, String $address, String $port = null, String $database = null): String {
+    protected function getDsn(String $driver, String $address, String $port = null, String $database = null): String {
         switch($driver) {
             case 'mysql':
             $dsn = "$driver:host=$address;port=$port;dbname=$database;charset=utf8mb4";
@@ -17,7 +17,7 @@ class GenericDB {
         return $dsn;
     }
 
-    public function getCommands(String $driver) {
+    protected function getCommands(String $driver) {
         switch($driver) {
             case 'mysql':
             return [
@@ -50,5 +50,16 @@ class GenericDB {
         return $this->meta;
     }
 
+    public function selectSingle(array $columns, String $table, String $pk, String $id): array {
+        $stmt = $this->pdo->prepare('SELECT "'.implode('","',$columns).'" FROM "'.$table.'" WHERE "'.$pk.'" = :id');
+        $stmt->execute(['id' => $id]);
+        return $stmt->fetch();
+    }
+
+    public function selectAll(array $columns, String $table): array {
+        $stmt = $this->pdo->prepare('SELECT "'.implode('","',$columns).'" FROM "'.$table);
+        $stmt->execute([]);
+        return $stmt->fetchAll();
+    }
 }
     
