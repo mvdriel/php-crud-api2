@@ -50,10 +50,20 @@ class GenericDB {
         return $this->meta;
     }
 
-    public function selectSingle(array $columns, String $table, String $pk, String $id): array {
+    public function selectSingle(array $columns, String $table, String $pk, String $id)/*: ?array*/ {
         $stmt = $this->pdo->prepare('SELECT "'.implode('","',$columns).'" FROM "'.$table.'" WHERE "'.$pk.'" = :id');
         $stmt->execute(['id' => $id]);
-        return $stmt->fetch();
+        return $stmt->fetch()?:null; 
+    }
+
+    public function selectMultiple(array $columns, String $table, String $pk, array $ids): array {
+        if (count($ids)==0) {
+            return [];
+        }
+        $qm = str_repeat('?,',count($ids)-1);
+        $stmt = $this->pdo->prepare('SELECT "'.implode('","',$columns).'" FROM "'.$table.'" WHERE "'.$pk.'" in ('.$qm.'?)');
+        $stmt->execute($ids);
+        return $stmt->fetchAll();
     }
 
     public function selectAll(array $columns, String $table): array {

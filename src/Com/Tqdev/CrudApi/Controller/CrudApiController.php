@@ -39,8 +39,21 @@ class CrudApiController extends BaseController {
 		$params = $request->getParams();
 		if (!$this->service->exists($table)) {
 			return $this->error(ErrorCode::TABLE_NOT_FOUND, $table);
-		}
-		return $this->success($this->service->read($table, $id, $params));
+        }
+        if (strpos($id, ',')!==false) {
+            $ids = explode(',', $id);
+            $result = [];
+            for ($i=0; $i<count($ids); $i++) {
+                array_push($result, $this->service->read($table, $ids[$i], $params));
+            }
+            return $this->success($result);
+        } else {
+            $response = $this->service->read($table, $id, $params);
+            if ($response === null) {
+                return $this->error(ErrorCode::RECORD_NOT_FOUND, $id);
+            }
+            return $this->success($response);
+        }		
     }
 
     public function update(Request $request): Response {

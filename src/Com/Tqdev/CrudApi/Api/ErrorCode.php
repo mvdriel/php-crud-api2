@@ -20,7 +20,7 @@ class ErrorCode {
     const DATA_INTEGRITY_VIOLATION = 1010;
 
     protected $values = [
-        9999 => ["Error for '%s' not found", Response::INTERNAL_SERVER_ERROR],
+        9999 => ["%s", Response::INTERNAL_SERVER_ERROR],
         1000 => ["Route '%s' not found", Response::NOT_FOUND],
         1001 => ["Table '%s' not found", Response::NOT_FOUND],
         1002 => ["Argument count mismatch in '%s'", Response::NOT_ACCEPTABLE],

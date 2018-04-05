@@ -18,8 +18,8 @@ class CrudApiService extends BaseCrudApiService {
         return $this->tables->exists($table);
     }
 
-    public function read(String $table, String $id, array $params): \stdClass {
-        return (object)$this->db->selectSingle(['id','content'],$table,'id',$id);
+    public function read(String $table, String $id, array $params)/*: ?\stdClass*/ {
+        return $this->db->selectSingle(['id','content'],$table,'id',$id);
     }
 
     public function list(String $table, array $params): array {
