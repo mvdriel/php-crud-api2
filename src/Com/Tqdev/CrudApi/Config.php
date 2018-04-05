@@ -46,7 +46,8 @@ class Config {
         $newValues = array_merge($this->values, $defaults, $values);
         $diff = array_diff_key($newValues, $this->values);
         if (!empty($diff)) {
-            throw new Exception('Config has invalid values: '.$diff);
+            $key = array_keys($diff)[0];
+            throw new \Exception("Config has invalid value '$key'");
         }
         $this->values = $newValues;
     }
