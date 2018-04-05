@@ -1,8 +1,10 @@
 <?php
 namespace Com\Tqdev\CrudApi;
 
+use Com\Tqdev\CrudApi\Config;
 use Com\Tqdev\CrudApi\Request;
 use Com\Tqdev\CrudApi\Response;
+use Com\Tqdev\CrudApi\Database\GenericDB;
 use Com\Tqdev\CrudApi\Api\ErrorCode;
 use Com\Tqdev\CrudApi\Controller\BaseController;
 use Com\Tqdev\CrudApi\Controller\CrudApiController;
@@ -14,10 +16,18 @@ class Api {
     
     protected $router;
 
-    public function __construct(String $allowedOrigins) {
-        $meta = new CrudMetaService();
-        $router = new CorsProtectedRouter($allowedOrigins);
-        $api = new CrudApiService($meta);
+    public function __construct(Config $config) {
+        $db = new GenericDB(
+            $config->getDriver(),
+            $config->getAddress(),
+            $config->getPort(),
+            $config->getDatabase(),
+            $config->getUsername(),
+            $config->getPassword()
+        );
+        $meta = new CrudMetaService($db);
+        $router = new CorsProtectedRouter($config->getAllowedOrigins());
+        $api = new CrudApiService($db, $meta);
         new CrudApiController($router,$api);
         $this->router = $router;
     }

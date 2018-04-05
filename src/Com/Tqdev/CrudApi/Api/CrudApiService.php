@@ -1,12 +1,13 @@
 <?php
 namespace Com\Tqdev\CrudApi\Api;
 
+use Com\Tqdev\CrudApi\Database\GenericDB;
 use Com\Tqdev\CrudApi\Api\BaseCrudApiService;
 use Com\Tqdev\CrudApi\Meta\CrudMetaService;
 
 class CrudApiService extends BaseCrudApiService {
 
-    public function __construct(CrudMetaService $meta) {
+    public function __construct(GenericDB $db, CrudMetaService $meta) {
         $this->tables = $meta->getDatabaseReflection();
     }
 
