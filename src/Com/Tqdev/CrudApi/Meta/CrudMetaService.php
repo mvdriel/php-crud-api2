@@ -13,7 +13,7 @@ class CrudMetaService {
     }
 
     public function getDatabaseReflection(): DatabaseReflection {
-        return new DatabaseReflection($this->db);
+        return new DatabaseReflection($this->db->meta());
     }
 }
 

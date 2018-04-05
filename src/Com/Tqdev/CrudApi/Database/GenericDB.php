@@ -6,6 +6,7 @@ class GenericDB {
     protected $driver;
     protected $database;
     protected $pdo;
+    protected $meta;
 
     private function getDsn(String $driver, String $address, String $port = null, String $database = null): String {
         switch($driver) {
@@ -42,17 +43,12 @@ class GenericDB {
         foreach ($commands as $command){
             $this->pdo->query($command);
         }
+        $this->meta = new GenericMeta($this->pdo, $driver, $database);
     }
 
-    public function metaGetTables(): array {
-        $stmt = $this->pdo->prepare('SELECT "TABLE_NAME" FROM "INFORMATION_SCHEMA"."TABLES" WHERE "TABLE_SCHEMA" = :database');
-        $stmt->execute(['database' => $this->database]);
-        return $stmt->fetchAll();
+    public function meta(): GenericMeta {
+        return $this->meta;
     }
 
-    public function metaGetTableColumns(String $tableName): array {
-        $stmt = $this->pdo->prepare('SELECT "COLUMN_NAME", "IS_NULLABLE", "DATA_TYPE", "CHARACTER_MAXIMUM_LENGTH", "NUMERIC_PRECISION", "NUMERIC_SCALE" FROM "INFORMATION_SCHEMA"."COLUMNS" WHERE "TABLE_NAME" = :tableName AND "TABLE_SCHEMA" = :database');
-        $stmt->execute(['tableName' => $tableName, 'database' => $this->database]);
-        return $stmt->fetchAll();
-    }
 }
+    

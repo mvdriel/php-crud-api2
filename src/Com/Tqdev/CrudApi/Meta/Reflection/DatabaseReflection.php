@@ -1,19 +1,19 @@
 <?php
 namespace Com\Tqdev\CrudApi\Meta\Reflection;
 
-use Com\Tqdev\CrudApi\Database\GenericDB;
+use Com\Tqdev\CrudApi\Database\GenericMeta;
 
 class DatabaseReflection {
 
-    protected $db;
+    protected $meta;
     protected $tables;
 
-    public function __construct(GenericDB $db) {
-        $this->db = $db;
-        $results = $db->metaGetTables();
+    public function __construct(GenericMeta $meta) {
+        $this->meta = $meta;
+        $results = $meta->getTables();
         foreach ($results as $result) {
             $tableName = $result['TABLE_NAME'];
-            $this->tables[$tableName] = new ReflectedTable($db, $tableName);
+            $this->tables[$tableName] = new ReflectedTable($meta, $tableName);
         }
     }
 
