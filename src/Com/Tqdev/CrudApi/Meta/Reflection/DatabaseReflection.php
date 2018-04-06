@@ -12,8 +12,8 @@ class DatabaseReflection {
         $this->meta = $meta;
         $results = $meta->getTables();
         foreach ($results as $result) {
-            $tableName = $result['TABLE_NAME'];
-            $this->tables[$tableName] = new ReflectedTable($meta, $tableName);
+            $table = new ReflectedTable($meta, $result);
+            $this->tables[$table->getName()] = $table;
         }
     }
 
