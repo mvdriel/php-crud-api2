@@ -21,4 +21,8 @@ class DatabaseReflection {
         return isset($this->tables[$tableName]);
     }
 
+    public function get(String $tableName): ReflectedTable {
+        return $this->tables[$tableName];
+    }
+
 }

@@ -1,6 +1,8 @@
 <?php
 namespace Com\Tqdev\CrudApi\Database;
 
+use Com\Tqdev\CrudApi\Meta\Reflection\ReflectedTable;
+
 class GenericDB {
     
     protected $driver;
@@ -50,24 +52,40 @@ class GenericDB {
         return $this->meta;
     }
 
-    public function selectSingle(array $columns, String $table, String $pk, String $id)/*: ?array*/ {
-        $stmt = $this->pdo->prepare('SELECT "'.implode('","',$columns).'" FROM "'.$table.'" WHERE "'.$pk.'" = ?');
+    private function getColumnNames(array $columns): array {
+        $results = array();
+        foreach ($columns as $column) {
+            $results[] = $column->getName();
+        }
+        return $results;
+    }
+
+    public function selectSingle(array $columns, ReflectedTable $table, String $id)/*: ?array*/ {
+        $columnNames = $this->getColumnNames($columns);
+        $tableName = $table->getName();
+        $pkName = $table->getPk()->getName(); 
+        $stmt = $this->pdo->prepare('SELECT "'.implode('","',$columnNames).'" FROM "'.$tableName.'" WHERE "'.$pkName.'" = ?');
         $stmt->execute([$id]);
         return $stmt->fetch()?:null; 
     }
 
-    public function selectMultiple(array $columns, String $table, String $pk, array $ids): array {
+    public function selectMultiple(array $columns, ReflectedTable $table, array $ids): array {
         if (count($ids)==0) {
             return [];
         }
+        $columnNames = $this->getColumnNames($columns);
+        $tableName = $table->getName();
+        $pkName = $table->getPk()->getName(); 
         $qm = str_repeat('?,',count($ids)-1);
-        $stmt = $this->pdo->prepare('SELECT "'.implode('","',$columns).'" FROM "'.$table.'" WHERE "'.$pk.'" in ('.$qm.'?)');
+        $stmt = $this->pdo->prepare('SELECT "'.implode('","',$columnNames).'" FROM "'.$tableName.'" WHERE "'.$pkName.'" in ('.$qm.'?)');
         $stmt->execute($ids);
         return $stmt->fetchAll();
     }
 
-    public function selectAll(array $columns, String $table): array {
-        $stmt = $this->pdo->prepare('SELECT "'.implode('","',$columns).'" FROM "'.$table);
+    public function selectAll(array $columns, ReflectedTable $table): array {
+        $columnNames = $this->getColumnNames($columns);
+        $tableName = $table->getName();
+        $stmt = $this->pdo->prepare('SELECT "'.implode('","',$columnNames).'" FROM "'.$tableName);
         $stmt->execute([]);
         return $stmt->fetchAll();
     }

@@ -27,7 +27,19 @@ class ReflectedTable {
         $this->fks = $meta->getTableForeignKeys($this->name);
     }
 
+    public function getPk(): ReflectedColumn {
+        return $this->pk;
+    }
+
     public function getName(): String {
         return $this->name;
+    }
+
+    public function columnNames(): array {
+        return array_keys($this->columns);
+    }
+
+    public function get($columnName): ReflectedColumn {
+        return $this->columns[$columnName];
     }
 }

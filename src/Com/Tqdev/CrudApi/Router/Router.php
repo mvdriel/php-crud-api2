@@ -39,7 +39,7 @@ class Router {
     }
 
     public function route(Request $request): Response {
-        $method = $request->getMethod();
+        $method = strtoupper($request->getMethod());
         $table = $request->getPath(1);
         $id = $request->getPath(2);
         if ($table) {

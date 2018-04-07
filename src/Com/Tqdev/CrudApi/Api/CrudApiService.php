@@ -4,6 +4,7 @@ namespace Com\Tqdev\CrudApi\Api;
 use Com\Tqdev\CrudApi\Database\GenericDB;
 use Com\Tqdev\CrudApi\Api\BaseCrudApiService;
 use Com\Tqdev\CrudApi\Meta\CrudMetaService;
+use Com\Tqdev\CrudApi\Api\ColumnSelector;
 
 class CrudApiService extends BaseCrudApiService {
 
@@ -18,11 +19,15 @@ class CrudApiService extends BaseCrudApiService {
         return $this->tables->exists($table);
     }
 
-    public function read(String $table, String $id, array $params)/*: ?\stdClass*/ {
-        return $this->db->selectSingle(['id','content'],$table,'id',$id);
+    public function read(String $tableName, String $id, array $params)/*: ?\stdClass*/ {
+        $table = $this->tables->get($tableName);
+        $columns = ColumnSelector::columnNames($table, true, $params);
+        return $this->db->selectSingle($columns,$table,$id);
     }
 
-    public function list(String $table, array $params): array {
-        return $this->db->selectAll(['id','content'],$table);
+    public function list(String $tableName, array $params): array {
+        $table = $this->tables->get($tableName);
+        $columns = ColumnSelector::columnNames($table, true, $params);
+        return $this->db->selectAll($columns,$table);
     }
 }
