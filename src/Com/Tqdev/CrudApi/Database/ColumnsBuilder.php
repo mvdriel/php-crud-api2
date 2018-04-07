@@ -17,8 +17,7 @@ class ColumnsBuilder {
     }
 
     private function quoteColumnName(ReflectedColumn $column): String {
-        $name = preg_replace('/[^A-Za-z0-9_-]/','',$column->getName());
-        return '"'.$name.'"';
+        return '"'.$column->getName().'"';
     }
 
     public function select(ReflectedTable $table, array $columnNames): String {

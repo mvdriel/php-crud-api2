@@ -6,11 +6,11 @@ use Com\Tqdev\CrudApi\Database\ColumnConverter;
 
 class ColumnSelector {
 
-	private static function isMandatoryField(String $tableName, String $fieldName, array $params): bool {
-		return isset($params['mandatory']) && in_array($tableName . "." . $fieldName, $params['mandatory']);
+	private function mandatory(String $tableName, String $columnName, array $params): bool {
+		return isset($params['mandatory']) && in_array($tableName . "." . $columnName, $params['mandatory']);
 	}
 
-	private static function select(String $tableName, bool $primaryTable, array $params, String $paramName,
+	private function select(String $tableName, bool $primaryTable, array $params, String $paramName,
 			array $columnNames, bool $include): array {
 		if (!isset($params[$paramName])) {
 			return $columnNames;
@@ -29,11 +29,11 @@ class ColumnSelector {
 				$match = isset($columns['*']) || isset($columns[$key]);
 			}
 			if ($match) {
-				if ($include || self::isMandatoryField($tableName, $key, $params)) {
+				if ($include || $this->mandatory($tableName, $key, $params)) {
 					$result[] = $key;
 				}
 			} else {
-				if (!$include || self::isMandatoryField($tableName, $key, $params)) {
+				if (!$include || $this->mandatory($tableName, $key, $params)) {
 					$result[] = $key;
 				}
 			}
@@ -41,17 +41,17 @@ class ColumnSelector {
 		return $result;
     }
     
-    public static function getColumnNames(ReflectedTable $table, bool $primaryTable, array $params):array {
+    public function names(ReflectedTable $table, bool $primaryTable, array $params):array {
 		$tableName = $table->getName();
 		$results = $table->columnNames();
-		$results = self::select($tableName, $primaryTable, $params, 'columns', $results, true);
-		$results = self::select($tableName, $primaryTable, $params, 'exclude', $results, false);
+		$results = $this->select($tableName, $primaryTable, $params, 'columns', $results, true);
+		$results = $this->select($tableName, $primaryTable, $params, 'exclude', $results, false);
 		return $results;
 	}
 
-	public static function getColumnValues(ReflectedTable $table, bool $primaryTable, array $record, array $params):array {
+	public function values(ReflectedTable $table, bool $primaryTable, array $record, array $params):array {
 		$results = array();
-		$columnNames = $this>getColumnNames($table, $primaryTable, $params);
+		$columnNames = $this->names($table, $primaryTable, $params);
 		foreach ($columnNames as $columnName) {
 			if (isset($record[$columnName])) {
                 $results[$columnName] = $record[$columnName];

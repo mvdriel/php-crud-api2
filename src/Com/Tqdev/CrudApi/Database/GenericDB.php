@@ -74,8 +74,8 @@ class GenericDB {
         $selectColumns = $this->columns()->select($columns);
         $tableName = $table->getName();
         $pkName = $table->getPk()->getName(); 
-        $qm = str_repeat('?,',count($ids)-1);
-        $stmt = $this->pdo->prepare('SELECT '.$selectColumns.' FROM "'.$tableName.'" WHERE "'.$pkName.'" in ('.$qm.'?)');
+        $questionMarks = str_repeat('?,',count($ids)-1);
+        $stmt = $this->pdo->prepare('SELECT '.$selectColumns.' FROM "'.$tableName.'" WHERE "'.$pkName.'" in ('.$questionMarks.'?)');
         $stmt->execute($ids);
         return $stmt->fetchAll();
     }
