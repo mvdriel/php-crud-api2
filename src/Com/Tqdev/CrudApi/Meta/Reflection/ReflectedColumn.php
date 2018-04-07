@@ -11,6 +11,7 @@ class ReflectedColumn {
     protected $length;
     protected $precision;
     protected $scale;
+    protected $value;
 
     public function __construct(array $columnResult) {
         $this->name = $columnResult['COLUMN_NAME'];
@@ -43,6 +44,14 @@ class ReflectedColumn {
 
     public function getScale(): int {
         return $this->scale;
+    }
+
+    public function setValue($value) {
+        $this->value = $value;
+    }
+
+    public function getValue() {
+        return $this->value;
     }
 
 }

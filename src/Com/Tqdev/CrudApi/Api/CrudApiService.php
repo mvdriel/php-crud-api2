@@ -21,13 +21,13 @@ class CrudApiService extends BaseCrudApiService {
 
     public function read(String $tableName, String $id, array $params)/*: ?\stdClass*/ {
         $table = $this->tables->get($tableName);
-        $columns = ColumnSelector::columnNames($table, true, $params);
-        return $this->db->selectSingle($columns,$table,$id);
+        $columnNames = ColumnSelector::getColumnNames($table, true, $params);
+        return $this->db->selectSingle($table, $columnNames, $id);
     }
 
     public function list(String $tableName, array $params): array {
         $table = $this->tables->get($tableName);
-        $columns = ColumnSelector::columnNames($table, true, $params);
-        return $this->db->selectAll($columns,$table);
+        $columnNames = ColumnSelector::getColumnNames($table, true, $params);
+        return $this->db->selectAll($table, $columnNames);
     }
 }

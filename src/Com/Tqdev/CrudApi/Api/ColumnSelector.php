@@ -2,6 +2,7 @@
 namespace Com\Tqdev\CrudApi\Api;
 
 use Com\Tqdev\CrudApi\Meta\Reflection\ReflectedTable;
+use Com\Tqdev\CrudApi\Database\ColumnConverter;
 
 class ColumnSelector {
 
@@ -40,19 +41,23 @@ class ColumnSelector {
 		return $result;
     }
     
-    private static function columns(ReflectedTable $table, bool $primaryTable, array $params):array {
+    public static function getColumnNames(ReflectedTable $table, bool $primaryTable, array $params):array {
 		$tableName = $table->getName();
 		$results = $table->columnNames();
 		$results = self::select($tableName, $primaryTable, $params, 'columns', $results, true);
 		$results = self::select($tableName, $primaryTable, $params, 'exclude', $results, false);
 		return $results;
+	}
+
+	public static function getColumnValues(ReflectedTable $table, bool $primaryTable, array $record, array $params):array {
+		$results = array();
+		$columnNames = $this>getColumnNames($table, $primaryTable, $params);
+		foreach ($columnNames as $columnName) {
+			if (isset($record[$columnName])) {
+                $results[$columnName] = $record[$columnName];
+            }
+		}
+		return $results;
     }
     
-	public static function columnNames(ReflectedTable $table, bool $primaryTable, array $params): array {
-		$columns = array();
-		foreach (self::columns($table, $primaryTable, $params) as $key) {
-			$columns[] = $table->get($key);
-		}
-		return $columns;
-	}
 }

@@ -9,6 +9,7 @@ class GenericDB {
     protected $database;
     protected $pdo;
     protected $meta;
+    protected $columns;
 
     protected function getDsn(String $driver, String $address, String $port = null, String $database = null): String {
         switch($driver) {
@@ -46,46 +47,43 @@ class GenericDB {
             $this->pdo->query($command);
         }
         $this->meta = new GenericMeta($this->pdo, $driver, $database);
+        $this->columns = new ColumnsBuilder($this->pdo, $driver, $database);
     }
 
     public function meta(): GenericMeta {
         return $this->meta;
     }
 
-    private function getColumnNames(array $columns): array {
-        $results = array();
-        foreach ($columns as $column) {
-            $results[] = $column->getName();
-        }
-        return $results;
+    public function columns(): ColumnsBuilder {
+        return $this->columns;
     }
-
-    public function selectSingle(array $columns, ReflectedTable $table, String $id)/*: ?array*/ {
-        $columnNames = $this->getColumnNames($columns);
+    
+    public function selectSingle(ReflectedTable $table, array $columnNames, String $id)/*: ?array*/ {
+        $selectColumns = $this->columns()->select($table, $columnNames);
         $tableName = $table->getName();
         $pkName = $table->getPk()->getName(); 
-        $stmt = $this->pdo->prepare('SELECT "'.implode('","',$columnNames).'" FROM "'.$tableName.'" WHERE "'.$pkName.'" = ?');
+        $stmt = $this->pdo->prepare('SELECT '.$selectColumns.' FROM "'.$tableName.'" WHERE "'.$pkName.'" = ?');
         $stmt->execute([$id]);
         return $stmt->fetch()?:null; 
     }
 
-    public function selectMultiple(array $columns, ReflectedTable $table, array $ids): array {
+    public function selectMultiple(ReflectedTable $table, array $columnNames, array $ids): array {
         if (count($ids)==0) {
             return [];
         }
-        $columnNames = $this->getColumnNames($columns);
+        $selectColumns = $this->columns()->select($columns);
         $tableName = $table->getName();
         $pkName = $table->getPk()->getName(); 
         $qm = str_repeat('?,',count($ids)-1);
-        $stmt = $this->pdo->prepare('SELECT "'.implode('","',$columnNames).'" FROM "'.$tableName.'" WHERE "'.$pkName.'" in ('.$qm.'?)');
+        $stmt = $this->pdo->prepare('SELECT '.$selectColumns.' FROM "'.$tableName.'" WHERE "'.$pkName.'" in ('.$qm.'?)');
         $stmt->execute($ids);
         return $stmt->fetchAll();
     }
 
-    public function selectAll(array $columns, ReflectedTable $table): array {
-        $columnNames = $this->getColumnNames($columns);
+    public function selectAll(ReflectedTable $table, array $columnNames): array {
+        $selectColumns = $this->columns()->select($columns);
         $tableName = $table->getName();
-        $stmt = $this->pdo->prepare('SELECT "'.implode('","',$columnNames).'" FROM "'.$tableName);
+        $stmt = $this->pdo->prepare('SELECT '.$selectColumns.' FROM "'.$tableName);
         $stmt->execute([]);
         return $stmt->fetchAll();
     }
