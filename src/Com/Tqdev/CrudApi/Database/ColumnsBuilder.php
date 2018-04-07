@@ -16,7 +16,7 @@ class ColumnsBuilder {
         $this->database = $database;
     }
 
-    private function quoteColumnName(ReflectedColumn $column): String {
+    protected function quoteColumnName(ReflectedColumn $column): String {
         return '"'.$column->getName().'"';
     }
 

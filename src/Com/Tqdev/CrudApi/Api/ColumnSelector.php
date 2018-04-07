@@ -6,11 +6,11 @@ use Com\Tqdev\CrudApi\Database\ColumnConverter;
 
 class ColumnSelector {
 
-	private function mandatory(String $tableName, String $columnName, array $params): bool {
+	protected function mandatory(String $tableName, String $columnName, array $params): bool {
 		return isset($params['mandatory']) && in_array($tableName . "." . $columnName, $params['mandatory']);
 	}
 
-	private function select(String $tableName, bool $primaryTable, array $params, String $paramName,
+	protected function select(String $tableName, bool $primaryTable, array $params, String $paramName,
 			array $columnNames, bool $include): array {
 		if (!isset($params[$paramName])) {
 			return $columnNames;
