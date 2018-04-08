@@ -4,14 +4,16 @@ namespace Com\Tqdev\CrudApi\Router;
 use Com\Tqdev\CrudApi\Request;
 use Com\Tqdev\CrudApi\Response;
 use Com\Tqdev\CrudApi\Api\ErrorCode;
-use Com\Tqdev\CrudApi\Controller\BaseController;
+use Com\Tqdev\CrudApi\Controller\Responder;
 
 class Router {
     
     protected $handlers;
+    protected $responder;
 
-    public function __construct() {
+    public function __construct(Responder $responder) {
         $this->handlers = array();
+        $this->responder = $responder;
     }
 
     public function registerListHandler($handler) {
@@ -75,7 +77,7 @@ class Router {
             }
         }
         if (!isset($this->handlers[$func])) {
-            return BaseController::error(ErrorCode::ROUTE_NOT_FOUND, $request->getPath());
+            return $this->responder->error(ErrorCode::ROUTE_NOT_FOUND, $request->getPath());
         }
         return call_user_func($this->handlers[$func], $request);
     }

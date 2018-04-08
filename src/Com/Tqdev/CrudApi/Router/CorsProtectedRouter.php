@@ -4,14 +4,15 @@ namespace Com\Tqdev\CrudApi\Router;
 use Com\Tqdev\CrudApi\Request;
 use Com\Tqdev\CrudApi\Response;
 use Com\Tqdev\CrudApi\Router\Router;
+use Com\Tqdev\CrudApi\Controller\Responder;
 
 class CorsProtectedRouter extends Router {
     
     protected $allowedOrigins;
 
-    public function __construct(String $allowedOrigins) {
+    public function __construct(Responder $responder, String $allowedOrigins) {
         $this->allowedOrigins = $allowedOrigins;
-        parent::__construct();
+        parent::__construct($responder);
     }
 
     protected function isOriginAllowed(String $origin, String $allowedOrigins): bool {
@@ -32,7 +33,7 @@ class CorsProtectedRouter extends Router {
         if ($origin) {
             $allowedOrigins = $this->allowedOrigins;
             if (!$this->isOriginAllowed($origin, $allowedOrigins)) {
-                return BaseController::error(ErrorCode::ORIGIN_FORBIDDEN, $origin);
+                return $this->responder->error(ErrorCode::ORIGIN_FORBIDDEN, $origin);
             }
         }
         $method = $request->getMethod();

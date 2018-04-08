@@ -6,7 +6,7 @@ use Com\Tqdev\CrudApi\Request;
 use Com\Tqdev\CrudApi\Response;
 use Com\Tqdev\CrudApi\Database\GenericDB;
 use Com\Tqdev\CrudApi\Api\ErrorCode;
-use Com\Tqdev\CrudApi\Controller\BaseController;
+use Com\Tqdev\CrudApi\Controller\Responder;
 use Com\Tqdev\CrudApi\Controller\CrudApiController;
 use Com\Tqdev\CrudApi\Router\CorsProtectedRouter;
 use Com\Tqdev\CrudApi\Api\CrudApiService;
@@ -15,6 +15,7 @@ use Com\Tqdev\CrudApi\Meta\CrudMetaService;
 class Api {
     
     protected $router;
+    protected $responder;
 
     public function __construct(Config $config) {
         $db = new GenericDB(
@@ -26,10 +27,12 @@ class Api {
             $config->getPassword()
         );
         $meta = new CrudMetaService($db);
-        $router = new CorsProtectedRouter($config->getAllowedOrigins());
+        $responder = new Responder();
+        $router = new CorsProtectedRouter($responder, $config->getAllowedOrigins());
         $api = new CrudApiService($db, $meta);
-        new CrudApiController($router,$api);
+        new CrudApiController($router, $api, $responder);
         $this->router = $router;
+        $this->responder = $responder;
     }
 
     public function handle(Request $request): Response {
@@ -37,7 +40,7 @@ class Api {
         try {
             $response = $this->router->route($request);
         } catch (\Throwable $e) {
-            $response = BaseController::error(ErrorCode::ERROR_NOT_FOUND, $e->getMessage());
+            $response = $this->responder->error(ErrorCode::ERROR_NOT_FOUND, $e->getMessage());
         }
         return $response;
     }
