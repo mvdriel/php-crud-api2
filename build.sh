@@ -15,8 +15,8 @@ tee -a target/api.php >/dev/null <<'EOF'
  **/
 EOF
 echo 'namespace Com\Tqdev\CrudApi;' >> target/api.php
-FILECOUNT=`find . -path ./tests -prune -o -path ./target -prune -o -iname '*.php' | grep '.php$' | wc -l`
-find . -path ./tests -prune -o -path ./target -prune -o -iname '*.php' -exec cat {} \; -exec echo \; | grep -v "^<?php\|^namespace \|^use \|spl_autoload_register\|^\s*//" >> target/api.php
+find . -path ./tests -prune -o -path ./target -prune -o -iname '*.php' -exec echo '/* source: {} */' \; -exec cat {} \; -exec echo \; | grep -v "^<?php\|^namespace \|^use \|spl_autoload_register\|^\s*//" >> target/api.php
+FILECOUNT=`grep '/* source:' target/api.php | wc -l`
 ERRORS=`php -l target/api.php`
 if [ $? != 0 ]; then
     echo $ERRORS
