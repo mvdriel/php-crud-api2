@@ -69,7 +69,7 @@ Where "1" is the value of the primary key of the record that you want to update.
         "title": "Adjusted title!"
     }
 
-This adjusts the title of the post. And the return value is the amount of rows that are set:
+This adjusts the title of the post. And the return value is the number of rows that are set:
 
     1
 
