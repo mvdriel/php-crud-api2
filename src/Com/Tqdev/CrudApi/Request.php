@@ -120,4 +120,23 @@ class Request {
     public function getHeaders(): array {
         return $this->headers;
     }
+
+    public static function fromString(String $request): Request {
+        $parts = explode("\n\n", trim($request), 2);
+        $head = $parts[0];
+        $body = isset($parts[1])?$parts[1]:null;
+        $lines = explode("\n", $head);
+        $line = explode(' ', trim(array_shift($lines)), 2);
+        $method = $line[0];
+        $url = $line[1];
+        $headers = array();
+        $path = parse_url($url, PHP_URL_PATH);
+        $query = parse_url($url, PHP_URL_QUERY);
+        $request = new Request($method, $path, $query, $body);
+        foreach ($lines as $line) {
+            list($key, $value) = explode(':', $line, 2);
+            $request->addHeader($key, trim($value));
+        }
+        return $request;
+    }
 }

@@ -52,6 +52,10 @@ class Config {
         $this->values = $newValues;
     }
     
+    public static function fromIniFile(String $filename): Config {
+        return new Config(parse_ini_file($filename));
+    }
+
     public function getDriver(): String {
         return $this->values['driver'];
     }

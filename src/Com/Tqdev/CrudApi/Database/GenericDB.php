@@ -24,9 +24,9 @@ class GenericDB {
         switch($driver) {
             case 'mysql':
             return [
-                'SET SESSION sql_warnings=1',
-                'SET NAMES utf8',
-                'SET SESSION sql_mode = "ANSI,TRADITIONAL"',
+                'SET SESSION sql_warnings=1;',
+                'SET NAMES utf8;',
+                'SET SESSION sql_mode = "ANSI,TRADITIONAL";',
             ];
         }
         return [];
@@ -50,6 +50,10 @@ class GenericDB {
         $this->columns = new ColumnsBuilder($this->pdo, $driver, $database);
     }
 
+    public function pdo(): \PDO {
+        return $this->pdo;
+    }
+
     public function meta(): GenericMeta {
         return $this->meta;
     }
@@ -71,7 +75,7 @@ class GenericDB {
         if (count($ids)==0) {
             return [];
         }
-        $selectColumns = $this->columns()->select($columns);
+        $selectColumns = $this->columns()->select($table, $columnNames);
         $tableName = $table->getName();
         $pkName = $table->getPk()->getName(); 
         $questionMarks = str_repeat('?,',count($ids)-1);
@@ -81,7 +85,7 @@ class GenericDB {
     }
 
     public function selectAll(ReflectedTable $table, array $columnNames): array {
-        $selectColumns = $this->columns()->select($columns);
+        $selectColumns = $this->columns()->select($table, $columnNames);
         $tableName = $table->getName();
         $stmt = $this->pdo->prepare('SELECT '.$selectColumns.' FROM "'.$tableName);
         $stmt->execute([]);
