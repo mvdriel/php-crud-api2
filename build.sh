@@ -17,7 +17,11 @@ EOF
 echo 'namespace Com\Tqdev\CrudApi;' >> target/api.php
 FILECOUNT=`find . -path ./tests -prune -o -path ./target -prune -o -iname '*.php' | grep '.php$' | wc -l`
 find . -path ./tests -prune -o -path ./target -prune -o -iname '*.php' -exec cat {} \; -exec echo \; | grep -v "^<?php\|^namespace \|^use \|spl_autoload_register\|^\s*//" >> target/api.php
-php -l target/api.php
+ERRORS=`php -l target/api.php`
+if [ $? != 0 ]; then
+    echo $ERRORS
+    exit 1
+fi;
 END=$(date +%s.%N)
 DIFF=$(echo "( $END - $START ) * 1000 / 1" | bc)
-echo "$FILECOUNT files combined in $DIFF ms"
+echo "$FILECOUNT files combined in $DIFF ms into 'target/api.php'"
