@@ -8,7 +8,7 @@ spl_autoload_register(function ($class) {
     include str_replace('\\',DIRECTORY_SEPARATOR,"..\\src\\$class.php"); 
 });
 
-function runDir($api,$dir) {
+function runDir(Api $api, String $dir) {
     $dir_handle = opendir($dir);
     $success = 0;
     $total = 0;
@@ -29,7 +29,7 @@ function runDir($api,$dir) {
     return compact('total','success','failed');
 }
 
-function runTest($api,$file): int {
+function runTest(Api $api, String $file): int {
     $title = ucwords(str_replace('_',' ',substr(basename($file),0,-4)));
     $parts = preg_split('/^[=]+[\r\n]+/m',file_get_contents($file),2);
     $recording = count($parts)!=2;
