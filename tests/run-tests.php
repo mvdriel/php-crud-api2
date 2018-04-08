@@ -52,7 +52,7 @@ function runTest($api,$file): int {
 
 function loadFixture(Config $config) {
     $driver = $config->getDriver();
-    $filename = 'data'.DIRECTORY_SEPARATOR."blog_$driver.sql";
+    $filename = 'fixtures'.DIRECTORY_SEPARATOR."blog_$driver.sql";
     $file = file_get_contents($filename);
     $db = new GenericDB(
         $config->getDriver(),
