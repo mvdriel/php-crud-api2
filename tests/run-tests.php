@@ -83,7 +83,8 @@ function loadFixture(Config $config) {
 function run() {
     $dir = __DIR__;
     $start = microtime(true);
-    $config = Config::fromIniFile("config.ini");
+    $ini = parse_ini_file("config.ini");
+    $config = new Config($ini);
     loadFixture($config);
     $api = new Api($config);
     $stats = runDir($api,$dir);
