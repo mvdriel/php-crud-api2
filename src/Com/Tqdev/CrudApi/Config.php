@@ -23,12 +23,14 @@ class Config {
     protected function getDefaultPort(String $driver): int {
         switch($driver) {
             case 'mysql': return 3306;
+            case 'pgsql': return 5432;
         }
     }
 
     protected function getDefaultAddress(String $driver): String {
         switch($driver) {
             case 'mysql': return 'localhost';
+            case 'pgsql': return 'localhost';
         }
     }
 

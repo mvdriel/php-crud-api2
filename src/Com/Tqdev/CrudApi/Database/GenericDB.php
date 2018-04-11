@@ -13,10 +13,9 @@ class GenericDB {
 
     protected function getDsn(String $address, String $port = null, String $database = null): String {
         switch($this->driver) {
-            case 'mysql':
-            return "$this->driver:host=$address;port=$port;dbname=$database;charset=utf8mb4";
+            case 'mysql': return "$this->driver:host=$address;port=$port;dbname=$database;charset=utf8mb4";
+            case 'pgsql': return "$this->driver:host=$address port=$port dbname=$database options='--client_encoding=UTF8'";
         }
-        return null;
     }
 
     protected function getCommands(): array {
@@ -27,8 +26,11 @@ class GenericDB {
                 'SET NAMES utf8mb4;',
                 'SET SESSION sql_mode = "ANSI,TRADITIONAL";',
             ];
+            case 'pgsql':
+            return [
+                "SET NAMES 'UTF8';",
+            ];
         }
-        return null;
     }
 
     public function __construct(String $driver, String $address, String $port = null, String $database = null, String $username = null, String $password = null) {
@@ -63,10 +65,9 @@ class GenericDB {
 
     protected function getLastInsertIdSql(): String {
         switch($this->driver) {
-            case 'mysql':
-            return 'LAST_INSERT_ID()';
+            case 'mysql': return 'LAST_INSERT_ID()';
+            case 'pgsql': return 'LASTVAL()';
         }
-        return null;
     }
     
     public function createSingle(ReflectedTable $table, array $columnValues) {
@@ -104,7 +105,7 @@ class GenericDB {
     public function selectAll(ReflectedTable $table, array $columnNames): array {
         $selectColumns = $this->columns()->select($table, $columnNames);
         $tableName = $table->getName();
-        $stmt = $this->pdo->prepare('SELECT '.$selectColumns.' FROM "'.$tableName);
+        $stmt = $this->pdo->prepare('SELECT '.$selectColumns.' FROM "'.$tableName.'"');
         $stmt->execute();
         return $stmt->fetchAll();
     }

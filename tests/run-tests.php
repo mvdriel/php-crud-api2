@@ -94,19 +94,21 @@ function loadFixture(Config $config) {
     }
 }
 
-function run() {
-    $dir = __DIR__;
-    $start = microtime(true);
-    $ini = parse_ini_file("config.ini");
-    $config = new Config($ini);
-    loadFixture($config);
-    $api = new Api($config);
-    $stats = runDir($api,$dir);
-    $end = microtime(true);
-    $time = ($end-$start)*1000;
-    $total = $stats['total'];
-    $failed = $stats['failed'];
-    echo sprintf("%d tests ran in %d ms, %d failed\n", $total, $time, $failed);
+function run($drivers) {
+    foreach ($drivers as $driver) {
+        $dir = __DIR__;
+        $start = microtime(true);
+        $ini = parse_ini_file(sprintf("config/config_%s.ini", $driver));
+        $config = new Config($ini);
+        loadFixture($config);
+        $api = new Api($config);
+        $stats = runDir($api,$dir);
+        $end = microtime(true);
+        $time = ($end-$start)*1000;
+        $total = $stats['total'];
+        $failed = $stats['failed'];
+        echo sprintf("%s: %d tests ran in %d ms, %d failed\n", $driver, $total, $time, $failed);
+    }
 }
 
-run();
+run(['mysql','pgsql']);
