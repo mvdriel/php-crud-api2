@@ -104,8 +104,13 @@ class GenericDB {
     public function selectAll(ReflectedTable $table, array $columnNames): array {
         $selectColumns = $this->columns()->select($table, $columnNames);
         $tableName = $table->getName();
+<<<<<<< HEAD
         $stmt = $this->pdo->prepare('SELECT '.$selectColumns.' FROM "'.$tableName);
         $stmt->execute();
+=======
+        $stmt = $this->pdo->prepare('SELECT '.$selectColumns.' FROM "'.$tableName.'"');
+        $stmt->execute([]);
+>>>>>>> f233291597d2f9a0d4d7160ac222646ef57c210e
         return $stmt->fetchAll();
     }
 
