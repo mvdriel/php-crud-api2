@@ -24,7 +24,7 @@ class GenericDB {
             case 'mysql':
             return [
                 'SET SESSION sql_warnings=1;',
-                'SET NAMES utf8;',
+                'SET NAMES utf8mb4;',
                 'SET SESSION sql_mode = "ANSI,TRADITIONAL";',
             ];
         }

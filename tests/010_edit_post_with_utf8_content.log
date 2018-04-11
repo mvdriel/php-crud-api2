@@ -1,0 +1,17 @@
+PUT /posts/2
+
+{"content":"🤗 Grüßgott, Вiтаю, dobrý deň, hyvää päivää, გამარჯობა, Γεια σας, góðan dag, здравствуйте"}
+===
+200
+Content-Type: application/json
+Content-Length: 1
+
+1
+===
+GET /posts/2
+===
+200
+Content-Type: application/json
+Content-Length: 363
+
+{"id":2,"user_id":1,"category_id":2,"content":"\ud83e\udd17 Gr\u00fc\u00dfgott, \u0412i\u0442\u0430\u044e, dobr\u00fd de\u0148, hyv\u00e4\u00e4 p\u00e4iv\u00e4\u00e4, \u10d2\u10d0\u10db\u10d0\u10e0\u10ef\u10dd\u10d1\u10d0, \u0393\u03b5\u03b9\u03b1 \u03c3\u03b1\u03c2, g\u00f3\u00f0an dag, \u0437\u0434\u0440\u0430\u0432\u0441\u0442\u0432\u0443\u0439\u0442\u0435"}
