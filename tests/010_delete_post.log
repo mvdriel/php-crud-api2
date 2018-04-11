@@ -1,0 +1,15 @@
+DELETE /posts/3
+===
+200
+Content-Type: application/json
+Content-Length: 1
+
+1
+===
+GET /posts/3
+===
+404
+Content-Type: application/json
+Content-Length: 46
+
+{"code":1003,"message":"Record '3' not found"}

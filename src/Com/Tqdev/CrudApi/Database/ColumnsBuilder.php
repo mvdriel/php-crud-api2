@@ -30,6 +30,18 @@ class ColumnsBuilder {
 		return implode(',', $results);
     }
 
+    public function insert(ReflectedTable $table, array $columnValues): String {
+        $columns = array();
+		$values = array();
+		foreach ($columnValues as $columnName => $columnValue) {
+			$column = $table->get($columnName);
+            $quotedColumnName = $this->quoteColumnName($column);
+            $columns[] = $quotedColumnName;
+            $values[] = '?';
+		}
+		return '('.implode(',', $columns).') VALUES ('.implode(',', $values).')';
+    }
+
 	public function update(ReflectedTable $table, array $columnValues): String {
         $results = array();
 		foreach ($columnValues as $columnName => $columnValue) {

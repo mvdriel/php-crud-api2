@@ -34,7 +34,13 @@ class CrudApiController {
     }
 
     public function create(Request $request): Response {
-        
+        $table = $request->getPath(1);
+        $record = $request->getBody();
+		$params = $request->getParams();
+		if (!$this->service->exists($table)) {
+			return $this->responder->error(ErrorCode::TABLE_NOT_FOUND, $table);
+		}
+		return $this->responder->success($this->service->create($table, $record, $params));
     }
 
     public function read(Request $request): Response {
@@ -61,11 +67,24 @@ class CrudApiController {
     }
 
     public function update(Request $request): Response {
-        
+        $table = $request->getPath(1);
+        $id = $request->getPath(2);
+		$record = $request->getBody();
+		$params = $request->getParams();
+		if (!$this->service->exists($table)) {
+			return $this->responder->error(ErrorCode::TABLE_NOT_FOUND, $table);
+		}
+		return $this->responder->success($this->service->update($table, $id, $record, $params));
     }
 
     public function delete(Request $request): Response {
-        
+        $table = $request->getPath(1);
+        $id = $request->getPath(2);
+		$params = $request->getParams();
+		if (!$this->service->exists($table)) {
+			return $this->responder->error(ErrorCode::TABLE_NOT_FOUND, $table);
+		}
+		return $this->responder->success($this->service->delete($table, $id, $params));
     }
 
 }

@@ -27,6 +27,10 @@ class ReflectedTable {
         $this->fks = $meta->getTableForeignKeys($this->name);
     }
 
+    public function exists(String $columnName): bool {
+        return isset($this->columns[$columnName]);
+    }
+
     public function getPk(): ReflectedColumn {
         return $this->pk;
     }

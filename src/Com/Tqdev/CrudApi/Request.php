@@ -76,11 +76,11 @@ class Request {
         return $this->params;
     }
 
-    public function getBody() {
+    public function getBody()/*: ?array*/ {
         $body = $this->body;
         $first = substr($body,0,1);
         if ($first=='[' || $first=='{') {
-            $body = json_decode($body);
+            $body = json_decode($body, true);
             $causeCode = json_last_error();
             if ($causeCode !== JSON_ERROR_NONE) {
                 throw new \Exception("Error decoding input JSON. json_last_error code: " . $causeCode);
@@ -93,7 +93,7 @@ class Request {
                     unset($input[$key]);
                 }
             }
-            $body = (object)$input;
+            $body = $input;
         }
         return $body;
     }

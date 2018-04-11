@@ -9,10 +9,10 @@ spl_autoload_register(function ($class) {
 });
 
 function runDir(Api $api, String $dir) {
-    $dir_handle = opendir($dir);
     $success = 0;
     $total = 0;
-    while (($entry = readdir($dir_handle)) !== false) {
+    $entries = scandir($dir);
+    foreach ($entries as $entry) {
         if ($entry === '.' || $entry === '..') {
             continue;
         }
@@ -31,21 +31,35 @@ function runDir(Api $api, String $dir) {
 
 function runTest(Api $api, String $file): int {
     $title = ucwords(str_replace('_',' ',substr(basename($file),0,-4)));
-    $parts = preg_split('/^[=]+[\r\n]+/m',file_get_contents($file),2);
-    $recording = count($parts)!=2;
-    $in = $recording?trim($parts[0]):$parts[0];
-    $exp = $recording?'':$parts[1];
-    $out = $api->handle(Request::fromString($in));
+    $line1 = "=====[$title]=====";
+    $len = strlen($line1);
+    $line2 = str_repeat("=",$len);
+    $parts = preg_split('/^[=]+[\r\n]+/m',file_get_contents($file));
+    $dirty = false;
     $success = 1;
-    if ($recording) {
-        file_put_contents($file, "$in\n===\n$out");
+    for ($i=0; $i<count($parts); $i+=2) {
+        $recording = false;
+        if (empty($parts[$i+1])) {
+            if (substr($parts[$i],-1)!="\n") {
+                $parts[$i].="\n";
+            }
+            $parts[$i+1] = '';
+            $recording = true;
+            $dirty = true;
+        }
+        $in = $parts[$i];
+        $exp = $parts[$i+1];
+        $out = $api->handle(Request::fromString($in));
+        if ($recording) {
+            $parts[$i+1] = $out;
+        }
+        else if ($out != $exp) {
+            echo "$line1\n$exp\n$line2\n$out\n$line2\n";
+            $success = 0;
+        }
     }
-    else if ($out != $exp) {
-        $title = "=====[$title]=====";
-        $len = strlen($title);
-        $line = str_repeat("=",$len);
-        echo "\n$title\n$exp\n$line\n$out\n$line\n";
-        $success = 0;
+    if ($dirty) {
+        file_put_contents($file, implode("===\n", $parts));
     }
     return $success;
 }
