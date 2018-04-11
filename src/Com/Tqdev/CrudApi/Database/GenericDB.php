@@ -19,7 +19,7 @@ class GenericDB {
         return null;
     }
 
-    protected function getCommands() {
+    protected function getCommands(): array {
         switch($this->driver) {
             case 'mysql':
             return [
