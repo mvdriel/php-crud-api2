@@ -8,7 +8,7 @@ spl_autoload_register(function ($class) {
     include str_replace('\\',DIRECTORY_SEPARATOR,"..\\src\\$class.php"); 
 });
 
-function runDir(Api $api, String $dir) {
+function runDir(Api $api, String $dir): array {
     $success = 0;
     $total = 0;
     $entries = scandir($dir);
@@ -94,7 +94,7 @@ function loadFixture(Config $config) {
     }
 }
 
-function run($drivers) {
+function run(array $drivers) {
     foreach ($drivers as $driver) {
         $dir = __DIR__;
         $start = microtime(true);
