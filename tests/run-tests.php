@@ -34,7 +34,7 @@ function runTest(Api $api, String $file): int {
     $line1 = "=====[$title]=====";
     $len = strlen($line1);
     $line2 = str_repeat("=",$len);
-    $parts = preg_split('/^[=]+[\r\n]+/m',file_get_contents($file));
+    $parts = preg_split('/^[=]+([\r\n]+|$)/m',file_get_contents($file));
     $dirty = false;
     $success = 1;
     for ($i=0; $i<count($parts); $i+=2) {
