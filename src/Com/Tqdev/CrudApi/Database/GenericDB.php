@@ -80,19 +80,13 @@ class GenericDB {
         }
     }
 
-    protected function getOrderBySql(array $orderDirections) {
+    protected function getOrderBySql(array $sortFields) {
         $sql = '';
-        foreach (array_keys($orderDirections) as $i=>$columnName) {
-            $ascending = $orderDirections[$columnName];
+        foreach ($sortFields as $i=>list($columnName, $ascending)) {
             if ($i>0) {
                 $sql .= ', ';
             }
-            $sql .= '"'.$columnName.'"';
-            if ($ascending) {
-                $sql .= ' ASC';
-            } else {
-                $sql .= ' DESC';
-            }
+            $sql .= '"'.$columnName.'" '.$ascending;
         }
         return $sql;
     }
@@ -137,10 +131,10 @@ class GenericDB {
         return $stmt->fetchColumn(0);
     }
 
-    public function selectAll(ReflectedTable $table, array $columnNames, array $orderDirections, int $offset, int $limit): array {
+    public function selectAll(ReflectedTable $table, array $columnNames, array $sortFields, int $offset, int $limit): array {
         $selectColumns = $this->columns()->select($table, $columnNames);
         $tableName = $table->getName();
-        $orderBySql = $this->getOrderBySql($orderDirections);
+        $orderBySql = $this->getOrderBySql($sortFields);
         $offsetLimitSql = $this->getOffsetLimitSql($offset, $limit);
         $pkName = $table->getPk()->getName(); 
         $stmt = $this->pdo->prepare('SELECT '.$selectColumns.' FROM "'.$tableName.'" ORDER BY '.$orderBySql.' '.$offsetLimitSql);
