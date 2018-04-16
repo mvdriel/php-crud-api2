@@ -69,6 +69,33 @@ class GenericDB {
             case 'pgsql': return 'LASTVAL()';
         }
     }
+
+    protected function getOffsetLimitSql(int $offset, int $limit): String {
+        if ($limit<0 || $offset<0) {
+            return '';
+        }
+        switch($this->driver) {
+            case 'mysql': return "LIMIT $offset, $limit";
+            case 'pgsql': return "LIMIT $limit OFFSET $offset";
+        }
+    }
+
+    protected function getOrderBySql(array $orderDirections) {
+        $sql = '';
+        foreach (array_keys($orderDirections) as $i=>$columnName) {
+            $ascending = $orderDirections[$columnName];
+            if ($i>0) {
+                $sql .= ', ';
+            }
+            $sql .= '"'.$columnName.'"';
+            if ($ascending) {
+                $sql .= ' ASC';
+            } else {
+                $sql .= ' DESC';
+            }
+        }
+        return $sql;
+    }
     
     public function createSingle(ReflectedTable $table, array $columnValues) {
         $insertColumns = $this->columns()->insert($table, $columnValues);
@@ -102,10 +129,21 @@ class GenericDB {
         return $stmt->fetchAll();
     }
 
-    public function selectAll(ReflectedTable $table, array $columnNames): array {
+    public function selectCount(ReflectedTable $table): int {
+        $tableName = $table->getName();
+        $pkName = $table->getPk()->getName(); 
+        $stmt = $this->pdo->prepare('SELECT COUNT("'.$pkName.'") FROM "'.$tableName.'"');
+        $stmt->execute();
+        return $stmt->fetchColumn(0);
+    }
+
+    public function selectAll(ReflectedTable $table, array $columnNames, array $orderDirections, int $offset, int $limit): array {
         $selectColumns = $this->columns()->select($table, $columnNames);
         $tableName = $table->getName();
-        $stmt = $this->pdo->prepare('SELECT '.$selectColumns.' FROM "'.$tableName.'"');
+        $orderBySql = $this->getOrderBySql($orderDirections);
+        $offsetLimitSql = $this->getOffsetLimitSql($offset, $limit);
+        $pkName = $table->getPk()->getName(); 
+        $stmt = $this->pdo->prepare('SELECT '.$selectColumns.' FROM "'.$tableName.'" ORDER BY '.$orderBySql.' '.$offsetLimitSql);
         $stmt->execute();
         return $stmt->fetchAll();
     }

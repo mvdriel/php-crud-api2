@@ -25,6 +25,9 @@ class ListResponse implements \JsonSerializable {
         if (!$this->results) {
             return ['records' => $this->records];
         }
-        return $this;
+        return [
+			'records' => $this->records,
+			'results' => $this->results,
+		];
     }
 }

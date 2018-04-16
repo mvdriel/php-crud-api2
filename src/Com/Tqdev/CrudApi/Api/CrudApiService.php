@@ -16,6 +16,8 @@ class CrudApiService {
         $this->db = $db;
         $this->tables = $meta->getDatabaseReflection();
         $this->columns = new ColumnSelector();
+        $this->ordering = new OrderingInfo();
+        $this->pagination = new PaginationInfo();
     }
 
 	protected function sanitizeRecord(String $tableName, array $record, String $id) {
@@ -68,12 +70,17 @@ class CrudApiService {
     public function list(String $tableName, array $params): ListResponse {
         $table = $this->tables->get($tableName);
         $columnNames = $this->columns->names($table, true, $params);
-        $count = 0;
-        //if ($pagination) {
-        //$records =
-        //$count = 
-        //} else {
-        $records = $this->db->selectAll($table, $columnNames);
+		$orderDirections = $this->ordering->directions($table, $params);
+		if (!$this->pagination->hasPage($params)) {
+            $offset = 0;
+            $limit = $this->pagination->resultSize($params);
+            $count = 0;
+		} else {
+			$offset = $this->pagination->pageOffset($params);
+			$limit = $this->pagination->pageSize($params);
+			$count = $this->db->selectCount($table);
+        }
+        $records = $this->db->selectAll($table, $columnNames, $orderDirections, $offset, $limit);
         return new ListResponse($records, $count);
     }
 }
