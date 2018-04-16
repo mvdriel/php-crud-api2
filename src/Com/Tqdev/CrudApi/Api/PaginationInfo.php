@@ -9,9 +9,9 @@ class PaginationInfo {
 		return isset($params['page']);
 	}
 
-	public function pageOffset(array $params): int {
+	public function getPageOffset(array $params): int {
 		$offset = 0;
-		$pageSize = $this->pageSize($params);
+		$pageSize = $this->getPageSize($params);
 		if (isset($params['page'])) {
 			foreach ($params['page'] as $key) {
 				$parts = explode(',', $key, 2);
@@ -22,7 +22,7 @@ class PaginationInfo {
 		return $offset;
 	}
 
-	public function pageSize(array $params): int {
+	public function getPageSize(array $params): int {
 		$pageSize = $this->DEFAULT_PAGE_SIZE;
 		if (isset($params['page'])) {
 			foreach ($params['page'] as $key) {
@@ -35,7 +35,7 @@ class PaginationInfo {
 		return $pageSize;
 	}
 
-	public function resultSize(array $params): int {
+	public function getResultSize(array $params): int {
 		$numberOfRows = -1;
 		if (isset($params['size'])) {
 			foreach ($params['size'] as $key) {

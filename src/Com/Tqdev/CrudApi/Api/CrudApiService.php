@@ -45,20 +45,20 @@ class CrudApiService {
 	public function create(String $tableName, array $record, array $params) {
 		$this->sanitizeRecord($tableName, $record, "");
 		$table = $this->tables->get($tableName);
-        $columnValues = $this->columns->values($table, true, $record, $params);
+        $columnValues = $this->columns->getValues($table, true, $record, $params);
         return $this->db->createSingle($table, $columnValues);
 	}
 
     public function read(String $tableName, String $id, array $params)/*: ?\stdClass*/ {
         $table = $this->tables->get($tableName);
-        $columnNames = $this->columns->names($table, true, $params);
+        $columnNames = $this->columns->getNames($table, true, $params);
         return $this->db->selectSingle($table, $columnNames, $id);
     }
 
     public function update(String $tableName, String $id, array $record, array $params) {
 		$this->sanitizeRecord($tableName, $record, $id);
 		$table = $this->tables->get($tableName);
-        $columnValues = $this->columns->values($table, true, $record, $params);
+        $columnValues = $this->columns->getValues($table, true, $record, $params);
         return $this->db->updateSingle($table, $columnValues, $id);
     }
     
@@ -69,15 +69,15 @@ class CrudApiService {
 
     public function list(String $tableName, array $params): ListResponse {
         $table = $this->tables->get($tableName);
-        $columnNames = $this->columns->names($table, true, $params);
-		$sortFields = $this->ordering->sortFields($table, $params);
+        $columnNames = $this->columns->getNames($table, true, $params);
+		$sortFields = $this->ordering->getSortFields($table, $params);
 		if (!$this->pagination->hasPage($params)) {
             $offset = 0;
-            $limit = $this->pagination->resultSize($params);
+            $limit = $this->pagination->getResultSize($params);
             $count = 0;
 		} else {
-			$offset = $this->pagination->pageOffset($params);
-			$limit = $this->pagination->pageSize($params);
+			$offset = $this->pagination->getPageOffset($params);
+			$limit = $this->pagination->getPageSize($params);
 			$count = $this->db->selectCount($table);
         }
         $records = $this->db->selectAll($table, $columnNames, $sortFields, $offset, $limit);
