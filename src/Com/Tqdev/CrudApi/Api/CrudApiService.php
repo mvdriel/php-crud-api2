@@ -4,6 +4,7 @@ namespace Com\Tqdev\CrudApi\Api;
 use Com\Tqdev\CrudApi\Database\GenericDB;
 use Com\Tqdev\CrudApi\Meta\CrudMetaService;
 use Com\Tqdev\CrudApi\Api\ColumnSelector;
+use Com\Tqdev\CrudApi\Api\Record\ListResponse;
 
 class CrudApiService {
 
@@ -64,9 +65,15 @@ class CrudApiService {
         return $this->db->deleteSingle($table, $id);
 	}
 
-    public function list(String $tableName, array $params): array {
+    public function list(String $tableName, array $params): ListResponse {
         $table = $this->tables->get($tableName);
         $columnNames = $this->columns->names($table, true, $params);
-        return $this->db->selectAll($table, $columnNames);
+        $count = 0;
+        //if ($pagination) {
+        //$records =
+        //$count = 
+        //} else {
+        $records = $this->db->selectAll($table, $columnNames);
+        return new ListResponse($records, $count);
     }
 }
