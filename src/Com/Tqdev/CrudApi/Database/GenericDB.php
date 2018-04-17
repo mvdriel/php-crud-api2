@@ -20,16 +20,14 @@ class GenericDB {
 
     protected function getCommands(): array {
         switch($this->driver) {
-            case 'mysql':
-            return [
-                'SET SESSION sql_warnings=1;',
-                'SET NAMES utf8mb4;',
-                'SET SESSION sql_mode = "ANSI,TRADITIONAL";',
-            ];
-            case 'pgsql':
-            return [
-                "SET NAMES 'UTF8';",
-            ];
+            case 'mysql': return [
+                    'SET SESSION sql_warnings=1;',
+                    'SET NAMES utf8mb4;',
+                    'SET SESSION sql_mode = "ANSI,TRADITIONAL";',
+                ];
+            case 'pgsql': return [
+                    "SET NAMES 'UTF8';",
+                ];
         }
     }
 
