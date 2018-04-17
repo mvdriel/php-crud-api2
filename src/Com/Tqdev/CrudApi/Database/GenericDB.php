@@ -124,7 +124,7 @@ class GenericDB {
     public function selectCount(ReflectedTable $table): int {
         $tableName = $table->getName();
         $pkName = $table->getPk()->getName(); 
-        $stmt = $this->pdo->prepare('SELECT COUNT("'.$pkName.'") FROM "'.$tableName.'"');
+        $stmt = $this->pdo->prepare('SELECT COUNT(*) FROM "'.$tableName.'"');
         $stmt->execute();
         return $stmt->fetchColumn(0);
     }
