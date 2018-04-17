@@ -22,7 +22,8 @@ class OrderingInfo {
                 }
                 $fields[] = [$columnName, $ascending];
 			}
-		} else {
+        } 
+        if (count($fields)==0) {
             $fields[] = [$table->getPk()->getName(), 'ASC'];
         }
 		return $fields;
