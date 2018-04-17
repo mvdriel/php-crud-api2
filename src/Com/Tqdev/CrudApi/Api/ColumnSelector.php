@@ -41,7 +41,7 @@ class ColumnSelector {
 		return $result;
     }
     
-    public function getNames(ReflectedTable $table, bool $primaryTable, array $params):array {
+    public function getNames(ReflectedTable $table, bool $primaryTable, array $params): array {
 		$tableName = $table->getName();
 		$results = $table->columnNames();
 		$results = $this->select($tableName, $primaryTable, $params, 'columns', $results, true);
@@ -49,7 +49,7 @@ class ColumnSelector {
 		return $results;
 	}
 
-	public function getValues(ReflectedTable $table, bool $primaryTable, array $record, array $params):array {
+	public function getValues(ReflectedTable $table, bool $primaryTable, array $record, array $params): array {
 		$results = array();
 		$columnNames = $this->getNames($table, $primaryTable, $params);
 		foreach ($columnNames as $columnName) {

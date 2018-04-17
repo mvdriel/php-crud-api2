@@ -20,7 +20,7 @@ class ColumnsBuilder {
         return '"'.$column->getName().'"';
     }
 
-    public function getOrderBy(ReflectedTable $table, array $columnOrdering) {
+    public function getOrderBy(ReflectedTable $table, array $columnOrdering): String {
         $results = array();
 		foreach ($columnOrdering as $i=>list($columnName, $ordering)) {
             $column = $table->get($columnName);
