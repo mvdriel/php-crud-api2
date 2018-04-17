@@ -20,7 +20,7 @@ class ColumnsBuilder {
         return '"'.$column->getName().'"';
     }
 
-    protected function getOrderBy(array $columnOrdering) {
+    public function getOrderBy(array $columnOrdering) {
         $results = array();
 		foreach ($columnOrdering as $i=>list($columnName, $ordering)) {
             $column = $table->get($columnName);
