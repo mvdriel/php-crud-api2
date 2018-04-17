@@ -20,14 +20,11 @@ class ListResponse implements \JsonSerializable {
 		return $this->results;
     }
     
-    // From JsonSerializable
     public function jsonSerialize() {
-        if (!$this->results) {
-            return ['records' => $this->records];
+		$result = ['records' => $this->records];
+		if ($this->results) {
+            $result['results'] = $this->results;
         }
-        return [
-			'records' => $this->records,
-			'results' => $this->results,
-		];
+        return $results;
     }
 }
