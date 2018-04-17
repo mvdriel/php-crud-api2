@@ -5,7 +5,7 @@ use Com\Tqdev\CrudApi\Meta\Reflection\ReflectedTable;
 
 class OrderingInfo {
 
-    public function getSortFields(ReflectedTable $table, array $params): array {
+    public function getColumnOrdering(ReflectedTable $table, array $params): array {
 		$fields = array();
 		if (isset($params['order'])) {
 			foreach ($params['order'] as $key) {

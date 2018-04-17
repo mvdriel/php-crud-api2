@@ -76,7 +76,7 @@ class CrudApiService {
     public function list(String $tableName, array $params): ListResponse {
         $table = $this->tables->get($tableName);
         $columnNames = $this->columns->getNames($table, true, $params);
-		$sortFields = $this->ordering->getSortFields($table, $params);
+		$columnOrdering = $this->ordering->getColumnOrdering($table, $params);
 		if (!$this->pagination->hasPage($params)) {
             $offset = 0;
             $limit = $this->pagination->getResultSize($params);
@@ -86,7 +86,7 @@ class CrudApiService {
 			$limit = $this->pagination->getPageSize($params);
 			$count = $this->db->selectCount($table);
         }
-        $records = $this->db->selectAll($table, $columnNames, $sortFields, $offset, $limit);
+        $records = $this->db->selectAll($table, $columnNames, $columnOrdering, $offset, $limit);
         return new ListResponse($records, $count);
     }
 }
