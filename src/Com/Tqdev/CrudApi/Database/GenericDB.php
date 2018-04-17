@@ -120,7 +120,7 @@ class GenericDB {
     public function selectAll(ReflectedTable $table, array $columnNames, array $columnOrdering, int $offset, int $limit): array {
         $selectColumns = $this->columns()->getSelect($table, $columnNames);
         $tableName = $table->getName();
-        $orderBy = $this->columns()->getOrderBy($columnOrdering);
+        $orderBy = $this->columns()->getOrderBy($table, $columnOrdering);
         $offsetLimit = $this->getOffsetLimit($offset, $limit);
         $pkName = $table->getPk()->getName(); 
         $stmt = $this->pdo->prepare('SELECT '.$selectColumns.' FROM "'.$tableName.'" ORDER BY '.$orderBy.' '.$offsetLimit);
