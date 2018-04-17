@@ -61,14 +61,14 @@ class GenericDB {
         return $this->columns;
     }
 
-    protected function getLastInsertIdSql(): String {
+    protected function getLastInsertId(): String {
         switch($this->driver) {
             case 'mysql': return 'LAST_INSERT_ID()';
             case 'pgsql': return 'LASTVAL()';
         }
     }
 
-    protected function getOffsetLimitSql(int $offset, int $limit): String {
+    protected function getOffsetLimit(int $offset, int $limit): String {
         if ($limit<0 || $offset<0) {
             return '';
         }
@@ -78,29 +78,18 @@ class GenericDB {
         }
     }
 
-    protected function getOrderBySql(array $columnOrdering) {
-        $sql = '';
-        foreach ($columnOrdering as $i=>list($columnName, $ordering)) {
-            if ($i>0) {
-                $sql .= ', ';
-            }
-            $sql .= '"'.$columnName.'" '.$ordering;
-        }
-        return $sql;
-    }
-    
     public function createSingle(ReflectedTable $table, array $columnValues) {
-        $insertColumns = $this->columns()->insert($table, $columnValues);
+        $insertColumns = $this->columns()->getInsert($table, $columnValues);
         $tableName = $table->getName();
         $stmt = $this->pdo->prepare('INSERT INTO "'.$tableName.'" '.$insertColumns);
         $stmt->execute(array_values($columnValues));
-        $stmt = $this->pdo->prepare('SELECT '.$this->getLastInsertIdSql());
+        $stmt = $this->pdo->prepare('SELECT '.$this->getLastInsertId());
         $stmt->execute();
         return $stmt->fetchColumn();
     }
 
     public function selectSingle(ReflectedTable $table, array $columnNames, String $id)/*: ?\stdClass*/ {
-        $selectColumns = $this->columns()->select($table, $columnNames);
+        $selectColumns = $this->columns()->getSelect($table, $columnNames);
         $tableName = $table->getName();
         $pkName = $table->getPk()->getName(); 
         $stmt = $this->pdo->prepare('SELECT '.$selectColumns.' FROM "'.$tableName.'" WHERE "'.$pkName.'" = ?');
@@ -112,7 +101,7 @@ class GenericDB {
         if (count($ids)==0) {
             return [];
         }
-        $selectColumns = $this->columns()->select($table, $columnNames);
+        $selectColumns = $this->columns()->getSelect($table, $columnNames);
         $tableName = $table->getName();
         $pkName = $table->getPk()->getName(); 
         $questionMarks = str_repeat('?,',count($ids)-1);
@@ -129,18 +118,18 @@ class GenericDB {
     }
 
     public function selectAll(ReflectedTable $table, array $columnNames, array $columnOrdering, int $offset, int $limit): array {
-        $selectColumns = $this->columns()->select($table, $columnNames);
+        $selectColumns = $this->columns()->getSelect($table, $columnNames);
         $tableName = $table->getName();
-        $orderBySql = $this->getOrderBySql($columnOrdering);
-        $offsetLimitSql = $this->getOffsetLimitSql($offset, $limit);
+        $orderBy = $this->columns()->getOrderBy($columnOrdering);
+        $offsetLimit = $this->getOffsetLimit($offset, $limit);
         $pkName = $table->getPk()->getName(); 
-        $stmt = $this->pdo->prepare('SELECT '.$selectColumns.' FROM "'.$tableName.'" ORDER BY '.$orderBySql.' '.$offsetLimitSql);
+        $stmt = $this->pdo->prepare('SELECT '.$selectColumns.' FROM "'.$tableName.'" ORDER BY '.$orderBy.' '.$offsetLimit);
         $stmt->execute();
         return $stmt->fetchAll();
     }
 
     public function updateSingle(ReflectedTable $table, array $columnValues, String $id) {
-        $updateColumns = $this->columns()->update($table, $columnValues);
+        $updateColumns = $this->columns()->getUpdate($table, $columnValues);
         $tableName = $table->getName();
         $pkName = $table->getPk()->getName(); 
         $stmt = $this->pdo->prepare('UPDATE "'.$tableName.'" SET '.$updateColumns.' WHERE "'.$pkName.'" = ?');

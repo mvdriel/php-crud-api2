@@ -20,7 +20,17 @@ class ColumnsBuilder {
         return '"'.$column->getName().'"';
     }
 
-    public function select(ReflectedTable $table, array $columnNames): String {
+    protected function getOrderBy(array $columnOrdering) {
+        $results = array();
+		foreach ($columnOrdering as $i=>list($columnName, $ordering)) {
+            $column = $table->get($columnName);
+            $quotedColumnName = $this->quoteColumnName($column);
+            $results[] = $quotedColumnName.' '.$ordering;
+        }
+        return implode(',', $results);
+    }
+
+    public function getSelect(ReflectedTable $table, array $columnNames): String {
         $results = array();
 		foreach ($columnNames as $columnName) {
 			$column = $table->get($columnName);
@@ -30,7 +40,7 @@ class ColumnsBuilder {
 		return implode(',', $results);
     }
 
-    public function insert(ReflectedTable $table, array $columnValues): String {
+    public function getInsert(ReflectedTable $table, array $columnValues): String {
         $columns = array();
 		$values = array();
 		foreach ($columnValues as $columnName => $columnValue) {
@@ -42,7 +52,7 @@ class ColumnsBuilder {
 		return '('.implode(',', $columns).') VALUES ('.implode(',', $values).')';
     }
 
-	public function update(ReflectedTable $table, array $columnValues): String {
+	public function getUpdate(ReflectedTable $table, array $columnValues): String {
         $results = array();
 		foreach ($columnValues as $columnName => $columnValue) {
             $column = $table->get($columnName);
@@ -52,7 +62,7 @@ class ColumnsBuilder {
 		return implode(',', $results);
     }
 
-    public function increment(ReflectedTable $table, array $columnValues): String {
+    public function getIncrement(ReflectedTable $table, array $columnValues): String {
         $results = array();
 		foreach ($columnValues as $columnName => $columnValue) {
             if (!is_numeric($columnValue)) {
