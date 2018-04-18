@@ -5,7 +5,7 @@ class PathTree {
 
 	protected $values = array();
 
-    protected $leaves = array();
+    protected $branches = array();
 
     public function getValues(): array {
         return $this->values;
@@ -17,18 +17,18 @@ class PathTree {
             return;
         }
         $key = array_shift($path);
-        if (!isset($this->leaves[$key])) {
-            $this->leaves[$key] = new PathTree();
+        if (!isset($this->branches[$key])) {
+            $this->branches[$key] = new PathTree();
         }
-        $tree = $this->leaves[$key];
+        $tree = $this->branches[$key];
         $tree->put($path, $value);
     }
 
     public function getKeys(): array {
-        return array_keys($this->leaves);
+        return array_keys($this->branches);
     }
 
     public function get($key): PathTree {
-        return $this->leaves[$key];
+        return $this->branches[$key];
     }
 }
