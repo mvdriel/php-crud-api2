@@ -6,43 +6,28 @@ use Com\Tqdev\CrudApi\Api\PathTree;
 
 class FilterInfo {    
    
+    protected function addConditionFromFilteraPath(PathTree $conditions, array $path, ReflectedTable $table, array $params): PathTree {
+        $key = 'filter'.implode('', $path);
+        if (isset($params[$key])) {
+            foreach ($params[$key] as $filter) {
+                $condition = getConditionFromString($table, $filter);
+                if ($condition != null) {
+                    $conditions->put($path, $condition);
+                }
+            }
+        }
+    }
+
     protected function getConditionsAsPathTree(ReflectedTable $table, array $params): PathTree {
         $conditions = new PathTree();
-        if (isset($params["filter"])) {
-            foreach ($params["filter"] as $filter) {
-                $condition = getConditionFromString($table, $filter);
-                if (condition != null) {
-                    LinkedList<Character> path = new LinkedList<Character>();
-                    conditions.put(path, condition);
-                }
+        $this->addConditionFromFilteraPath($conditions, [], $table, $params);
+        for ($n = ord('0'); $n <= ord('9'); $n++) {
+            $this->addConditionFromFilteraPath($conditions, [chr($n)], $table, $params);
+            for ($l = ord('a'); $l <= ord('f'); $l++) {
+                $this->addConditionFromFilteraPath($conditions, [chr($n),chr($l)], $table, $params);    
             }
         }
-        for (char n = '0'; n <= '9'; n++) {
-            if (params.containsKey("filter" + n)) {
-                for (String value : params.get("filter" + n)) {
-                    Condition condition = getConditionFromString(table, value);
-                    if (condition != null) {
-                        LinkedList<Character> path = new LinkedList<Character>();
-                        path.add(n);
-                        conditions.put(path, condition);
-                    }
-                }
-            }
-            for (char l = 'a'; l <= 'f'; l++) {
-                if (params.containsKey("filter" + n + l)) {
-                    for (String value : params.get("filter" + n + l)) {
-                        Condition condition = getConditionFromString(table, value);
-                        if (condition != null) {
-                            LinkedList<Character> path = new LinkedList<Character>();
-                            path.add(n);
-                            path.add(l);
-                            conditions.put(path, condition);
-                        }
-                    }
-                }
-            }
-        }
-        return conditions;
+        return $conditions;
     }
 
     private Condition combinePathTreeOfConditions(PathTree<Character, Condition> tree) {
@@ -87,7 +72,7 @@ class FilterInfo {
     private Condition getConditionFromString(ReflectedTable table, String value) {
         Condition condition = null;
         String[] parts2;
-        String[] parts = value.split(",", 3);
+        String[] parts = value.split(',', 3);
         if (parts.length < 2) {
             return null;
         }
@@ -106,78 +91,78 @@ class FilterInfo {
         }
         Field<Object> field = table.get(parts[0]);
         if (parts.length == 3
-                || (parts.length == 2 && (command.equals("ic") || command.equals("is") || command.equals("iv")))) {
+                || (parts.length == 2 && (command.equals('ic') || command.equals('is') || command.equals('iv')))) {
             if (spatial) {
                 switch (command) {
-                case "co":
+                case 'co':
                     condition = SpatialDSL.contains(field, SpatialDSL.geomFromText(DSL.val(parts[2])));
                     break;
-                case "cr":
+                case 'cr':
                     condition = SpatialDSL.crosses(field, SpatialDSL.geomFromText(DSL.val(parts[2])));
                     break;
-                case "di":
+                case 'di':
                     condition = SpatialDSL.disjoint(field, SpatialDSL.geomFromText(DSL.val(parts[2])));
                     break;
-                case "eq":
+                case 'eq':
                     condition = SpatialDSL.equals(field, SpatialDSL.geomFromText(DSL.val(parts[2])));
                     break;
-                case "in":
+                case 'in':
                     condition = SpatialDSL.intersects(field, SpatialDSL.geomFromText(DSL.val(parts[2])));
                     break;
-                case "ov":
+                case 'ov':
                     condition = SpatialDSL.overlaps(field, SpatialDSL.geomFromText(DSL.val(parts[2])));
                     break;
-                case "to":
+                case 'to':
                     condition = SpatialDSL.touches(field, SpatialDSL.geomFromText(DSL.val(parts[2])));
                     break;
-                case "wi":
+                case 'wi':
                     condition = SpatialDSL.within(field, SpatialDSL.geomFromText(DSL.val(parts[2])));
                     break;
-                case "ic":
+                case 'ic':
                     condition = SpatialDSL.isClosed(field);
                     break;
-                case "is":
+                case 'is':
                     condition = SpatialDSL.isSimple(field);
                     break;
-                case "iv":
+                case 'iv':
                     condition = SpatialDSL.isValid(field);
                     break;
                 }
             } else {
                 switch (command) {
-                case "cs":
+                case 'cs':
                     condition = field.contains(parts[2]);
                     break;
-                case "sw":
+                case 'sw':
                     condition = field.startsWith(parts[2]);
                     break;
-                case "ew":
+                case 'ew':
                     condition = field.endsWith(parts[2]);
                     break;
-                case "eq":
+                case 'eq':
                     condition = field.eq(parts[2]);
                     break;
-                case "lt":
+                case 'lt':
                     condition = field.lt(parts[2]);
                     break;
-                case "le":
+                case 'le':
                     condition = field.le(parts[2]);
                     break;
-                case "ge":
+                case 'ge':
                     condition = field.ge(parts[2]);
                     break;
-                case "gt":
+                case 'gt':
                     condition = field.gt(parts[2]);
                     break;
-                case "bt":
-                    parts2 = parts[2].split(",", 2);
+                case 'bt':
+                    parts2 = parts[2].split(',', 2);
                     condition = field.between(parts2[0], parts2[1]);
                     break;
-                case "in":
-                    parts2 = parts[2].split(",");
+                case 'in':
+                    parts2 = parts[2].split(',');
                     condition = field.in((Object[]) parts2);
                     break;
-                case "is":
+                case 'is':
                     condition = field.isNull();
                     break;
                 }

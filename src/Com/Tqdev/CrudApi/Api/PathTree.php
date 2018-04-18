@@ -3,24 +3,24 @@ namespace Com\Tqdev\CrudApi\Api;
 
 class PathTree {
 
-    private $values = array();
+	protected $values = array();
 
-    private $leaves = array();
-    
+    protected $leaves = array();
+
     public function getValues(): array {
-        return $values;
+        return $this->values;
     }
 
     public function put(array $path, $value) {
         if (count($path)==0) {
-            $values[] = $value;
+            $this->values[] = $value;
             return;
         }
         $key = array_shift($path);
-        if (!isset($leaves[$key])) {
-            $leaves[$key] = new PathTree();
+        if (!isset($this->leaves[$key])) {
+            $this->leaves[$key] = new PathTree();
         }
-        $tree = $leaves[$key];
+        $tree = $this->leaves[$key];
         $tree->put($path, $value);
     }
 
