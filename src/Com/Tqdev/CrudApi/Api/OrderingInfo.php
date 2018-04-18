@@ -8,8 +8,8 @@ class OrderingInfo {
     public function getColumnOrdering(ReflectedTable $table, array $params): array {
 		$fields = array();
 		if (isset($params['order'])) {
-			foreach ($params['order'] as $key) {
-                $parts = explode(',', $key, 3);
+			foreach ($params['order'] as $order) {
+                $parts = explode(',', $order, 3);
                 $columnName = $parts[0];
                 if (!$table->exists($columnName)) {
                     continue;

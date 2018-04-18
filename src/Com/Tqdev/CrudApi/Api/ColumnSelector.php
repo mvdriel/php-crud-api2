@@ -16,25 +16,25 @@ class ColumnSelector {
 			return $columnNames;
 		}
 		$columns = array();
-		foreach (explode(',',$params[$paramName][0]) as $key) {
-			$columns[$key] = true;
+		foreach (explode(',',$params[$paramName][0]) as $columnName) {
+			$columns[$columnName] = true;
 		}
 		$result = array();
-		foreach ($columnNames as $key) {
+		foreach ($columnNames as $columnName) {
 			$match = isset($columns['*.*']);
 			if (!$match) {
-				$match = isset($columns[$tableName . '.*']) || isset($columns[$tableName . '.' . $key]);
+				$match = isset($columns[$tableName . '.*']) || isset($columns[$tableName . '.' . $columnName]);
 			}
 			if ($primaryTable && !$match) {
-				$match = isset($columns['*']) || isset($columns[$key]);
+				$match = isset($columns['*']) || isset($columns[$columnName]);
 			}
 			if ($match) {
-				if ($include || $this->isMandatory($tableName, $key, $params)) {
-					$result[] = $key;
+				if ($include || $this->isMandatory($tableName, $columnName, $params)) {
+					$result[] = $columnName;
 				}
 			} else {
-				if (!$include || $this->isMandatory($tableName, $key, $params)) {
-					$result[] = $key;
+				if (!$include || $this->isMandatory($tableName, $columnName, $params)) {
+					$result[] = $columnName;
 				}
 			}
 		}

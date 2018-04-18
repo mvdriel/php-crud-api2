@@ -13,8 +13,8 @@ class PaginationInfo {
 		$offset = 0;
 		$pageSize = $this->getPageSize($params);
 		if (isset($params['page'])) {
-			foreach ($params['page'] as $key) {
-				$parts = explode(',', $key, 2);
+			foreach ($params['page'] as $page) {
+				$parts = explode(',', $page, 2);
 				$page = intval($parts[0]) - 1;
 				$offset = $page * $pageSize;
 			}
@@ -25,8 +25,8 @@ class PaginationInfo {
 	public function getPageSize(array $params): int {
 		$pageSize = $this->DEFAULT_PAGE_SIZE;
 		if (isset($params['page'])) {
-			foreach ($params['page'] as $key) {
-				$parts = explode(',', $key, 2);
+			foreach ($params['page'] as $page) {
+				$parts = explode(',', $page, 2);
 				if (count($parts) > 1) {
 					$pageSize = intval($parts[1]);
 				}
@@ -38,8 +38,8 @@ class PaginationInfo {
 	public function getResultSize(array $params): int {
 		$numberOfRows = -1;
 		if (isset($params['size'])) {
-			foreach ($params['size'] as $key) {
-				$numberOfRows = intval($key);
+			foreach ($params['size'] as $size) {
+				$numberOfRows = intval($size);
 			}
 		}
 		return $numberOfRows;
