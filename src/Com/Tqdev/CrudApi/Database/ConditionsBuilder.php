@@ -130,51 +130,63 @@ class ConditionsBuilder {
         return $sql;
     }
 
+    protected function getSpatialFunctionCall(String $name, String $arg1, String $arg2) {
+        switch ($this->driver) {
+            case 'mysql': 
+            case 'pgsql': 
+                return "$name($arg1, $arg2)=TRUE";
+            case 'sql_srv': 
+                $name = str_replace('_','',$name); 
+                $arg2 = str_replace('ST_GeomFromText(?)','geometry::STGeomFromText(?,0)',$arg2);
+                return "$arg1.$name($arg2)=1";
+        }
+    }
+
     protected function getSpatialConditionSql(ColumnCondition $condition, array &$arguments): String {
         $column = $this->quoteColumnName($condition->getColumn());
         $operator = $condition->getOperator();
         $value = $condition->getValue();
         switch($operator) {
             case 'co': 
-                $sql = "ST_Contains($column,ST_GeomFromText(?))";
+                $sql = $this->getSpatialFunctionCall('ST_Contains',$column,'ST_GeomFromText(?)');
                 $arguments[] = $value;
                 break;
             case 'cr': 
-                $sql = "ST_Crosses($column,ST_GeomFromText(?))";
+                $sql = $this->getSpatialFunctionCall('ST_Crosses',$column,'ST_GeomFromText(?)');
                 $arguments[] = $value;
                 break;
             case 'di': 
-                $sql = "ST_Disjoint($column,ST_GeomFromText(?))";
+                $sql = $this->getSpatialFunctionCall('ST_Disjoint',$column,'ST_GeomFromText(?)');
                 $arguments[] = $value;
                 break;
             case 'eq': 
-                $sql = "ST_Equals($column,ST_GeomFromText(?))";
+                $sql = $this->getSpatialFunctionCall('ST_Equals',$column,'ST_GeomFromText(?)');
                 $arguments[] = $value;
                 break;
             case 'in': 
-                $sql = "ST_Intersects($column,ST_GeomFromText(?))";
+                $sql = $this->getSpatialFunctionCall('ST_Intersects',$column,'ST_GeomFromText(?)');
                 $arguments[] = $value;
                 break;
             case 'ov': 
-                $sql = "ST_Overlaps($column,ST_GeomFromText(?))";
+                $sql = $this->getSpatialFunctionCall('ST_Overlaps',$column,'ST_GeomFromText(?)');
                 $arguments[] = $value;
                 break;
             case 'to': 
-                $sql = "ST_Touches($column,ST_GeomFromText(?))";
+                $sql = $this->getSpatialFunctionCall('ST_Touches',$column,'ST_GeomFromText(?)');
                 $arguments[] = $value;
                 break;
             case 'wi': 
-                $sql = "ST_Within($column,ST_GeomFromText(?))";
+                $sql = $this->getSpatialFunctionCall('ST_Within',$column,'ST_GeomFromText(?)');
                 $arguments[] = $value;
                 break;
             case 'ic': 
-                $sql = "ST_IsClosed($column)";
+                $sql = $this->getSpatialFunctionCall('ST_IsClosed',$column,'');
                 break;
             case 'is': 
-                $sql = "ST_IsSimple($column)";
+                $sql = $this->getSpatialFunctionCall('ST_IsSimple',$column,'');
                 break;
             case 'iv': 
-                $sql = "ST_IsValid($column)";
+                $sql = $this->getSpatialFunctionCall('ST_IsValid',$column,'');
                 break;
         }
         return $sql;
