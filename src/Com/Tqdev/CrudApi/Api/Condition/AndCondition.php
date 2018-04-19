@@ -1,7 +1,7 @@
 <?php
 namespace Com\Tqdev\CrudApi\Api\Condition;
 
-class OrCondition extends Condition
+class AndCondition extends Condition
 {
     protected $conditions;
 
@@ -9,7 +9,7 @@ class OrCondition extends Condition
         $this->conditions = [$condition1, $condition2];
     }
 
-    public function or(Condition $condition): Condition {
+    public function and(Condition $condition): Condition {
         $this->conditions[] = $condition;
         return $this;
     }
@@ -25,9 +25,9 @@ class OrCondition extends Condition
         if (count($conditions)==1) {
             return $conditions[0];
         }
-        $condition = new OrCondition($conditions[0], $conditions[1]);
+        $condition = new AndCondition($conditions[0], $conditions[1]);
         for ($i=2;$i<count($conditions);$i++) {
-            $condition = $condition->or($conditions[$i]);
+            $condition = $condition->and($conditions[$i]);
         }
         return $condition;
     }

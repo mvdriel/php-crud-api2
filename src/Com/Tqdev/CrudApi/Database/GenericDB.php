@@ -46,7 +46,8 @@ class GenericDB {
             $this->pdo->query($command);
         }
         $this->meta = new GenericMeta($this->pdo, $driver, $database);
-        $this->columns = new ColumnsBuilder($this->pdo, $driver, $database);
+        $this->columns = new ColumnsBuilder($driver);
+        $this->conditions = new ConditionsBuilder($driver);
     }
 
     public function pdo(): \PDO {
@@ -57,39 +58,18 @@ class GenericDB {
         return $this->meta;
     }
 
-    public function columns(): ColumnsBuilder {
-        return $this->columns;
-    }
-
-    protected function getLastInsertId(): String {
-        switch($this->driver) {
-            case 'mysql': return 'LAST_INSERT_ID()';
-            case 'pgsql': return 'LASTVAL()';
-        }
-    }
-
-    protected function getOffsetLimit(int $offset, int $limit): String {
-        if ($limit<0 || $offset<0) {
-            return '';
-        }
-        switch($this->driver) {
-            case 'mysql': return "LIMIT $offset, $limit";
-            case 'pgsql': return "LIMIT $limit OFFSET $offset";
-        }
-    }
-
     public function createSingle(ReflectedTable $table, array $columnValues) {
-        $insertColumns = $this->columns()->getInsert($table, $columnValues);
+        $insertColumns = $this->columns->getInsert($table, $columnValues);
         $tableName = $table->getName();
         $stmt = $this->pdo->prepare('INSERT INTO "'.$tableName.'" '.$insertColumns);
         $stmt->execute(array_values($columnValues));
-        $stmt = $this->pdo->prepare('SELECT '.$this->getLastInsertId());
+        $stmt = $this->pdo->prepare('SELECT '.$this->columns->getLastInsertId());
         $stmt->execute();
         return $stmt->fetchColumn();
     }
 
     public function selectSingle(ReflectedTable $table, array $columnNames, String $id)/*: ?\stdClass*/ {
-        $selectColumns = $this->columns()->getSelect($table, $columnNames);
+        $selectColumns = $this->columns->getSelect($table, $columnNames);
         $tableName = $table->getName();
         $pkName = $table->getPk()->getName(); 
         $stmt = $this->pdo->prepare('SELECT '.$selectColumns.' FROM "'.$tableName.'" WHERE "'.$pkName.'" = ?');
@@ -101,7 +81,7 @@ class GenericDB {
         if (count($ids)==0) {
             return [];
         }
-        $selectColumns = $this->columns()->getSelect($table, $columnNames);
+        $selectColumns = $this->columns->getSelect($table, $columnNames);
         $tableName = $table->getName();
         $pkName = $table->getPk()->getName(); 
         $questionMarks = str_repeat('?,',count($ids)-1);
@@ -110,26 +90,28 @@ class GenericDB {
         return $stmt->fetchAll();
     }
 
-    public function selectCount(ReflectedTable $table): int {
+    public function selectCount(ReflectedTable $table, array $conditions): int {
         $tableName = $table->getName();
-        $stmt = $this->pdo->prepare('SELECT COUNT(*) FROM "'.$tableName.'"');
+        $whereClause = $this->conditions->getWhereClause($conditions);
+        $stmt = $this->pdo->prepare('SELECT COUNT(*) FROM "'.$tableName.'"'.$whereClause);
         $stmt->execute();
         return $stmt->fetchColumn(0);
     }
 
-    public function selectAll(ReflectedTable $table, array $columnNames, array $columnOrdering, int $offset, int $limit): array {
-        $selectColumns = $this->columns()->getSelect($table, $columnNames);
+    public function selectAll(ReflectedTable $table, array $columnNames, array $conditions, array $columnOrdering, int $offset, int $limit): array {
+        $selectColumns = $this->columns->getSelect($table, $columnNames);
         $tableName = $table->getName();
-        $orderBy = $this->columns()->getOrderBy($table, $columnOrdering);
-        $offsetLimit = $this->getOffsetLimit($offset, $limit);
+        $whereClause = $this->conditions->getWhereClause($conditions);
+        $orderBy = $this->columns->getOrderBy($table, $columnOrdering);
+        $offsetLimit = $this->columns->getOffsetLimit($offset, $limit);
         $pkName = $table->getPk()->getName(); 
-        $stmt = $this->pdo->prepare('SELECT '.$selectColumns.' FROM "'.$tableName.'" ORDER BY '.$orderBy.' '.$offsetLimit);
+        $stmt = $this->pdo->prepare('SELECT '.$selectColumns.' FROM "'.$tableName.'"'.$whereClause.' ORDER BY '.$orderBy.' '.$offsetLimit);
         $stmt->execute();
         return $stmt->fetchAll();
     }
 
     public function updateSingle(ReflectedTable $table, array $columnValues, String $id) {
-        $updateColumns = $this->columns()->getUpdate($table, $columnValues);
+        $updateColumns = $this->columns->getUpdate($table, $columnValues);
         $tableName = $table->getName();
         $pkName = $table->getPk()->getName(); 
         $stmt = $this->pdo->prepare('UPDATE "'.$tableName.'" SET '.$updateColumns.' WHERE "'.$pkName.'" = ?');

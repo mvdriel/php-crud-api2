@@ -6,14 +6,27 @@ use Com\Tqdev\CrudApi\Meta\Reflection\ReflectedTable;
 
 class ColumnsBuilder {
     
-    protected $pdo;
     protected $driver;
-    protected $database;
 
-    public function __construct(\PDO $pdo, String $driver, String $database = null) {
-        $this->pdo = $pdo;
+    public function __construct(String $driver) {
         $this->driver = $driver;
-        $this->database = $database;
+    }
+
+    public function getLastInsertId(): String {
+        switch($this->driver) {
+            case 'mysql': return 'LAST_INSERT_ID()';
+            case 'pgsql': return 'LASTVAL()';
+        }
+    }
+
+    public function getOffsetLimit(int $offset, int $limit): String {
+        if ($limit<0 || $offset<0) {
+            return '';
+        }
+        switch($this->driver) {
+            case 'mysql': return "LIMIT $offset, $limit";
+            case 'pgsql': return "LIMIT $limit OFFSET $offset";
+        }
     }
 
     protected function quoteColumnName(ReflectedColumn $column): String {
