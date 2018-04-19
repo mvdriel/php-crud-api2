@@ -44,7 +44,7 @@ abstract class Condition
                 }
             } else {
                 if (in_array($command,['cs','sw','ew','eq','lt','le','ge','gt','bt','in','is'])) {
-                    $condition = new FieldCondition($field, $command, $parts[2]);
+                    $condition = new ColumnCondition($field, $command, $parts[2]);
                 }
             }
         }

@@ -1,6 +1,6 @@
 <?php
 namespace Com\Tqdev\CrudApi\Api\Condition;
 
-class SpatialCondition extends FieldCondition
+class SpatialCondition extends ColumnCondition
 {
 }

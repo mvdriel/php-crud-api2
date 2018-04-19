@@ -3,15 +3,15 @@ namespace Com\Tqdev\CrudApi\Api\Condition;
 
 use Com\Tqdev\CrudApi\Meta\Reflection\ReflectedColumn;
 
-class FieldCondition extends Condition
+class ColumnCondition extends Condition
 {
     protected $column;
-    protected $operand;
+    protected $operator;
     protected $value;
     
-    public function __construct(ReflectedColumn $column, String $operand, String $value) {
+    public function __construct(ReflectedColumn $column, String $operator, String $value) {
         $this->column = $column;
-        $this->operand = $operand;
+        $this->operator = $operator;
         $this->value = $value;
     }
 
@@ -19,8 +19,8 @@ class FieldCondition extends Condition
         return $this->column;
     }
 
-    public function getOperand(): String {
-        return $this->operand;
+    public function getOperator(): String {
+        return $this->operator;
     }
 
     public function getValue(): String {

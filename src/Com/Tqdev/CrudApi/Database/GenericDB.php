@@ -92,21 +92,23 @@ class GenericDB {
 
     public function selectCount(ReflectedTable $table, array $conditions): int {
         $tableName = $table->getName();
-        $whereClause = $this->conditions->getWhereClause($conditions);
+        $parameters = array();
+        $whereClause = $this->conditions->getWhereClause($conditions, $parameters);
         $stmt = $this->pdo->prepare('SELECT COUNT(*) FROM "'.$tableName.'"'.$whereClause);
-        $stmt->execute();
+        $stmt->execute($parameters);
         return $stmt->fetchColumn(0);
     }
 
     public function selectAll(ReflectedTable $table, array $columnNames, array $conditions, array $columnOrdering, int $offset, int $limit): array {
         $selectColumns = $this->columns->getSelect($table, $columnNames);
         $tableName = $table->getName();
-        $whereClause = $this->conditions->getWhereClause($conditions);
+        $parameters = array();
+        $whereClause = $this->conditions->getWhereClause($conditions, $parameters);
         $orderBy = $this->columns->getOrderBy($table, $columnOrdering);
         $offsetLimit = $this->columns->getOffsetLimit($offset, $limit);
         $pkName = $table->getPk()->getName(); 
         $stmt = $this->pdo->prepare('SELECT '.$selectColumns.' FROM "'.$tableName.'"'.$whereClause.' ORDER BY '.$orderBy.' '.$offsetLimit);
-        $stmt->execute();
+        $stmt->execute($parameters);
         return $stmt->fetchAll();
     }
 
