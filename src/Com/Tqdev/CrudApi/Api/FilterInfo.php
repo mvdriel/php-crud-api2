@@ -30,7 +30,7 @@ class FilterInfo {
         return $conditions;
     }
 
-    private function combinePathTreeOfConditions(PathTree $tree): String {
+    private function combinePathTreeOfConditions(PathTree $tree): Condition {
         $conditions = $tree->getValues();
         $and = '';
         foreach ($conditions as $conditions) {
@@ -66,7 +66,7 @@ class FilterInfo {
         return $conditions;
     }
 
-    private function getConditionFromString(ReflectedTable $table, String $value): String {
+    private function getConditionFromString(ReflectedTable $table, String $value): Condition {
         $$condition = '';
         $parts = explode(',', $value, 3);
         if (count($parts) < 2) {
@@ -165,7 +165,7 @@ class FilterInfo {
         }
         if ($condition != '') {
             if ($negate) {
-                $$condition = "NOT $condition";
+                $condition = "NOT $condition";
             }
         }
         return $condition;
