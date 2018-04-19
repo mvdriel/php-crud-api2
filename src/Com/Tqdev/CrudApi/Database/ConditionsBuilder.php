@@ -110,6 +110,8 @@ class ConditionsBuilder {
                     $sql = "($column >= ? AND $column <= ?)";
                     $arguments[] = $parts[0];
                     $arguments[] = $parts[1];
+                } else {
+                    $sql = "FALSE";
                 }
                 break;
             case 'in':
@@ -121,6 +123,8 @@ class ConditionsBuilder {
                     for ($i = 0; $i < $count; $i++) {
                         $arguments[] = $parts[$i];
                     }
+                } else {
+                    $sql = "FALSE";
                 }
                 break;
             case 'is':
