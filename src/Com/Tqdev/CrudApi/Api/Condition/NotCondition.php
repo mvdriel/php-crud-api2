@@ -5,10 +5,10 @@ class NotCondition extends Condition
 {
     protected $condition;
 
-    public function not(Condition $condition): Condition {
+    public function __construct(Condition $condition){
         $this->condition = $condition;
     }
-    
+
     public function getCondition(): array {
         return $this->condition;
     }
