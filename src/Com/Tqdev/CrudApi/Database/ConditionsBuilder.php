@@ -134,15 +134,37 @@ class ConditionsBuilder {
         return $sql;
     }
 
-    protected function getSpatialFunctionCall(String $name, String $arg1, String $arg2) {
+    protected function getSpatialFunctionName(String $operator): String {
+        switch ($operator) {
+            case 'co': return 'ST_Contains';
+            case 'cr': return 'ST_Crosses';
+            case 'di': return 'ST_Disjoint';
+            case 'eq': return 'ST_Equals';
+            case 'in': return 'ST_Intersects';
+            case 'ov': return 'ST_Overlaps';
+            case 'to': return 'ST_Touches';
+            case 'wi': return 'ST_Within';
+            case 'ic': return 'ST_IsClosed';
+            case 'is': return 'ST_IsSimple';
+            case 'iv': return 'ST_IsValid';
+        }
+    }
+
+    protected function hasSpatialArgument(String $operator): bool {
+        return in_array($opertor, ['ic', 'is', 'iv'])?false:true;
+    }
+
+
+    protected function getSpatialFunctionCall(String $functionName, String $column, bool $hasArgument): String {
+        $argument = $hasArgument ? 'ST_GeomFromText(?)' : '';
         switch ($this->driver) {
             case 'mysql': 
             case 'pgsql': 
-                return "$name($arg1, $arg2)=TRUE";
+                return "$functionName($column, $argument)=TRUE";
             case 'sql_srv': 
-                $name = str_replace('_','',$name); 
-                $arg2 = str_replace('ST_GeomFromText(?)','geometry::STGeomFromText(?,0)',$arg2);
-                return "$arg1.$name($arg2)=1";
+                $functionName = str_replace('_','',$functionName); 
+                $argument = str_replace('ST_GeomFromText(?)','geometry::STGeomFromText(?,0)',$argument);
+                return "$column.$functionName($argument)=1";
         }
     }
 
@@ -150,48 +172,11 @@ class ConditionsBuilder {
         $column = $this->quoteColumnName($condition->getColumn());
         $operator = $condition->getOperator();
         $value = $condition->getValue();
-        switch($operator) {
-            case 'co': 
-                $sql = $this->getSpatialFunctionCall('ST_Contains',$column,'ST_GeomFromText(?)');
-                $arguments[] = $value;
-                break;
-            case 'cr': 
-                $sql = $this->getSpatialFunctionCall('ST_Crosses',$column,'ST_GeomFromText(?)');
-                $arguments[] = $value;
-                break;
-            case 'di': 
-                $sql = $this->getSpatialFunctionCall('ST_Disjoint',$column,'ST_GeomFromText(?)');
-                $arguments[] = $value;
-                break;
-            case 'eq': 
-                $sql = $this->getSpatialFunctionCall('ST_Equals',$column,'ST_GeomFromText(?)');
-                $arguments[] = $value;
-                break;
-            case 'in': 
-                $sql = $this->getSpatialFunctionCall('ST_Intersects',$column,'ST_GeomFromText(?)');
-                $arguments[] = $value;
-                break;
-            case 'ov': 
-                $sql = $this->getSpatialFunctionCall('ST_Overlaps',$column,'ST_GeomFromText(?)');
-                $arguments[] = $value;
-                break;
-            case 'to': 
-                $sql = $this->getSpatialFunctionCall('ST_Touches',$column,'ST_GeomFromText(?)');
-                $arguments[] = $value;
-                break;
-            case 'wi': 
-                $sql = $this->getSpatialFunctionCall('ST_Within',$column,'ST_GeomFromText(?)');
-                $arguments[] = $value;
-                break;
-            case 'ic': 
-                $sql = $this->getSpatialFunctionCall('ST_IsClosed',$column,'');
-                break;
-            case 'is': 
-                $sql = $this->getSpatialFunctionCall('ST_IsSimple',$column,'');
-                break;
-            case 'iv': 
-                $sql = $this->getSpatialFunctionCall('ST_IsValid',$column,'');
-                break;
+        $functionName = $this->getSpatialFunctionName($operator);
+        $hasArgument = $this->hasSpatialArgument($operator);
+        $sql = $this->getSpatialFunctionCall($functionName, $column, $hasArgument);
+        if ($hasArgument) {
+            $arguments[] = $value;
         }
         return $sql;
     }
