@@ -25,4 +25,7 @@ class DatabaseReflection {
         return $this->tables[$tableName];
     }
 
+    public function getTableNames(): array {
+        return array_keys($this->tables);
+    }
 }

@@ -2,6 +2,7 @@
 namespace Com\Tqdev\CrudApi\Api;
 
 use Com\Tqdev\CrudApi\Meta\Reflection\DatabaseReflection;
+use Com\Tqdev\CrudApi\Database\GenericDB;
 
 class RelationIncluder {
     
@@ -43,9 +44,9 @@ class RelationIncluder {
 		}
 	}
 
-	public function addIncludes(String $tableName, Record $record, DatabaseReflection $tables, array $params, DSLContext $dsl): void {
+	public function addIncludesToRecord(String $tableName, Record $record, DatabaseReflection $tables, array $params, GenericDB $db): void {
 		$records = array($record);
-		$this->addIncludes($tableName, $records, $tables, $params, $dsl);
+		$this->addIncludes($tableName, $records, $tables, $params, $db);
 	}
 
 	private function getIncludesAsTreeMap(DatabaseReflection $tables, array $params): TreeMap {
@@ -65,31 +66,31 @@ class RelationIncluder {
         return $includes;
 	}
 
-	/*public function addIncludes(String $tableName, array $records, DatabaseReflection $tables, array $params,
-			DSLContext $dsl): void {
+	public function addIncludesToRecords(String $tableName, array $records, DatabaseReflection $tables, array $params,
+			GenericDB $db): void {
 
 		$includes = $this->getIncludesAsTreeMap($tables, $params);
 		$this->addIncludesForTables(tables.get(tableName), includes, records, tables, params, dsl);
 	}
 
     
-	private ReflectedTable hasAndBelongsToMany(ReflectedTable t1, ReflectedTable t2, DatabaseReflection tables) {
-		for (String tableName : tables.tableNames()) {
-			ReflectedTable t3 = tables.get(tableName);
-			if (!t3.getFksTo(t1.getName()).isEmpty() && !t3.getFksTo(t2.getName()).isEmpty()) {
-				return t3;
+	private function hasAndBelongsToMany(ReflectedTable $t1, ReflectedTable $t2, DatabaseReflection $tables)/*: ?ReflectedTable*/ {
+		foreach ($tables->getTableNames() as $tableName) {
+			$t3 = $tables->get($tableName);
+			if (count($t3->getFksTo($t1->getName()))>0 && count($t3->getFksTo($t2->getName()))>0) {
+				return $t3;
 			}
 		}
 		return null;
 	}
 
-	private class HabtmValues {
+	/*private class HabtmValues {
 		protected HashMap<Object, ArrayList<Object>> pkValues = new HashMap<>();
 		protected HashMap<Object, Object> fkValues = new HashMap<>();
 	}
 
 	private void addIncludesForTables(ReflectedTable t1, TreeMap<ReflectedTable> includes, ArrayList<Record> records,
-			DatabaseReflection tables, Params params, DSLContext dsl) {
+			DatabaseReflection tables, Params params, GenericDB dsl) {
 
 		for (ReflectedTable t2 : includes.keySet()) {
 
@@ -148,7 +149,7 @@ class RelationIncluder {
 		return fkValues;
 	}
 
-	private void addFkRecords(ReflectedTable t2, HashMap<Object, Object> fkValues, Params params, DSLContext dsl,
+	private void addFkRecords(ReflectedTable t2, HashMap<Object, Object> fkValues, Params params, GenericDB dsl,
 			ArrayList<Record> records) {
 		Field<Object> pk = t2.getPk();
 		ArrayList<Field<?>> fields = columns.getColumnNames(t2, false, params);
@@ -190,7 +191,7 @@ class RelationIncluder {
 	}
 
 	private void addPkRecords(ReflectedTable t1, ReflectedTable t2, HashMap<Object, ArrayList<Object>> pkValues,
-			Params params, DSLContext dsl, ArrayList<Record> records) {
+			Params params, GenericDB dsl, ArrayList<Record> records) {
 		List<Field<Object>> fks = t2.getFksTo(t1.getName());
 		ArrayList<Field<?>> fields = columns.getColumnNames(t2, false, params);
 		Condition condition = DSL.falseCondition();
@@ -225,7 +226,7 @@ class RelationIncluder {
 		}
 	}
 
-	private HabtmValues getHabtmEmptyValues(ReflectedTable t1, ReflectedTable t2, ReflectedTable t3, DSLContext dsl,
+	private HabtmValues getHabtmEmptyValues(ReflectedTable t1, ReflectedTable t2, ReflectedTable t3, GenericDB dsl,
 			ArrayList<Record> records) {
 		HashMap<Object, ArrayList<Object>> pkValues = getPkEmptyValues(t1, records);
 		HashMap<Object, Object> fkValues = new HashMap<>();
