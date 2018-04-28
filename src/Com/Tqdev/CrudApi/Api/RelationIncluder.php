@@ -22,10 +22,10 @@ class RelationIncluder
         foreach ($params['include'] as $includedTableNames) {
             $t1 = $tables->get($tableName);
             foreach (explode(',', $includedTableNames) as $includedTableName) {
-                $t2 = $tables->get($includedTableName);
-                if ($t2 == null) {
+                if (!$tables->exists($includedTableName)) {
                     continue;
                 }
+                $t2 = $tables->get($includedTableName);
                 $params['mandatory'] = array();
                 $fks1 = $t1->getFksTo($t2->getName());
                 $t3 = $this->hasAndBelongsToMany($t1, $t2, $tables);
@@ -134,131 +134,138 @@ class RelationIncluder
         }
     }
 
-/*private HashMap<Object, Object> getFkEmptyValues(ReflectedTable t1, ReflectedTable t2, ArrayList<Record> records) {
-HashMap<Object, Object> fkValues = new HashMap<>();
-List<Field<Object>> fks = t1.getFksTo(t2.getName());
-for (Field<Object> fk : fks) {
-for (Record record : records) {
-Object fkValue = record.get(fk.getName());
-if (fkValue == null) {
-continue;
-}
-fkValues.put(fkValue, null);
-}
-}
-return fkValues;
-}
+    private function getFkEmptyValues(ReflectedTable $t1, ReflectedTable $t2, array $records): array
+    {
+        $fkValues = array();
+        $fks = $t1->getFksTo($t2->getName());
+        foreach ($fks as $fk) {
+            $fkName = $fk->getName();
+            foreach ($records as $record) {
+                if (isset($record[$fkName])) {
+                    $fkValue = $record[$fkName];
+                    $fkValues[$fkValue] = null;
+                }
+            }
+        }
+        return $fkValues;
+    }
 
-private void addFkRecords(ReflectedTable t2, HashMap<Object, Object> fkValues, Params params, GenericDB db,
-ArrayList<Record> records) {
-Field<Object> pk = t2.getPk();
-ArrayList<Field<?>> fields = columns.getColumnNames(t2, false, params);
-ResultQuery<org.jooq.Record> query = db.select(fields).from(t2).where(pk.in(fkValues.keySet()));
-for (org.jooq.Record record : query.fetch()) {
-records.add(Record.valueOf(record.intoMap()));
-}
-}
+    private function addFkRecords(ReflectedTable $t2, array $fkValues, array $params, GenericDB $db, array &$records): void
+    {
+        $pk = $t2->getPk();
+        $columnNames = $columns->getColumnNames($t2, false, $params);
+        $fkIds = array_keys($fkValues);
 
-private void fillFkValues(ReflectedTable t2, ArrayList<Record> fkRecords, HashMap<Object, Object> fkValues) {
-Field<Object> pk = t2.getPk();
-for (Record fkRecord : fkRecords) {
-Object pkValue = fkRecord.get(pk.getName());
-fkValues.put(pkValue, fkRecord);
-}
-}
+        foreach ($db->selectMultiple($t2, $columnNames, $fkIds) as $record) {
+            $records[] = $record;
+        }
+    }
 
-private void setFkValues(ReflectedTable t1, ReflectedTable t2, ArrayList<Record> records,
-HashMap<Object, Object> fkValues) {
-List<Field<Object>> fks = t1.getFksTo(t2.getName());
-for (Field<Object> fk : fks) {
-for (Record record : records) {
-Object key = record.get(fk.getName());
-if (key == null) {
-continue;
-}
-record.put(fk.getName(), fkValues.get(key));
-}
-}
-}
+    private function fillFkValues(ReflectedTable $t2, array $fkRecords, array &$fkValues): void
+    {
+        $pkName = $t2->getPk()->getName();
+        foreach ($fkRecords as $fkRecord) {
+            $pkValue = $fkRecord[$pkName];
+            $fkValues[$pkValue] = $fkRecord;
+        }
+    }
 
-private HashMap<Object, ArrayList<Object>> getPkEmptyValues(ReflectedTable t1, ArrayList<Record> records) {
-HashMap<Object, ArrayList<Object>> pkValues = new HashMap<>();
-for (Record record : records) {
-Object key = record.get(t1.getPk().getName());
-pkValues.put(key, new ArrayList<>());
-}
-return pkValues;
-}
+    private function setFkValues(ReflectedTable $t1, ReflectedTable $t2, array &$records, array $fkValues): void
+    {
+        $fks = $t1->getFksTo($t2->getName());
+        foreach ($fks as $fk) {
+            $fkName = $fk->getName();
+            foreach ($records as $i => $record) {
+                if (isset($record[$fkName])) {
+                    $records[$i][$fkName] = $fkValues[$key];
+                }
+            }
+        }
+    }
 
-private void addPkRecords(ReflectedTable t1, ReflectedTable t2, HashMap<Object, ArrayList<Object>> pkValues,
-Params params, GenericDB db, ArrayList<Record> records) {
-List<Field<Object>> fks = t2.getFksTo(t1.getName());
-ArrayList<Field<?>> fields = columns.getColumnNames(t2, false, params);
-Condition condition = db.falseCondition();
-for (Field<Object> fk : fks) {
-condition = condition.or(fk.in(pkValues.keySet()));
-}
-ResultQuery<org.jooq.Record> query = db.select(fields).from(t2).where(condition);
-for (org.jooq.Record record : query.fetch()) {
-records.add(Record.valueOf(record.intoMap()));
-}
-}
+    private function getPkEmptyValues(ReflectedTable $t1, array $records): array
+    {
+        $pkValues = array();
+        $pkName = $t1->getPk()->getName();
+        foreach ($records as $record) {
+            $key = $record[$pkName];
+            $pkValues[$key] = array();
+        }
+        return $pkValues;
+    }
 
-private void fillPkValues(ReflectedTable t1, ReflectedTable t2, ArrayList<Record> pkRecords,
-HashMap<Object, ArrayList<Object>> pkValues) {
-List<Field<Object>> fks = t2.getFksTo(t1.getName());
-for (Field<Object> fk : fks) {
-for (Record pkRecord : pkRecords) {
-Object key = pkRecord.get(fk.getName());
-ArrayList<Object> records = pkValues.get(key);
-if (records != null) {
-records.add(pkRecord);
-}
-}
-}
-}
+    private function addPkRecords(ReflectedTable $t1, ReflectedTable $t2, array $pkValues, array $params, GenericDB $db, array &$records): void
+    {
+        $fks = $t2->getFksTo($t1->getName());
+        $columnNames = $columns->getColumnNames($t2, false, $params);
+        $fkIds = array_keys($pkValues);
 
-private void setPkValues(ReflectedTable t1, ReflectedTable t2, ArrayList<Record> records,
-HashMap<Object, ArrayList<Object>> pkValues) {
-for (Record record : records) {
-Object key = record.get(t1.getPk().getName());
-record.put(t2.getName(), pkValues.get(key));
-}
-}
+        foreach ($db->selectMultiple($t2, $columnNames, $fkIds) as $record) {
+            $records[] = $record;
+        }
+    }
 
-private HabtmValues getHabtmEmptyValues(ReflectedTable t1, ReflectedTable t2, ReflectedTable t3, GenericDB db,
-ArrayList<Record> records) {
-HashMap<Object, ArrayList<Object>> pkValues = getPkEmptyValues(t1, records);
-HashMap<Object, Object> fkValues = new HashMap<>();
+    private function fillPkValues(ReflectedTable $t1, ReflectedTable $t2, array $pkRecords, array &$pkValues): void
+    {
+        $fks = $t2->getFksTo($t1->getName());
+        foreach ($fks as $fk) {
+            $fkName = $fk->getName();
+            foreach ($pkRecords as $pkRecord) {
+                $key = $pkRecord[$fkName];
+                if (isset($pkValues[$key])) {
+                    $pkValues[$key][] = $pkRecord;
+                }
+            }
+        }
+    }
 
-Field<Object> fk1 = t3.getFksTo(t1.getName()).get(0);
-Field<Object> fk2 = t3.getFksTo(t2.getName()).get(0);
-List<Field<?>> fields = Arrays.asList(fk1, fk2);
-Condition condition = fk1.in(pkValues.keySet());
-ResultQuery<org.jooq.Record> query = db.select(fields).from(t3).where(condition);
-for (org.jooq.Record record : query.fetch()) {
-Object val1 = record.get(fk1);
-Object val2 = record.get(fk2);
-pkValues.get(val1).add(val2);
-fkValues.put(val2, null);
-}
+    private function setPkValues(ReflectedTable $t1, ReflectedTable $t2, array &$records, array $pkValues): void
+    {
+        $pkName = $t1->getPk()->getName();
+        $t2Name = $t2->getName();
+        foreach ($records as $i => $record) {
+            $key = $record[$pkName];
+            $records[$i][$t2Name] = $pkValues[$key];
+        }
+    }
 
-HabtmValues habtmValues = new HabtmValues();
-habtmValues.pkValues = pkValues;
-habtmValues.fkValues = fkValues;
-return habtmValues;
-}
+    private function getHabtmEmptyValues(ReflectedTable $t1, ReflectedTable $t2, ReflectedTable $t3, GenericDB $db, array $records): HabtmValues
+    {
+        $pkValues = $this->getPkEmptyValues($t1, $records);
+        $fkValues = array();
 
-private void setHabtmValues(ReflectedTable t1, ReflectedTable t3, ArrayList<Record> records,
-HabtmValues habtmValues) {
-for (Record record : records) {
-Object key = record.get(t1.getPk().getName());
-ArrayList<Object> val = new ArrayList<>();
-ArrayList<Object> fks = habtmValues.pkValues.get(key);
-for (Object fk : fks) {
-val.add(habtmValues.fkValues.get(fk));
-}
-record.put(t3.getName(), val);
-}
-}*/
+        $fk1 = $t3->getFksTo($t1->getName())[0];
+        $fk2 = $t3->getFksTo($t2->getName())[0];
+
+        $fk1Name = $fk1->getName();
+        $fk2Name = $fk2->getName();
+
+        $columnNames = array($fk1Name, $fk2Name);
+
+        $condition = $fk1Name . ',in,' . array_keys($pkValues);
+        $records = $db->selectAllUnordered($t3, $columnNames, array($condition));
+        foreach ($records as $record) {
+            $val1 = $record[$fk1Name];
+            $val2 = $record[$fk2Name];
+            $pkValues[$val1][] = $val2;
+            $fkValues[$val2] = null;
+        }
+
+        return new HabtmValues($pkValues, $fkValues);
+    }
+
+    private function setHabtmValues(ReflectedTable $t1, ReflectedTable $t3, array &$records, HabtmValues $habtmValues): void
+    {
+        $pkName = $t1->getPk()->getName();
+        $t3Name = $t3->getName();
+        foreach ($records as $i => $record) {
+            $key = $record[$pkName];
+            $val = array();
+            $fks = $habtmValues->pkValues[$key];
+            foreach ($fks as $fk) {
+                $val[] = $habtmValues->fkValues[$fk];
+            }
+            $records[$i][$t3Name] = $val;
+        }
+    }
 }

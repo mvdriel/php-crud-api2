@@ -11,6 +11,7 @@ class GenericDB
     protected $pdo;
     protected $meta;
     protected $columns;
+    protected $conditions;
 
     protected function getDsn(String $address, String $port = null, String $database = null): String
     {
@@ -109,6 +110,17 @@ class GenericDB
         return $stmt->fetchColumn(0);
     }
 
+    public function selectAllUnordered(ReflectedTable $table, array $columnNames, array $conditions): array
+    {
+        $selectColumns = $this->columns->getSelect($table, $columnNames);
+        $tableName = $table->getName();
+        $parameters = array();
+        $whereClause = $this->conditions->getWhereClause($conditions, $parameters);
+        $stmt = $this->pdo->prepare('SELECT ' . $selectColumns . ' FROM "' . $tableName . '"' . $whereClause);
+        $stmt->execute($parameters);
+        return $stmt->fetchAll();
+    }
+
     public function selectAll(ReflectedTable $table, array $columnNames, array $conditions, array $columnOrdering, int $offset, int $limit): array
     {
         $selectColumns = $this->columns->getSelect($table, $columnNames);
@@ -117,7 +129,6 @@ class GenericDB
         $whereClause = $this->conditions->getWhereClause($conditions, $parameters);
         $orderBy = $this->columns->getOrderBy($table, $columnOrdering);
         $offsetLimit = $this->columns->getOffsetLimit($offset, $limit);
-        $pkName = $table->getPk()->getName();
         $stmt = $this->pdo->prepare('SELECT ' . $selectColumns . ' FROM "' . $tableName . '"' . $whereClause . ' ORDER BY ' . $orderBy . ' ' . $offsetLimit);
         $stmt->execute($parameters);
         return $stmt->fetchAll();
