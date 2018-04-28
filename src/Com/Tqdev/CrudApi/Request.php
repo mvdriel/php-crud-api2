@@ -1,15 +1,17 @@
 <?php
 namespace Com\Tqdev\CrudApi;
 
-class Request {
-    
+class Request
+{
+
     protected $method;
     protected $path;
     protected $params;
     protected $body;
     protected $headers;
 
-    public function __construct(String $method = null, String $path = null, String $query = null, String $body = null) {
+    public function __construct(String $method = null, String $path = null, String $query = null, String $body = null)
+    {
         $this->parseMethod($method);
         $this->parsePath($path);
         $this->parseParams($query);
@@ -17,7 +19,8 @@ class Request {
         $this->headers = array();
     }
 
-    protected function parseMethod(String $method = null) {
+    protected function parseMethod(String $method = null)
+    {
         if (!$method) {
             if (isset($_SERVER['REQUEST_METHOD'])) {
                 $method = $_SERVER['REQUEST_METHOD'];
@@ -28,7 +31,8 @@ class Request {
         $this->method = $method;
     }
 
-    protected function parsePath(String $path = null) {
+    protected function parsePath(String $path = null)
+    {
         if (!$path) {
             if (isset($_SERVER['PATH_INFO'])) {
                 $path = $_SERVER['PATH_INFO'];
@@ -36,10 +40,11 @@ class Request {
                 $path = '/';
             }
         }
-        $this->path = explode('/',$path);
+        $this->path = explode('/', $path);
     }
 
-    protected function parseParams(String $query = null) {
+    protected function parseParams(String $query = null)
+    {
         if (!$query) {
             if (isset($_SERVER['QUERY_STRING'])) {
                 $query = $_SERVER['QUERY_STRING'];
@@ -51,18 +56,21 @@ class Request {
         parse_str($query, $this->params);
     }
 
-    protected function parseBody(String $body = null) {
+    protected function parseBody(String $body = null)
+    {
         if (!$body) {
             $body = file_get_contents('php://input');
         }
         $this->body = $body;
     }
 
-    public function getMethod(): String {
+    public function getMethod(): String
+    {
         return $this->method;
     }
 
-    public function getPath(int $part = 0): String {
+    public function getPath(int $part = 0): String
+    {
         if ($part == 0) {
             return implode('/', $this->path);
         }
@@ -72,14 +80,16 @@ class Request {
         return $this->path[$part];
     }
 
-    public function getParams(): array {
+    public function getParams(): array
+    {
         return $this->params;
     }
 
-    public function getBody()/*: ?array*/ {
+    public function getBody() /*: ?array*/
+    {
         $body = $this->body;
-        $first = substr($body,0,1);
-        if ($first=='[' || $first=='{') {
+        $first = substr($body, 0, 1);
+        if ($first == '[' || $first == '{') {
             $body = json_decode($body, true);
             $causeCode = json_last_error();
             if ($causeCode !== JSON_ERROR_NONE) {
@@ -88,8 +98,8 @@ class Request {
         } else {
             parse_str($body, $input);
             foreach ($input as $key => $value) {
-                if (substr($key,-9)=='__is_null') {
-                    $input[substr($key,0,-9)] = null;
+                if (substr($key, -9) == '__is_null') {
+                    $input[substr($key, 0, -9)] = null;
                     unset($input[$key]);
                 }
             }
@@ -98,9 +108,10 @@ class Request {
         return $body;
     }
 
-    public function addHeader(String $key, String $value = null) {
+    public function addHeader(String $key, String $value = null)
+    {
         if ($value === null) {
-            $header = 'HTTP_'.strtoupper(str_replace('-','_',$key));
+            $header = 'HTTP_' . strtoupper(str_replace('-', '_', $key));
             if (isset($_SERVER[$header])) {
                 $value = $_SERVER[$header];
             }
@@ -110,21 +121,24 @@ class Request {
         }
     }
 
-    public function getHeader(String $key): String {
+    public function getHeader(String $key): String
+    {
         if (isset($this->headers[$key])) {
             return $this->headers[$key];
         }
         return '';
     }
 
-    public function getHeaders(): array {
+    public function getHeaders(): array
+    {
         return $this->headers;
     }
 
-    public static function fromString(String $request): Request {
+    public static function fromString(String $request): Request
+    {
         $parts = explode("\n\n", trim($request), 2);
         $head = $parts[0];
-        $body = isset($parts[1])?$parts[1]:null;
+        $body = isset($parts[1]) ? $parts[1] : null;
         $lines = explode("\n", $head);
         $line = explode(' ', trim(array_shift($lines)), 2);
         $method = $line[0];

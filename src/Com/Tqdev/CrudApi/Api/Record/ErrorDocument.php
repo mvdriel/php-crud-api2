@@ -3,23 +3,27 @@ namespace Com\Tqdev\CrudApi\Api\Record;
 
 use Com\Tqdev\CrudApi\Api\ErrorCode;
 
-class ErrorDocument {
+class ErrorDocument
+{
 
-	public $code;
+    public $code;
 
-	public $message;
+    public $message;
 
-	public function __construct(ErrorCode $errorCode, String $argument) {
-		$this->code = $errorCode->getCode();
-		$this->message = $errorCode->getMessage($argument);
-	}
+    public function __construct(ErrorCode $errorCode, String $argument)
+    {
+        $this->code = $errorCode->getCode();
+        $this->message = $errorCode->getMessage($argument);
+    }
 
-	public function getCode(): int {
-		return $this->code;
-	}
+    public function getCode(): int
+    {
+        return $this->code;
+    }
 
-	public function getMessage(): String {
-		return $this->message;
-	}
+    public function getMessage(): String
+    {
+        return $this->message;
+    }
 
 }

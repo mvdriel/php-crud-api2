@@ -3,7 +3,8 @@ namespace Com\Tqdev\CrudApi\Api;
 
 use Com\Tqdev\CrudApi\Response;
 
-class ErrorCode {
+class ErrorCode
+{
 
     protected $code;
     protected $message;
@@ -31,7 +32,8 @@ class ErrorCode {
         1010 => ["Data integrity violation", Response::NOT_ACCEPTABLE],
     ];
 
-    public function __construct(int $code) {
+    public function __construct(int $code)
+    {
         if (!isset($this->values[$code])) {
             $code = 9999;
         }
@@ -40,16 +42,19 @@ class ErrorCode {
         $this->status = $this->values[$code][1];
     }
 
-	public function getCode(): int {
-		return $this->code;
-	}
+    public function getCode(): int
+    {
+        return $this->code;
+    }
 
-    public function getMessage(String $argument): String {
-		return sprintf($this->message, $argument);
-	}
+    public function getMessage(String $argument): String
+    {
+        return sprintf($this->message, $argument);
+    }
 
-	public function getStatus(): int {
-		return $this->status;
-	}
-    
+    public function getStatus(): int
+    {
+        return $this->status;
+    }
+
 }

@@ -1,16 +1,18 @@
 <?php
 namespace Com\Tqdev\CrudApi\Api;
 
-use Com\Tqdev\CrudApi\Meta\Reflection\ReflectedTable;
-use Com\Tqdev\CrudApi\Api\PathTree;
-use Com\Tqdev\CrudApi\Api\Condition\Condition;
 use Com\Tqdev\CrudApi\Api\Condition\AndCondition;
+use Com\Tqdev\CrudApi\Api\Condition\Condition;
 use Com\Tqdev\CrudApi\Api\Condition\OrCondition;
+use Com\Tqdev\CrudApi\Api\PathTree;
+use Com\Tqdev\CrudApi\Meta\Reflection\ReflectedTable;
 
-class FilterInfo {    
-   
-    protected function addConditionFromFilterPath(PathTree $conditions, array $path, ReflectedTable $table, array $params) {
-        $key = 'filter'.implode('', $path);
+class FilterInfo
+{
+
+    protected function addConditionFromFilterPath(PathTree $conditions, array $path, ReflectedTable $table, array $params)
+    {
+        $key = 'filter' . implode('', $path);
         if (isset($params[$key])) {
             foreach ($params[$key] as $filter) {
                 $condition = Condition::fromString($table, $filter);
@@ -21,19 +23,21 @@ class FilterInfo {
         }
     }
 
-    protected function getConditionsAsPathTree(ReflectedTable $table, array $params): PathTree {
+    protected function getConditionsAsPathTree(ReflectedTable $table, array $params): PathTree
+    {
         $conditions = new PathTree();
         $this->addConditionFromFilterPath($conditions, [], $table, $params);
         for ($n = ord('0'); $n <= ord('9'); $n++) {
             $this->addConditionFromFilterPath($conditions, [chr($n)], $table, $params);
             for ($l = ord('a'); $l <= ord('f'); $l++) {
-                $this->addConditionFromFilterPath($conditions, [chr($n),chr($l)], $table, $params);    
+                $this->addConditionFromFilterPath($conditions, [chr($n), chr($l)], $table, $params);
             }
         }
         return $conditions;
     }
 
-    private function combinePathTreeOfConditions(PathTree $tree)/*: ?Condition*/ {
+    private function combinePathTreeOfConditions(PathTree $tree) /*: ?Condition*/
+    {
         $andConditions = $tree->getValues();
         $and = AndCondition::fromArray($andConditions);
         $orConditions = [];
@@ -51,7 +55,8 @@ class FilterInfo {
         return $and;
     }
 
-    public function getConditions(ReflectedTable $table, array $params): array {
+    public function getConditions(ReflectedTable $table, array $params): array
+    {
         $conditions = array();
         $condition = $this->combinePathTreeOfConditions($this->getConditionsAsPathTree($table, $params));
         if ($condition != null) {

@@ -1,8 +1,9 @@
 <?php
 namespace Com\Tqdev\CrudApi;
 
-class Response {
-    
+class Response
+{
+
     const OK = 200;
     const INTERNAL_SERVER_ERROR = 500;
     const NOT_FOUND = 404;
@@ -13,43 +14,51 @@ class Response {
     protected $headers;
     protected $body;
 
-    public function __construct(int $status, $body) {
+    public function __construct(int $status, $body)
+    {
         $this->status = $status;
         $this->headers = array();
         $this->parseBody($body);
     }
 
-    protected function parseBody($body) {
+    protected function parseBody($body)
+    {
         $data = json_encode($body);
         $this->addHeader('Content-Type', 'application/json');
         $this->addHeader('Content-Length', strlen($data));
         $this->body = $data;
     }
 
-    public function getStatus(): int {
+    public function getStatus(): int
+    {
         return $this->status;
     }
 
-    public function getBody(): String {
+    public function getBody(): String
+    {
         return $this->body;
     }
 
-    public function addHeader(String $key, String $value) {
-        $this->headers[$key]=$value;
+    public function addHeader(String $key, String $value)
+    {
+        $this->headers[$key] = $value;
     }
 
-    public function getHeader(String $key): String {
+    public function getHeader(String $key): String
+    {
         if (isset($this->headers[$key])) {
             return $this->headers[$key];
         }
         return null;
     }
 
-    public function getHeaders(): array {
+    public function getHeaders(): array
+    {
         return $this->headers;
     }
 
-    public function output() {
+    public function output()
+    {
         http_response_code($this->getStatus());
         foreach ($this->getHeaders() as $key => $value) {
             header("$key: $value");
@@ -57,7 +66,8 @@ class Response {
         echo $this->getBody();
     }
 
-    public function __toString(): String {
+    public function __toString(): String
+    {
         $str = "$this->status\n";
         foreach ($this->headers as $key => $value) {
             $str .= "$key: $value\n";

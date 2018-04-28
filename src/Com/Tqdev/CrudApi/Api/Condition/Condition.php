@@ -5,19 +5,21 @@ use Com\Tqdev\CrudApi\Meta\Reflection\ReflectedTable;
 
 abstract class Condition
 {
-    public function and(Condition $condition): Condition {
+    function  and (Condition $condition): Condition {
         return new AndCondition($this, $condition);
     }
 
-    public function or(Condition $condition): Condition {
+    function  or (Condition $condition): Condition {
         return new OrCondition($this, $condition);
     }
 
-    public function not(): Condition {
+    public function not(): Condition
+    {
         return new NotCondition($this);
     }
 
-    public static function fromString(ReflectedTable $table, String $value)/*: ?Condition*/ {
+    public static function fromString(ReflectedTable $table, String $value) /*: ?Condition*/
+    {
         $condition = null;
         $parts = explode(',', $value, 3);
         if (count($parts) < 2) {
@@ -28,22 +30,22 @@ abstract class Condition
         $negate = false;
         $spatial = false;
         if (strlen($command) > 2) {
-            if (substr($command,0,1) == 'n') {
+            if (substr($command, 0, 1) == 'n') {
                 $negate = true;
-                $command = substr($command,1);
+                $command = substr($command, 1);
             }
-            if (substr($command,0,1) == 's') {
+            if (substr($command, 0, 1) == 's') {
                 $spatial = true;
-                $command = substr($command,1);
+                $command = substr($command, 1);
             }
         }
-        if (count($parts) == 3 || (count($parts) == 2 && in_array($command, ['ic','is','iv']))) {
+        if (count($parts) == 3 || (count($parts) == 2 && in_array($command, ['ic', 'is', 'iv']))) {
             if ($spatial) {
-                if (in_array($command, ['co','cr','di','eq','in','ov','to','wi','ic','is','iv'])) {
+                if (in_array($command, ['co', 'cr', 'di', 'eq', 'in', 'ov', 'to', 'wi', 'ic', 'is', 'iv'])) {
                     $condition = new SpatialCondition($field, $command, $parts[2]);
                 }
             } else {
-                if (in_array($command,['cs','sw','ew','eq','lt','le','ge','gt','bt','in','is'])) {
+                if (in_array($command, ['cs', 'sw', 'ew', 'eq', 'lt', 'le', 'ge', 'gt', 'bt', 'in', 'is'])) {
                     $condition = new ColumnCondition($field, $command, $parts[2]);
                 }
             }

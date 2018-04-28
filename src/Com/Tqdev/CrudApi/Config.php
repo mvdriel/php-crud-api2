@@ -1,8 +1,9 @@
 <?php
 namespace Com\Tqdev\CrudApi;
 
-class Config {
-    
+class Config
+{
+
     protected $values = [
         'driver' => null,
         'address' => 'localhost',
@@ -13,36 +14,41 @@ class Config {
         'allowedOrigins' => '*',
     ];
 
-    protected function getDefaultDriver(array $values): String {
+    protected function getDefaultDriver(array $values): String
+    {
         if (isset($values['driver'])) {
             return $values['driver'];
         }
         return 'mysql';
     }
 
-    protected function getDefaultPort(String $driver): int {
-        switch($driver) {
-            case 'mysql': return 3306;
-            case 'pgsql': return 5432;
+    protected function getDefaultPort(String $driver): int
+    {
+        switch ($driver) {
+            case 'mysql':return 3306;
+            case 'pgsql':return 5432;
         }
     }
 
-    protected function getDefaultAddress(String $driver): String {
-        switch($driver) {
-            case 'mysql': return 'localhost';
-            case 'pgsql': return 'localhost';
+    protected function getDefaultAddress(String $driver): String
+    {
+        switch ($driver) {
+            case 'mysql':return 'localhost';
+            case 'pgsql':return 'localhost';
         }
     }
 
-    protected function getDriverDefaults(String $driver): array {
+    protected function getDriverDefaults(String $driver): array
+    {
         return [
-            'driver'    => $driver,
-            'address'   => $this->getDefaultAddress($driver),
-            'port'      => $this->getDefaultPort($driver),
+            'driver' => $driver,
+            'address' => $this->getDefaultAddress($driver),
+            'port' => $this->getDefaultPort($driver),
         ];
     }
 
-    public function __construct(array $values) {
+    public function __construct(array $values)
+    {
         $driver = $this->getDefaultDriver($values);
         $defaults = $this->getDriverDefaults($driver);
         $newValues = array_merge($this->values, $defaults, $values);
@@ -54,31 +60,38 @@ class Config {
         $this->values = $newValues;
     }
 
-    public function getDriver(): String {
+    public function getDriver(): String
+    {
         return $this->values['driver'];
     }
-    
-    public function getAddress(): String {
+
+    public function getAddress(): String
+    {
         return $this->values['address'];
     }
-    
-    public function getPort(): int {
+
+    public function getPort(): int
+    {
         return $this->values['port'];
     }
-    
-    public function getDatabase(): String {
+
+    public function getDatabase(): String
+    {
         return $this->values['database'];
     }
-    
-    public function getUsername(): String {
+
+    public function getUsername(): String
+    {
         return $this->values['username'];
     }
-    
-    public function getPassword(): String {
+
+    public function getPassword(): String
+    {
         return $this->values['password'];
     }
-    
-    public function getAllowedOrigins(): String {
+
+    public function getAllowedOrigins(): String
+    {
         return $this->values['allowedOrigins'];
     }
 }

@@ -1,34 +1,38 @@
 <?php
 namespace Com\Tqdev\CrudApi\Router;
 
+use Com\Tqdev\CrudApi\Controller\Responder;
 use Com\Tqdev\CrudApi\Request;
 use Com\Tqdev\CrudApi\Response;
 use Com\Tqdev\CrudApi\Router\Router;
-use Com\Tqdev\CrudApi\Controller\Responder;
 
-class CorsProtectedRouter extends Router {
-    
+class CorsProtectedRouter extends Router
+{
+
     protected $allowedOrigins;
 
-    public function __construct(Responder $responder, String $allowedOrigins) {
+    public function __construct(Responder $responder, String $allowedOrigins)
+    {
         $this->allowedOrigins = $allowedOrigins;
         parent::__construct($responder);
     }
 
-    protected function isOriginAllowed(String $origin, String $allowedOrigins): bool {
+    protected function isOriginAllowed(String $origin, String $allowedOrigins): bool
+    {
         $found = false;
-        foreach (explode(',',$allowedOrigins) as $allowedOrigin) {
+        foreach (explode(',', $allowedOrigins) as $allowedOrigin) {
             $hostname = preg_quote(strtolower(trim($allowedOrigin)));
-            $regex = '/^'.str_replace('\*','.*',$hostname).'$/';
-            if (preg_match($regex, $origin)) { 
+            $regex = '/^' . str_replace('\*', '.*', $hostname) . '$/';
+            if (preg_match($regex, $origin)) {
                 $found = true;
-    			break;
+                break;
             }
         }
         return $found;
     }
 
-    public function route(Request $request): Response {
+    public function route(Request $request): Response
+    {
         $origin = $request->getHeader('Origin');
         if ($origin) {
             $allowedOrigins = $this->allowedOrigins;

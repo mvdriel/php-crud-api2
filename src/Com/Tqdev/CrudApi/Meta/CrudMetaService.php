@@ -4,16 +4,18 @@ namespace Com\Tqdev\CrudApi\Meta;
 use Com\Tqdev\CrudApi\Database\GenericDB;
 use Com\Tqdev\CrudApi\Meta\Reflection\DatabaseReflection;
 
-class CrudMetaService {
+class CrudMetaService
+{
 
     protected $db;
 
-    public function __construct(GenericDB $db) {
+    public function __construct(GenericDB $db)
+    {
         $this->db = $db;
     }
 
-    public function getDatabaseReflection(): DatabaseReflection {
+    public function getDatabaseReflection(): DatabaseReflection
+    {
         return new DatabaseReflection($this->db->meta());
     }
 }
-

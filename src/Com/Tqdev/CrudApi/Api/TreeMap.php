@@ -1,12 +1,14 @@
 <?php
 namespace Com\Tqdev\CrudApi\Api;
 
-class TreeMap {
+class TreeMap
+{
 
-	protected $branches = array();
+    protected $branches = array();
 
-    public function put(array $path) {
-        if (count($path)==0) {
+    public function put(array $path)
+    {
+        if (count($path) == 0) {
             return;
         }
         $key = array_shift($path);
@@ -15,13 +17,15 @@ class TreeMap {
         }
         $branches = $this->branches[$key];
         $branches->put($path);
-	}
+    }
 
-    public function getKeys(): array {
+    public function getKeys(): array
+    {
         return array_keys($this->branches);
     }
 
-    public function get($key): PathTree {
+    public function get($key): PathTree
+    {
         return $this->branches[$key];
     }
 }
