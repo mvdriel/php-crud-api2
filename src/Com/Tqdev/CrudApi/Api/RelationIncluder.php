@@ -75,7 +75,7 @@ class RelationIncluder
         GenericDB $db): void{
 
         $includes = $this->getIncludesAsTreeMap($tables, $params);
-        $this->addIncludesForTables(tables . get(tableName), includes, records, tables, params, dsl);
+        $this->addIncludesForTables($tables->get(tableName), $includes, $records, $tables, $params, $db);
     }
 
     private function hasAndBelongsToMany(ReflectedTable $t1, ReflectedTable $t2, DatabaseReflection $tables) /*: ?ReflectedTable*/
@@ -89,57 +89,52 @@ class RelationIncluder
         return null;
     }
 
-    /*private class HabtmValues {
-protected HashMap<Object, ArrayList<Object>> pkValues = new HashMap<>();
-protected HashMap<Object, Object> fkValues = new HashMap<>();
-}
+    private function addIncludesForTables(ReflectedTable $t1, TreeMap $includes, array $records,
+        DatabaseReflection $tables, array $params, GenericDB $db) {
 
-private void addIncludesForTables(ReflectedTable t1, TreeMap<ReflectedTable> includes, ArrayList<Record> records,
-DatabaseReflection tables, Params params, GenericDB dsl) {
+        foreach ($includes->getKeys() as $t2) {
 
-for (ReflectedTable t2 : includes.keySet()) {
+            $belongsTo = count($t1->getFksTo($t2->getName())) > 0;
+            $hasMany = count($t2->getFksTo($t1->getName())) > 0;
+            $t3 = $this->hasAndBelongsToMany($t1, $t2, $tables);
+            $hasAndBelongsToMany = (t3 != null);
 
-boolean belongsTo = !t1.getFksTo(t2.getName()).isEmpty();
-boolean hasMany = !t2.getFksTo(t1.getName()).isEmpty();
-ReflectedTable t3 = hasAndBelongsToMany(t1, t2, tables);
-boolean hasAndBelongsToMany = t3 != null;
+            $newRecords = array();
+            $fkValues = null;
+            $pkValues = null;
+            $habtmValues = null;
 
-ArrayList<Record> newRecords = new ArrayList<>();
-HashMap<Object, Object> fkValues = null;
-HashMap<Object, ArrayList<Object>> pkValues = null;
-HabtmValues habtmValues = null;
+            if ($belongsTo) {
+                $fkValues = $this->getFkEmptyValues($t1, $t2, $records);
+                $this->addFkRecords($t2, $fkValues, $params, $db, $newRecords);
+            }
+            if ($hasMany) {
+                $pkValues = $this->getPkEmptyValues(t1, records);
+                $this->addPkRecords($t1, $t2, $pkValues, $params, $db, $newRecords);
+            }
+            if ($hasAndBelongsToMany) {
+                $habtmValues = $this->getHabtmEmptyValues($t1, $t2, $t3, $db, $records);
+                $this->addFkRecords($t2, $habtmValues->fkValues, $params, $db, $newRecords);
+            }
 
-if (belongsTo) {
-fkValues = getFkEmptyValues(t1, t2, records);
-addFkRecords(t2, fkValues, params, dsl, newRecords);
-}
-if (hasMany) {
-pkValues = getPkEmptyValues(t1, records);
-addPkRecords(t1, t2, pkValues, params, dsl, newRecords);
-}
-if (hasAndBelongsToMany) {
-habtmValues = getHabtmEmptyValues(t1, t2, t3, dsl, records);
-addFkRecords(t2, habtmValues.fkValues, params, dsl, newRecords);
-}
+            $this->addIncludesForTables($t2, $includes->get($t2), $newRecords, $tables, $params, $db);
 
-addIncludesForTables(t2, includes.get(t2), newRecords, tables, params, dsl);
+            if ($fkValues != null) {
+                $this->fillFkValues($t2, $newRecords, $fkValues);
+                $this->setFkValues($t1, $t2, $records, $fkValues);
+            }
+            if ($pkValues != null) {
+                $this->fillPkValues($t1, $t2, $newRecords, $pkValues);
+                $this->setPkValues($t1, $t2, $records, $pkValues);
+            }
+            if ($habtmValues != null) {
+                $this->fillFkValues($t2, $newRecords, $habtmValues->fkValues);
+                $this->setHabtmValues($t1, $t3, $records, $habtmValues);
+            }
+        }
+    }
 
-if (fkValues != null) {
-fillFkValues(t2, newRecords, fkValues);
-setFkValues(t1, t2, records, fkValues);
-}
-if (pkValues != null) {
-fillPkValues(t1, t2, newRecords, pkValues);
-setPkValues(t1, t2, records, pkValues);
-}
-if (habtmValues != null) {
-fillFkValues(t2, newRecords, habtmValues.fkValues);
-setHabtmValues(t1, t3, records, habtmValues);
-}
-}
-}
-
-private HashMap<Object, Object> getFkEmptyValues(ReflectedTable t1, ReflectedTable t2, ArrayList<Record> records) {
+/*private HashMap<Object, Object> getFkEmptyValues(ReflectedTable t1, ReflectedTable t2, ArrayList<Record> records) {
 HashMap<Object, Object> fkValues = new HashMap<>();
 List<Field<Object>> fks = t1.getFksTo(t2.getName());
 for (Field<Object> fk : fks) {
@@ -154,11 +149,11 @@ fkValues.put(fkValue, null);
 return fkValues;
 }
 
-private void addFkRecords(ReflectedTable t2, HashMap<Object, Object> fkValues, Params params, GenericDB dsl,
+private void addFkRecords(ReflectedTable t2, HashMap<Object, Object> fkValues, Params params, GenericDB db,
 ArrayList<Record> records) {
 Field<Object> pk = t2.getPk();
 ArrayList<Field<?>> fields = columns.getColumnNames(t2, false, params);
-ResultQuery<org.jooq.Record> query = dsl.select(fields).from(t2).where(pk.in(fkValues.keySet()));
+ResultQuery<org.jooq.Record> query = db.select(fields).from(t2).where(pk.in(fkValues.keySet()));
 for (org.jooq.Record record : query.fetch()) {
 records.add(Record.valueOf(record.intoMap()));
 }
@@ -196,14 +191,14 @@ return pkValues;
 }
 
 private void addPkRecords(ReflectedTable t1, ReflectedTable t2, HashMap<Object, ArrayList<Object>> pkValues,
-Params params, GenericDB dsl, ArrayList<Record> records) {
+Params params, GenericDB db, ArrayList<Record> records) {
 List<Field<Object>> fks = t2.getFksTo(t1.getName());
 ArrayList<Field<?>> fields = columns.getColumnNames(t2, false, params);
-Condition condition = DSL.falseCondition();
+Condition condition = db.falseCondition();
 for (Field<Object> fk : fks) {
 condition = condition.or(fk.in(pkValues.keySet()));
 }
-ResultQuery<org.jooq.Record> query = dsl.select(fields).from(t2).where(condition);
+ResultQuery<org.jooq.Record> query = db.select(fields).from(t2).where(condition);
 for (org.jooq.Record record : query.fetch()) {
 records.add(Record.valueOf(record.intoMap()));
 }
@@ -231,7 +226,7 @@ record.put(t2.getName(), pkValues.get(key));
 }
 }
 
-private HabtmValues getHabtmEmptyValues(ReflectedTable t1, ReflectedTable t2, ReflectedTable t3, GenericDB dsl,
+private HabtmValues getHabtmEmptyValues(ReflectedTable t1, ReflectedTable t2, ReflectedTable t3, GenericDB db,
 ArrayList<Record> records) {
 HashMap<Object, ArrayList<Object>> pkValues = getPkEmptyValues(t1, records);
 HashMap<Object, Object> fkValues = new HashMap<>();
@@ -240,7 +235,7 @@ Field<Object> fk1 = t3.getFksTo(t1.getName()).get(0);
 Field<Object> fk2 = t3.getFksTo(t2.getName()).get(0);
 List<Field<?>> fields = Arrays.asList(fk1, fk2);
 Condition condition = fk1.in(pkValues.keySet());
-ResultQuery<org.jooq.Record> query = dsl.select(fields).from(t3).where(condition);
+ResultQuery<org.jooq.Record> query = db.select(fields).from(t3).where(condition);
 for (org.jooq.Record record : query.fetch()) {
 Object val1 = record.get(fk1);
 Object val2 = record.get(fk2);
