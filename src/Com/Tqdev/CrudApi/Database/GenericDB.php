@@ -14,6 +14,7 @@ class GenericDB
     private $meta;
     private $columns;
     private $conditions;
+    private $types;
 
     private function getDsn(String $address, String $port = null, String $database = null): String
     {
@@ -55,6 +56,7 @@ class GenericDB
         $this->meta = new GenericMeta($this->pdo, $driver, $database);
         $this->columns = new ColumnsBuilder($driver);
         $this->conditions = new ConditionsBuilder($driver);
+        $this->types = new TypeConverter($driver);
     }
 
     public function pdo(): \PDO
@@ -88,7 +90,13 @@ class GenericDB
         $whereClause = $this->conditions->getWhereClause($condition, $parameters);
         $stmt = $this->pdo->prepare('SELECT ' . $selectColumns . ' FROM "' . $tableName . '" ' . $whereClause);
         $stmt->execute($parameters);
-        return $stmt->fetch() ?: null;
+        $record = $stmt->fetch() ?: null;
+        if ($record === null) {
+            return null;
+        }
+        $records = array($record);
+        $this->types->convertRecords($table, $columnNames, $records);
+        return $records[0];
     }
 
     public function selectMultiple(ReflectedTable $table, array $columnNames, array $ids): array
@@ -103,7 +111,9 @@ class GenericDB
         $whereClause = $this->conditions->getWhereClause($condition, $parameters);
         $stmt = $this->pdo->prepare('SELECT ' . $selectColumns . ' FROM "' . $tableName . '" ' . $whereClause);
         $stmt->execute($parameters);
-        return $stmt->fetchAll();
+        $records = $stmt->fetchAll();
+        $this->types->convertRecords($table, $columnNames, $records);
+        return $records;
     }
 
     public function selectCount(ReflectedTable $table, Condition $condition): int
@@ -124,7 +134,9 @@ class GenericDB
         $whereClause = $this->conditions->getWhereClause($condition, $parameters);
         $stmt = $this->pdo->prepare('SELECT ' . $selectColumns . ' FROM "' . $tableName . '"' . $whereClause);
         $stmt->execute($parameters);
-        return $stmt->fetchAll();
+        $records = $stmt->fetchAll();
+        $this->types->convertRecords($table, $columnNames, $records);
+        return $records;
     }
 
     public function selectAll(ReflectedTable $table, array $columnNames, Condition $condition, array $columnOrdering, int $offset, int $limit): array
@@ -137,7 +149,9 @@ class GenericDB
         $offsetLimit = $this->columns->getOffsetLimit($offset, $limit);
         $stmt = $this->pdo->prepare('SELECT ' . $selectColumns . ' FROM "' . $tableName . '"' . $whereClause . ' ORDER BY ' . $orderBy . ' ' . $offsetLimit);
         $stmt->execute($parameters);
-        return $stmt->fetchAll();
+        $records = $stmt->fetchAll();
+        $this->types->convertRecords($table, $columnNames, $records);
+        return $records;
     }
 
     public function updateSingle(ReflectedTable $table, array $columnValues, String $id)
