@@ -28,7 +28,7 @@ abstract class Condition
 
     public static function fromString(ReflectedTable $table, String $value): Condition
     {
-        $condition = null;
+        $condition = new NoCondition();
         $parts = explode(',', $value, 3);
         if (count($parts) < 2) {
             return null;
@@ -58,10 +58,8 @@ abstract class Condition
                 }
             }
         }
-        if ($condition != null) {
-            if ($negate) {
-                $condition = $condition->_not();
-            }
+        if ($negate) {
+            $condition = $condition->_not();
         }
         return $condition;
     }
