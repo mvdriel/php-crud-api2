@@ -110,7 +110,7 @@ class RelationIncluder
                 $this->addFkRecords($t2, $fkValues, $params, $db, $newRecords);
             }
             if ($hasMany) {
-                $pkValues = $this->getPkEmptyValues(t1, records);
+                $pkValues = $this->getPkEmptyValues($t1, $records);
                 $this->addPkRecords($t1, $t2, $pkValues, $params, $db, $newRecords);
             }
             if ($hasAndBelongsToMany) {
