@@ -2,6 +2,7 @@
 namespace Com\Tqdev\CrudApi\Database;
 
 use Com\Tqdev\CrudApi\Api\Condition\AndCondition;
+use Com\Tqdev\CrudApi\Api\Condition\BooleanCondition;
 use Com\Tqdev\CrudApi\Api\Condition\ColumnCondition;
 use Com\Tqdev\CrudApi\Api\Condition\Condition;
 use Com\Tqdev\CrudApi\Api\Condition\NotCondition;
@@ -36,6 +37,9 @@ class ConditionsBuilder
         if ($condition instanceof SpatialCondition) {
             return $this->getSpatialConditionSql($condition, $arguments);
         }
+        if ($condition instanceof BooleanCondition) {
+            return $this->getBooleanConditionSql($condition, $arguments);
+        }
         throw new \Exception('Unknown Condition: ' . get_class($condition));
     }
 
@@ -43,7 +47,7 @@ class ConditionsBuilder
     {
         $parts = [];
         foreach ($and->getConditions() as $condition) {
-            $parts[] = $this->getConditionSql($condition);
+            $parts[] = $this->getConditionSql($condition, $arguments);
         }
         return '(' . implode(' AND ', $parts) . ')';
     }
@@ -52,7 +56,7 @@ class ConditionsBuilder
     {
         $parts = [];
         foreach ($or->getConditions() as $condition) {
-            $parts[] = $this->getConditionSql($condition);
+            $parts[] = $this->getConditionSql($condition, $arguments);
         }
         return '(' . implode(' OR ', $parts) . ')';
     }
@@ -60,7 +64,7 @@ class ConditionsBuilder
     protected function getNotConditionSql(NotCondition $not, array &$arguments): String
     {
         $condition = $not->getCondition();
-        return '(NOT ' . $this->getConditionSql($condition) . ')';
+        return '(NOT ' . $this->getConditionSql($condition, $arguments) . ')';
     }
 
     protected function quoteColumnName(ReflectedColumn $column): String
@@ -190,6 +194,12 @@ class ConditionsBuilder
             $arguments[] = $value;
         }
         return $sql;
+    }
+
+    protected function getBooleanConditionSql(BooleanCondition $condition, array &$arguments): String
+    {
+        $value = $condition->getValue();
+        return $value ? 'TRUE' : 'FALSE';
     }
 
     public function getWhereClause(array $conditions, array &$arguments): String

@@ -1,6 +1,7 @@
 <?php
 namespace Com\Tqdev\CrudApi\Api;
 
+use Com\Tqdev\CrudApi\Api\Condition\BooleanCondition;
 use Com\Tqdev\CrudApi\Api\Condition\ColumnCondition;
 use Com\Tqdev\CrudApi\Database\GenericDB;
 use Com\Tqdev\CrudApi\Meta\Reflection\DatabaseReflection;
@@ -197,9 +198,12 @@ class RelationIncluder
     {
         $fks = $t2->getFksTo($t1->getName());
         $columnNames = $this->columns->getNames($t2, false, $params);
-        $fkIds = array_keys($pkValues);
-
-        foreach ($db->selectMultiple($t2, $columnNames, $fkIds) as $record) {
+        $pkValueKeys = implode(',', array_keys($pkValues));
+        $condition = new BooleanCondition(false);
+        foreach ($fks as $fk) {
+            $condition = $condition->or(new ColumnCondition($fk, 'in', $pkValueKeys));
+        }
+        foreach ($db->selectAllUnordered($t2, $columnNames, array($condition)) as $record) {
             $records[] = $record;
         }
     }
@@ -222,6 +226,7 @@ class RelationIncluder
     {
         $pkName = $t1->getPk()->getName();
         $t2Name = $t2->getName();
+
         foreach ($records as $i => $record) {
             $key = $record[$pkName];
             $records[$i][$t2Name] = $pkValues[$key];
