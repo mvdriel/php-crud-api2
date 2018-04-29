@@ -1,6 +1,8 @@
 <?php
 namespace Com\Tqdev\CrudApi\Database;
 
+use Com\Tqdev\CrudApi\Api\Condition\ColumnCondition;
+use Com\Tqdev\CrudApi\Api\Condition\Condition;
 use Com\Tqdev\CrudApi\Meta\Reflection\ReflectedTable;
 
 class GenericDB
@@ -69,8 +71,9 @@ class GenericDB
     {
         $insertColumns = $this->columns->getInsert($table, $columnValues);
         $tableName = $table->getName();
+        $parameters = array_values($columnValues);
         $stmt = $this->pdo->prepare('INSERT INTO "' . $tableName . '" ' . $insertColumns);
-        $stmt->execute(array_values($columnValues));
+        $stmt->execute($parameters);
         $stmt = $this->pdo->prepare('SELECT ' . $this->columns->getLastInsertId());
         $stmt->execute();
         return $stmt->fetchColumn();
@@ -80,9 +83,11 @@ class GenericDB
     {
         $selectColumns = $this->columns->getSelect($table, $columnNames);
         $tableName = $table->getName();
-        $pkName = $table->getPk()->getName();
-        $stmt = $this->pdo->prepare('SELECT ' . $selectColumns . ' FROM "' . $tableName . '" WHERE "' . $pkName . '" = ?');
-        $stmt->execute([$id]);
+        $condition = new ColumnCondition($table->getPk(), 'eq', $id);
+        $parameters = array();
+        $whereClause = $this->conditions->getWhereClause($condition, $parameters);
+        $stmt = $this->pdo->prepare('SELECT ' . $selectColumns . ' FROM "' . $tableName . '" ' . $whereClause);
+        $stmt->execute($parameters);
         return $stmt->fetch() ?: null;
     }
 
@@ -93,40 +98,41 @@ class GenericDB
         }
         $selectColumns = $this->columns->getSelect($table, $columnNames);
         $tableName = $table->getName();
-        $pkName = $table->getPk()->getName();
-        $questionMarks = str_repeat('?,', count($ids) - 1);
-        $stmt = $this->pdo->prepare('SELECT ' . $selectColumns . ' FROM "' . $tableName . '" WHERE "' . $pkName . '" in (' . $questionMarks . '?)');
-        $stmt->execute($ids);
+        $condition = new ColumnCondition($table->getPk(), 'in', implode(',', $ids));
+        $parameters = array();
+        $whereClause = $this->conditions->getWhereClause($condition, $parameters);
+        $stmt = $this->pdo->prepare('SELECT ' . $selectColumns . ' FROM "' . $tableName . '" ' . $whereClause);
+        $stmt->execute($parameters);
         return $stmt->fetchAll();
     }
 
-    public function selectCount(ReflectedTable $table, array $conditions): int
+    public function selectCount(ReflectedTable $table, Condition $condition): int
     {
         $tableName = $table->getName();
         $parameters = array();
-        $whereClause = $this->conditions->getWhereClause($conditions, $parameters);
+        $whereClause = $this->conditions->getWhereClause($condition, $parameters);
         $stmt = $this->pdo->prepare('SELECT COUNT(*) FROM "' . $tableName . '"' . $whereClause);
         $stmt->execute($parameters);
         return $stmt->fetchColumn(0);
     }
 
-    public function selectAllUnordered(ReflectedTable $table, array $columnNames, array $conditions): array
+    public function selectAllUnordered(ReflectedTable $table, array $columnNames, Condition $condition): array
     {
         $selectColumns = $this->columns->getSelect($table, $columnNames);
         $tableName = $table->getName();
         $parameters = array();
-        $whereClause = $this->conditions->getWhereClause($conditions, $parameters);
+        $whereClause = $this->conditions->getWhereClause($condition, $parameters);
         $stmt = $this->pdo->prepare('SELECT ' . $selectColumns . ' FROM "' . $tableName . '"' . $whereClause);
         $stmt->execute($parameters);
         return $stmt->fetchAll();
     }
 
-    public function selectAll(ReflectedTable $table, array $columnNames, array $conditions, array $columnOrdering, int $offset, int $limit): array
+    public function selectAll(ReflectedTable $table, array $columnNames, Condition $condition, array $columnOrdering, int $offset, int $limit): array
     {
         $selectColumns = $this->columns->getSelect($table, $columnNames);
         $tableName = $table->getName();
         $parameters = array();
-        $whereClause = $this->conditions->getWhereClause($conditions, $parameters);
+        $whereClause = $this->conditions->getWhereClause($condition, $parameters);
         $orderBy = $this->columns->getOrderBy($table, $columnOrdering);
         $offsetLimit = $this->columns->getOffsetLimit($offset, $limit);
         $stmt = $this->pdo->prepare('SELECT ' . $selectColumns . ' FROM "' . $tableName . '"' . $whereClause . ' ORDER BY ' . $orderBy . ' ' . $offsetLimit);
@@ -138,18 +144,22 @@ class GenericDB
     {
         $updateColumns = $this->columns->getUpdate($table, $columnValues);
         $tableName = $table->getName();
-        $pkName = $table->getPk()->getName();
-        $stmt = $this->pdo->prepare('UPDATE "' . $tableName . '" SET ' . $updateColumns . ' WHERE "' . $pkName . '" = ?');
-        $stmt->execute(array_merge(array_values($columnValues), [$id]));
+        $condition = new ColumnCondition($table->getPk(), 'eq', $id);
+        $parameters = array_values($columnValues);
+        $whereClause = $this->conditions->getWhereClause($condition, $parameters);
+        $stmt = $this->pdo->prepare('UPDATE "' . $tableName . '" SET ' . $updateColumns . $whereClause);
+        $stmt->execute($parameters);
         return $stmt->rowCount();
     }
 
     public function deleteSingle(ReflectedTable $table, String $id)
     {
         $tableName = $table->getName();
-        $pkName = $table->getPk()->getName();
-        $stmt = $this->pdo->prepare('DELETE FROM "' . $tableName . '" WHERE "' . $pkName . '" = ?');
-        $stmt->execute([$id]);
+        $condition = new ColumnCondition($table->getPk(), 'eq', $id);
+        $parameters = array();
+        $whereClause = $this->conditions->getWhereClause($condition, $parameters);
+        $stmt = $this->pdo->prepare('DELETE FROM "' . $tableName . '" ' . $whereClause);
+        $stmt->execute($parameters);
         return $stmt->rowCount();
     }
 }

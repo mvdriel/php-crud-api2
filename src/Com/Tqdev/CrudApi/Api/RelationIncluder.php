@@ -1,8 +1,8 @@
 <?php
 namespace Com\Tqdev\CrudApi\Api;
 
-use Com\Tqdev\CrudApi\Api\Condition\BooleanCondition;
 use Com\Tqdev\CrudApi\Api\Condition\ColumnCondition;
+use Com\Tqdev\CrudApi\Api\Condition\OrCondition;
 use Com\Tqdev\CrudApi\Database\GenericDB;
 use Com\Tqdev\CrudApi\Meta\Reflection\DatabaseReflection;
 use Com\Tqdev\CrudApi\Meta\Reflection\ReflectedTable;
@@ -199,11 +199,12 @@ class RelationIncluder
         $fks = $t2->getFksTo($t1->getName());
         $columnNames = $this->columns->getNames($t2, false, $params);
         $pkValueKeys = implode(',', array_keys($pkValues));
-        $condition = new BooleanCondition(false);
+        $conditions = array();
         foreach ($fks as $fk) {
-            $condition = $condition->or(new ColumnCondition($fk, 'in', $pkValueKeys));
+            $conditions[] = new ColumnCondition($fk, 'in', $pkValueKeys);
         }
-        foreach ($db->selectAllUnordered($t2, $columnNames, array($condition)) as $record) {
+        $condition = OrCondition::fromArray($conditions);
+        foreach ($db->selectAllUnordered($t2, $columnNames, $condition) as $record) {
             $records[] = $record;
         }
     }
@@ -247,9 +248,9 @@ class RelationIncluder
         $columnNames = array($fk1Name, $fk2Name);
 
         $pkIds = implode(',', array_keys($pkValues));
-        $conditions = array(new ColumnCondition($t3->get($fk1Name), 'in', $pkIds));
+        $condition = new ColumnCondition($t3->get($fk1Name), 'in', $pkIds);
 
-        $records = $db->selectAllUnordered($t3, $columnNames, $conditions);
+        $records = $db->selectAllUnordered($t3, $columnNames, $condition);
         foreach ($records as $record) {
             $val1 = $record[$fk1Name];
             $val2 = $record[$fk2Name];

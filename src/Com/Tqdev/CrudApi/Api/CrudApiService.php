@@ -90,7 +90,7 @@ class CrudApiService
     function list(String $tableName, array $params): ListResponse{
         $table = $this->tables->get($tableName);
         $columnNames = $this->columns->getNames($table, true, $params);
-        $conditions = $this->filters->getConditions($table, $params);
+        $condition = $this->filters->getCombinedConditions($table, $params);
         $columnOrdering = $this->ordering->getColumnOrdering($table, $params);
         if (!$this->pagination->hasPage($params)) {
             $offset = 0;
@@ -99,9 +99,9 @@ class CrudApiService
         } else {
             $offset = $this->pagination->getPageOffset($params);
             $limit = $this->pagination->getPageSize($params);
-            $count = $this->db->selectCount($table, $conditions);
+            $count = $this->db->selectCount($table, $condition);
         }
-        $records = $this->db->selectAll($table, $columnNames, $conditions, $columnOrdering, $offset, $limit);
+        $records = $this->db->selectAll($table, $columnNames, $condition, $columnOrdering, $offset, $limit);
         $this->includer->addIncludes($table, $records, $this->tables, $params, $this->db);
         return new ListResponse($records, $count);
     }

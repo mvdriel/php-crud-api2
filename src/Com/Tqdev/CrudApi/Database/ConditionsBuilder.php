@@ -2,9 +2,9 @@
 namespace Com\Tqdev\CrudApi\Database;
 
 use Com\Tqdev\CrudApi\Api\Condition\AndCondition;
-use Com\Tqdev\CrudApi\Api\Condition\BooleanCondition;
 use Com\Tqdev\CrudApi\Api\Condition\ColumnCondition;
 use Com\Tqdev\CrudApi\Api\Condition\Condition;
+use Com\Tqdev\CrudApi\Api\Condition\NoCondition;
 use Com\Tqdev\CrudApi\Api\Condition\NotCondition;
 use Com\Tqdev\CrudApi\Api\Condition\OrCondition;
 use Com\Tqdev\CrudApi\Api\Condition\SpatialCondition;
@@ -22,6 +22,9 @@ class ConditionsBuilder
 
     protected function getConditionSql(Condition $condition, array &$arguments): String
     {
+        if ($condition instanceof NoCondition) {
+            return '';
+        }
         if ($condition instanceof AndCondition) {
             return $this->getAndConditionSql($condition, $arguments);
         }
@@ -36,9 +39,6 @@ class ConditionsBuilder
         }
         if ($condition instanceof SpatialCondition) {
             return $this->getSpatialConditionSql($condition, $arguments);
-        }
-        if ($condition instanceof BooleanCondition) {
-            return $this->getBooleanConditionSql($condition, $arguments);
         }
         throw new \Exception('Unknown Condition: ' . get_class($condition));
     }
@@ -196,21 +196,12 @@ class ConditionsBuilder
         return $sql;
     }
 
-    protected function getBooleanConditionSql(BooleanCondition $condition, array &$arguments): String
+    public function getWhereClause(Condition $condition, array &$arguments): String
     {
-        $value = $condition->getValue();
-        return $value ? 'TRUE' : 'FALSE';
-    }
-
-    public function getWhereClause(array $conditions, array &$arguments): String
-    {
-        if (count($conditions) == 0) {
-            return '';
-        }
-        $condition = AndCondition::fromArray($conditions);
         $sql = $this->getConditionSql($condition, $arguments);
         if ($sql != '') {
-            return ' WHERE ' . $sql;
+            $sql = ' WHERE ' . $sql;
         }
+        return $sql;
     }
 }

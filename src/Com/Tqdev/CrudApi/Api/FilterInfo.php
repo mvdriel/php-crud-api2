@@ -3,6 +3,7 @@ namespace Com\Tqdev\CrudApi\Api;
 
 use Com\Tqdev\CrudApi\Api\Condition\AndCondition;
 use Com\Tqdev\CrudApi\Api\Condition\Condition;
+use Com\Tqdev\CrudApi\Api\Condition\NoCondition;
 use Com\Tqdev\CrudApi\Api\Condition\OrCondition;
 use Com\Tqdev\CrudApi\Api\PathTree;
 use Com\Tqdev\CrudApi\Meta\Reflection\ReflectedTable;
@@ -36,7 +37,7 @@ class FilterInfo
         return $conditions;
     }
 
-    private function combinePathTreeOfConditions(PathTree $tree) /*: ?Condition*/
+    private function combinePathTreeOfConditions(PathTree $tree): Condition
     {
         $andConditions = $tree->getValues();
         $and = AndCondition::fromArray($andConditions);
@@ -52,17 +53,15 @@ class FilterInfo
                 $and = $and->and($or);
             }
         }
+        if ($and == null) {
+            $and = new NoCondition();
+        }
         return $and;
     }
 
-    public function getConditions(ReflectedTable $table, array $params): array
+    public function getCombinedConditions(ReflectedTable $table, array $params): Condition
     {
-        $conditions = array();
-        $condition = $this->combinePathTreeOfConditions($this->getConditionsAsPathTree($table, $params));
-        if ($condition != null) {
-            $conditions[] = $condition;
-        }
-        return $conditions;
+        return $this->combinePathTreeOfConditions($this->getConditionsAsPathTree($table, $params));
     }
 
 }
