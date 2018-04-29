@@ -60,15 +60,17 @@ class CrudApiService
         return $this->db->createSingle($table, $columnValues);
     }
 
-    public function read(String $tableName, String $id, array $params) /*: ?\stdClass*/
+    public function read(String $tableName, String $id, array $params) /*: ?array*/
     {
         $table = $this->tables->get($tableName);
         $columnNames = $this->columns->getNames($table, true, $params);
         $record = $this->db->selectSingle($table, $columnNames, $id);
-        if ($record != null) {
-            $this->includer->addIncludesToRecord($table, $record, $this->tables, $params, $this->db);
+        if ($record == null) {
+            return null;
         }
-        return $record;
+        $records = array($record);
+        $this->includer->addIncludes($table, $records, $this->tables, $params, $this->db);
+        return $records[0];
     }
 
     public function update(String $tableName, String $id, array $record, array $params)
@@ -100,7 +102,7 @@ class CrudApiService
             $count = $this->db->selectCount($table, $conditions);
         }
         $records = $this->db->selectAll($table, $columnNames, $conditions, $columnOrdering, $offset, $limit);
-        $this->includer->addIncludesToRecords($table, $records, $this->tables, $params, $this->db);
+        $this->includer->addIncludes($table, $records, $this->tables, $params, $this->db);
         return new ListResponse($records, $count);
     }
 }

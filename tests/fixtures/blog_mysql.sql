@@ -72,12 +72,13 @@ DROP TABLE IF EXISTS `tags`;
 CREATE TABLE `tags` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
+  `is_important` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-INSERT INTO `tags` (`id`, `name`) VALUES
-(1,	'funny'),
-(2,	'important');
+INSERT INTO `tags` (`id`, `name`, `is_important`) VALUES
+(1,	'funny', 0),
+(2,	'important', 1);
 
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (

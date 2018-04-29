@@ -3,8 +3,8 @@ namespace Com\Tqdev\CrudApi\Api;
 
 class HabtmValues
 {
-    protected $pkValues;
-    protected $fkValues;
+    public $pkValues;
+    public $fkValues;
 
     public function __construct(array $pkValues, array $fkValues)
     {

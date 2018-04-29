@@ -1,6 +1,7 @@
 <?php
 namespace Com\Tqdev\CrudApi\Api;
 
+use Com\Tqdev\CrudApi\Api\Condition\ColumnCondition;
 use Com\Tqdev\CrudApi\Database\GenericDB;
 use Com\Tqdev\CrudApi\Meta\Reflection\DatabaseReflection;
 use Com\Tqdev\CrudApi\Meta\Reflection\ReflectedTable;
@@ -48,12 +49,6 @@ class RelationIncluder
         }
     }
 
-    public function addIncludesToRecord(ReflectedTable $table, array &$record, DatabaseReflection $tables, array $params, GenericDB $db): void
-    {
-        $records = array(&$record);
-        $this->addIncludesToRecords($table, $records, $tables, $params, $db);
-    }
-
     private function getIncludesAsPathTree(DatabaseReflection $tables, array $params): PathTree
     {
         $includes = new PathTree();
@@ -72,7 +67,7 @@ class RelationIncluder
         return $includes;
     }
 
-    public function addIncludesToRecords(ReflectedTable $table, array &$records, DatabaseReflection $tables, array $params,
+    public function addIncludes(ReflectedTable $table, array &$records, DatabaseReflection $tables, array $params,
         GenericDB $db): void{
 
         $includes = $this->getIncludesAsPathTree($tables, $params);
@@ -246,8 +241,10 @@ class RelationIncluder
 
         $columnNames = array($fk1Name, $fk2Name);
 
-        $condition = $fk1Name . ',in,' . array_keys($pkValues);
-        $records = $db->selectAllUnordered($t3, $columnNames, array($condition));
+        $pkIds = implode(',', array_keys($pkValues));
+        $conditions = array(new ColumnCondition($t3->get($fk1Name), 'in', $pkIds));
+
+        $records = $db->selectAllUnordered($t3, $columnNames, $conditions);
         foreach ($records as $record) {
             $val1 = $record[$fk1Name];
             $val2 = $record[$fk2Name];

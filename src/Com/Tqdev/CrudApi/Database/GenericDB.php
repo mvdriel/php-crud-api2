@@ -65,7 +65,7 @@ class GenericDB
         return $this->meta;
     }
 
-    public function createSingle(ReflectedTable $table, array $columnValues)
+    public function createSingle(ReflectedTable $table, array $columnValues) /*: ?String*/
     {
         $insertColumns = $this->columns->getInsert($table, $columnValues);
         $tableName = $table->getName();
@@ -76,7 +76,7 @@ class GenericDB
         return $stmt->fetchColumn();
     }
 
-    public function selectSingle(ReflectedTable $table, array $columnNames, String $id) /*: ?\stdClass*/
+    public function selectSingle(ReflectedTable $table, array $columnNames, String $id) /*: ?array*/
     {
         $selectColumns = $this->columns->getSelect($table, $columnNames);
         $tableName = $table->getName();

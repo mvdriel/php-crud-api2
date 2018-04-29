@@ -126,7 +126,7 @@ class ConditionsBuilder
                 $parts = explode(',', $value);
                 $count = count($parts);
                 if ($count > 0) {
-                    $qmarks = implode(',', explode('', str_repeat('?', $count)));
+                    $qmarks = implode(',', str_split(str_repeat('?', $count)));
                     $sql = "$column IN ($qmarks)";
                     for ($i = 0; $i < $count; $i++) {
                         $arguments[] = $parts[$i];

@@ -87,7 +87,8 @@ CREATE TABLE posts (
 
 CREATE TABLE tags (
     id serial NOT NULL,
-    name character varying(255) NOT NULL
+    name character varying(255) NOT NULL,
+    is_important boolean NOT NULL
 );
 
 
@@ -193,9 +194,9 @@ INSERT INTO "posts" ("user_id", "category_id", "content") VALUES
 -- Data for Name: tags; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO "tags" ("name") VALUES
-('funny'),
-('important');
+INSERT INTO "tags" ("name", "is_important") VALUES
+('funny', false),
+('important', true);
 
 --
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: postgres
