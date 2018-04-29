@@ -9,13 +9,13 @@ use Com\Tqdev\CrudApi\Meta\CrudMetaService;
 class CrudApiService
 {
 
-    protected $db;
-    protected $tables;
-    protected $columns;
-    protected $includer;
-    protected $filters;
-    protected $ordering;
-    protected $pagination;
+    private $db;
+    private $tables;
+    private $columns;
+    private $includer;
+    private $filters;
+    private $ordering;
+    private $pagination;
 
     public function __construct(GenericDB $db, CrudMetaService $meta)
     {
@@ -28,7 +28,7 @@ class CrudApiService
         $this->pagination = new PaginationInfo();
     }
 
-    protected function sanitizeRecord(String $tableName, array $record, String $id)
+    private function sanitizeRecord(String $tableName, array $record, String $id)
     {
         $keyset = array_keys((array) $record);
         foreach ($keyset as $key) {

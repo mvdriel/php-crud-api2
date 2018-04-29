@@ -13,14 +13,14 @@ use Com\Tqdev\CrudApi\Meta\Reflection\ReflectedColumn;
 class ConditionsBuilder
 {
 
-    protected $driver;
+    private $driver;
 
     public function __construct(String $driver)
     {
         $this->driver = $driver;
     }
 
-    protected function getConditionSql(Condition $condition, array &$arguments): String
+    private function getConditionSql(Condition $condition, array &$arguments): String
     {
         if ($condition instanceof AndCondition) {
             return $this->getAndConditionSql($condition, $arguments);
@@ -40,7 +40,7 @@ class ConditionsBuilder
         throw new \Exception('Unknown Condition: ' . get_class($condition));
     }
 
-    protected function getAndConditionSql(AndCondition $and, array &$arguments): String
+    private function getAndConditionSql(AndCondition $and, array &$arguments): String
     {
         $parts = [];
         foreach ($and->getConditions() as $condition) {
@@ -49,7 +49,7 @@ class ConditionsBuilder
         return '(' . implode(' AND ', $parts) . ')';
     }
 
-    protected function getOrConditionSql(OrCondition $or, array &$arguments): String
+    private function getOrConditionSql(OrCondition $or, array &$arguments): String
     {
         $parts = [];
         foreach ($or->getConditions() as $condition) {
@@ -58,23 +58,23 @@ class ConditionsBuilder
         return '(' . implode(' OR ', $parts) . ')';
     }
 
-    protected function getNotConditionSql(NotCondition $not, array &$arguments): String
+    private function getNotConditionSql(NotCondition $not, array &$arguments): String
     {
         $condition = $not->getCondition();
         return '(NOT ' . $this->getConditionSql($condition, $arguments) . ')';
     }
 
-    protected function quoteColumnName(ReflectedColumn $column): String
+    private function quoteColumnName(ReflectedColumn $column): String
     {
         return '"' . $column->getName() . '"';
     }
 
-    protected function escapeLikeValue(String $value): String
+    private function escapeLikeValue(String $value): String
     {
         return addcslashes($value, '%_');
     }
 
-    protected function getColumnConditionSql(ColumnCondition $condition, array &$arguments): String
+    private function getColumnConditionSql(ColumnCondition $condition, array &$arguments): String
     {
         $column = $this->quoteColumnName($condition->getColumn());
         $operator = $condition->getOperator();
@@ -143,7 +143,7 @@ class ConditionsBuilder
         return $sql;
     }
 
-    protected function getSpatialFunctionName(String $operator): String
+    private function getSpatialFunctionName(String $operator): String
     {
         switch ($operator) {
             case 'co':return 'ST_Contains';
@@ -160,12 +160,12 @@ class ConditionsBuilder
         }
     }
 
-    protected function hasSpatialArgument(String $operator): bool
+    private function hasSpatialArgument(String $operator): bool
     {
         return in_array($opertor, ['ic', 'is', 'iv']) ? false : true;
     }
 
-    protected function getSpatialFunctionCall(String $functionName, String $column, bool $hasArgument): String
+    private function getSpatialFunctionCall(String $functionName, String $column, bool $hasArgument): String
     {
         $argument = $hasArgument ? 'ST_GeomFromText(?)' : '';
         switch ($this->driver) {
@@ -179,7 +179,7 @@ class ConditionsBuilder
         }
     }
 
-    protected function getSpatialConditionSql(ColumnCondition $condition, array &$arguments): String
+    private function getSpatialConditionSql(ColumnCondition $condition, array &$arguments): String
     {
         $column = $this->quoteColumnName($condition->getColumn());
         $operator = $condition->getOperator();

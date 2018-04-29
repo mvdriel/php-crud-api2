@@ -3,7 +3,7 @@ namespace Com\Tqdev\CrudApi\Api\Condition;
 
 class OrCondition extends Condition
 {
-    protected $conditions;
+    private $conditions;
 
     public function __construct(Condition $condition1, Condition $condition2)
     {

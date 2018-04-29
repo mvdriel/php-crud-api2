@@ -7,7 +7,7 @@ use Com\Tqdev\CrudApi\Meta\Reflection\DatabaseReflection;
 class CrudMetaService
 {
 
-    protected $db;
+    private $db;
 
     public function __construct(GenericDB $db)
     {

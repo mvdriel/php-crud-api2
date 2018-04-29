@@ -4,9 +4,9 @@ namespace Com\Tqdev\CrudApi\Database;
 class GenericMeta
 {
 
-    protected $pdo;
-    protected $driver;
-    protected $database;
+    private $pdo;
+    private $driver;
+    private $database;
 
     public function __construct(\PDO $pdo, String $driver, String $database = null)
     {
@@ -15,7 +15,7 @@ class GenericMeta
         $this->database = $database;
     }
 
-    protected function getTablesSQL(): String
+    private function getTablesSQL(): String
     {
         switch ($this->driver) {
             case 'mysql':return 'SELECT "TABLE_NAME" FROM "INFORMATION_SCHEMA"."TABLES" WHERE "TABLE_TYPE" IN (\'BASE TABLE\', \'VIEW\') AND "TABLE_SCHEMA" = ?';
@@ -23,7 +23,7 @@ class GenericMeta
         }
     }
 
-    protected function getTableColumnsSQL(): String
+    private function getTableColumnsSQL(): String
     {
         switch ($this->driver) {
             case 'mysql':return 'SELECT "COLUMN_NAME", "IS_NULLABLE", "DATA_TYPE", "CHARACTER_MAXIMUM_LENGTH", "NUMERIC_PRECISION", "NUMERIC_SCALE" FROM "INFORMATION_SCHEMA"."COLUMNS" WHERE "TABLE_NAME" = ? AND "TABLE_SCHEMA" = ?';
@@ -31,7 +31,7 @@ class GenericMeta
         }
     }
 
-    protected function getTablePrimaryKeysSQL(): String
+    private function getTablePrimaryKeysSQL(): String
     {
         switch ($this->driver) {
             case 'mysql':return 'SELECT "COLUMN_NAME" FROM "INFORMATION_SCHEMA"."KEY_COLUMN_USAGE" WHERE "CONSTRAINT_NAME" = \'PRIMARY\' AND "TABLE_NAME" = ? AND "TABLE_SCHEMA" = ?';
@@ -39,7 +39,7 @@ class GenericMeta
         }
     }
 
-    protected function getTableForeignKeysSQL(): String
+    private function getTableForeignKeysSQL(): String
     {
         switch ($this->driver) {
             case 'mysql':return 'SELECT "COLUMN_NAME", "REFERENCED_TABLE_NAME" FROM "INFORMATION_SCHEMA"."KEY_COLUMN_USAGE" WHERE "REFERENCED_TABLE_NAME" IS NOT NULL AND "TABLE_NAME" = ? AND "TABLE_SCHEMA" = ?';

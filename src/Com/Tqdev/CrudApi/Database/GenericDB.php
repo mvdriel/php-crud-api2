@@ -8,14 +8,14 @@ use Com\Tqdev\CrudApi\Meta\Reflection\ReflectedTable;
 class GenericDB
 {
 
-    protected $driver;
-    protected $database;
-    protected $pdo;
-    protected $meta;
-    protected $columns;
-    protected $conditions;
+    private $driver;
+    private $database;
+    private $pdo;
+    private $meta;
+    private $columns;
+    private $conditions;
 
-    protected function getDsn(String $address, String $port = null, String $database = null): String
+    private function getDsn(String $address, String $port = null, String $database = null): String
     {
         switch ($this->driver) {
             case 'mysql':return "$this->driver:host=$address;port=$port;dbname=$database;charset=utf8mb4";
@@ -23,7 +23,7 @@ class GenericDB
         }
     }
 
-    protected function getCommands(): array
+    private function getCommands(): array
     {
         switch ($this->driver) {
             case 'mysql':return [

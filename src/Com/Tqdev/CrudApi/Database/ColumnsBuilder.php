@@ -7,7 +7,7 @@ use Com\Tqdev\CrudApi\Meta\Reflection\ReflectedTable;
 class ColumnsBuilder
 {
 
-    protected $driver;
+    private $driver;
 
     public function __construct(String $driver)
     {
@@ -33,7 +33,7 @@ class ColumnsBuilder
         }
     }
 
-    protected function quoteColumnName(ReflectedColumn $column): String
+    private function quoteColumnName(ReflectedColumn $column): String
     {
         return '"' . $column->getName() . '"';
     }

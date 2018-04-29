@@ -5,9 +5,9 @@ use Com\Tqdev\CrudApi\Meta\Reflection\ReflectedColumn;
 
 class ColumnCondition extends Condition
 {
-    protected $column;
-    protected $operator;
-    protected $value;
+    private $column;
+    private $operator;
+    private $value;
 
     public function __construct(ReflectedColumn $column, String $operator, String $value)
     {

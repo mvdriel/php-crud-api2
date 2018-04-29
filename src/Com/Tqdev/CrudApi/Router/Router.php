@@ -9,8 +9,8 @@ use Com\Tqdev\CrudApi\Response;
 class Router
 {
 
-    protected $handlers;
-    protected $responder;
+    private $handlers;
+    private $responder;
 
     public function __construct(Responder $responder)
     {

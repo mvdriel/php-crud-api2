@@ -4,9 +4,9 @@ namespace Com\Tqdev\CrudApi\Api\Record;
 class ListResponse implements \JsonSerializable
 {
 
-    protected $records;
+    private $records;
 
-    protected $results;
+    private $results;
 
     public function __construct(array $records, int $results)
     {

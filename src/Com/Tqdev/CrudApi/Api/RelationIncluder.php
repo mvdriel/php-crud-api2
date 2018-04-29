@@ -10,7 +10,7 @@ use Com\Tqdev\CrudApi\Meta\Reflection\ReflectedTable;
 class RelationIncluder
 {
 
-    protected $columns;
+    private $columns;
 
     public function __construct(ColumnSelector $columns)
     {

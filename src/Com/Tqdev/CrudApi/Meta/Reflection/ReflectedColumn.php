@@ -4,13 +4,13 @@ namespace Com\Tqdev\CrudApi\Meta\Reflection;
 class ReflectedColumn
 {
 
-    protected $name;
-    protected $nullable;
-    protected $type;
-    protected $length;
-    protected $precision;
-    protected $scale;
-    protected $value;
+    private $name;
+    private $nullable;
+    private $type;
+    private $length;
+    private $precision;
+    private $scale;
+    private $value;
 
     public function __construct(array $columnResult)
     {

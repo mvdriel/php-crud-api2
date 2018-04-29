@@ -11,7 +11,7 @@ use Com\Tqdev\CrudApi\Meta\Reflection\ReflectedTable;
 class FilterInfo
 {
 
-    protected function addConditionFromFilterPath(PathTree $conditions, array $path, ReflectedTable $table, array $params)
+    private function addConditionFromFilterPath(PathTree $conditions, array $path, ReflectedTable $table, array $params)
     {
         $key = 'filter' . implode('', $path);
         if (isset($params[$key])) {
@@ -24,7 +24,7 @@ class FilterInfo
         }
     }
 
-    protected function getConditionsAsPathTree(ReflectedTable $table, array $params): PathTree
+    private function getConditionsAsPathTree(ReflectedTable $table, array $params): PathTree
     {
         $conditions = new PathTree();
         $this->addConditionFromFilterPath($conditions, [], $table, $params);

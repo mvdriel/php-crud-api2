@@ -11,8 +11,8 @@ use Com\Tqdev\CrudApi\Router\CorsProtectedRouter;
 class CrudApiController
 {
 
-    protected $service;
-    protected $responder;
+    private $service;
+    private $responder;
 
     public function __construct(CorsProtectedRouter $router, CrudApiService $service, Responder $responder)
     {

@@ -6,8 +6,8 @@ use Com\Tqdev\CrudApi\Database\GenericMeta;
 class DatabaseReflection
 {
 
-    protected $meta;
-    protected $tables;
+    private $meta;
+    private $tables;
 
     public function __construct(GenericMeta $meta)
     {

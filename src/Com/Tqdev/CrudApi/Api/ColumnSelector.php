@@ -6,12 +6,12 @@ use Com\Tqdev\CrudApi\Meta\Reflection\ReflectedTable;
 class ColumnSelector
 {
 
-    protected function isMandatory(String $tableName, String $columnName, array $params): bool
+    private function isMandatory(String $tableName, String $columnName, array $params): bool
     {
         return isset($params['mandatory']) && in_array($tableName . "." . $columnName, $params['mandatory']);
     }
 
-    protected function select(String $tableName, bool $primaryTable, array $params, String $paramName,
+    private function select(String $tableName, bool $primaryTable, array $params, String $paramName,
         array $columnNames, bool $include): array{
         if (!isset($params[$paramName])) {
             return $columnNames;

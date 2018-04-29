@@ -4,7 +4,7 @@ namespace Com\Tqdev\CrudApi;
 class Config
 {
 
-    protected $values = [
+    private $values = [
         'driver' => null,
         'address' => 'localhost',
         'port' => null,
@@ -14,7 +14,7 @@ class Config
         'allowedOrigins' => '*',
     ];
 
-    protected function getDefaultDriver(array $values): String
+    private function getDefaultDriver(array $values): String
     {
         if (isset($values['driver'])) {
             return $values['driver'];
@@ -22,7 +22,7 @@ class Config
         return 'mysql';
     }
 
-    protected function getDefaultPort(String $driver): int
+    private function getDefaultPort(String $driver): int
     {
         switch ($driver) {
             case 'mysql':return 3306;
@@ -30,7 +30,7 @@ class Config
         }
     }
 
-    protected function getDefaultAddress(String $driver): String
+    private function getDefaultAddress(String $driver): String
     {
         switch ($driver) {
             case 'mysql':return 'localhost';
@@ -38,7 +38,7 @@ class Config
         }
     }
 
-    protected function getDriverDefaults(String $driver): array
+    private function getDriverDefaults(String $driver): array
     {
         return [
             'driver' => $driver,

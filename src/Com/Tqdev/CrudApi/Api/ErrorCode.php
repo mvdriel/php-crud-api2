@@ -6,9 +6,9 @@ use Com\Tqdev\CrudApi\Response;
 class ErrorCode
 {
 
-    protected $code;
-    protected $message;
-    protected $status;
+    private $code;
+    private $message;
+    private $status;
 
     const ERROR_NOT_FOUND = 9999;
     const ROUTE_NOT_FOUND = 1000;
@@ -20,7 +20,7 @@ class ErrorCode
     const DUPLICATE_KEY_EXCEPTION = 1009;
     const DATA_INTEGRITY_VIOLATION = 1010;
 
-    protected $values = [
+    private $values = [
         9999 => ["%s", Response::INTERNAL_SERVER_ERROR],
         1000 => ["Route '%s' not found", Response::NOT_FOUND],
         1001 => ["Table '%s' not found", Response::NOT_FOUND],

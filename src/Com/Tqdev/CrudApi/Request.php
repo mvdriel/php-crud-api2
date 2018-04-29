@@ -4,11 +4,11 @@ namespace Com\Tqdev\CrudApi;
 class Request
 {
 
-    protected $method;
-    protected $path;
-    protected $params;
-    protected $body;
-    protected $headers;
+    private $method;
+    private $path;
+    private $params;
+    private $body;
+    private $headers;
 
     public function __construct(String $method = null, String $path = null, String $query = null, String $body = null)
     {
@@ -19,7 +19,7 @@ class Request
         $this->headers = array();
     }
 
-    protected function parseMethod(String $method = null)
+    private function parseMethod(String $method = null)
     {
         if (!$method) {
             if (isset($_SERVER['REQUEST_METHOD'])) {
@@ -31,7 +31,7 @@ class Request
         $this->method = $method;
     }
 
-    protected function parsePath(String $path = null)
+    private function parsePath(String $path = null)
     {
         if (!$path) {
             if (isset($_SERVER['PATH_INFO'])) {
@@ -43,7 +43,7 @@ class Request
         $this->path = explode('/', $path);
     }
 
-    protected function parseParams(String $query = null)
+    private function parseParams(String $query = null)
     {
         if (!$query) {
             if (isset($_SERVER['QUERY_STRING'])) {
@@ -56,7 +56,7 @@ class Request
         parse_str($query, $this->params);
     }
 
-    protected function parseBody(String $body = null)
+    private function parseBody(String $body = null)
     {
         if (!$body) {
             $body = file_get_contents('php://input');

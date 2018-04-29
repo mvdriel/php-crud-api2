@@ -6,10 +6,10 @@ use Com\Tqdev\CrudApi\Database\GenericMeta;
 class ReflectedTable
 {
 
-    protected $name;
-    protected $columns;
-    protected $pk;
-    protected $fks;
+    private $name;
+    private $columns;
+    private $pk;
+    private $fks;
 
     public function __construct(GenericMeta $meta, array $tableResult)
     {

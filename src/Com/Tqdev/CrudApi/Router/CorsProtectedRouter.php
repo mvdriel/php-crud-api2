@@ -9,7 +9,7 @@ use Com\Tqdev\CrudApi\Router\Router;
 class CorsProtectedRouter extends Router
 {
 
-    protected $allowedOrigins;
+    private $allowedOrigins;
 
     public function __construct(Responder $responder, String $allowedOrigins)
     {
@@ -17,7 +17,7 @@ class CorsProtectedRouter extends Router
         parent::__construct($responder);
     }
 
-    protected function isOriginAllowed(String $origin, String $allowedOrigins): bool
+    private function isOriginAllowed(String $origin, String $allowedOrigins): bool
     {
         $found = false;
         foreach (explode(',', $allowedOrigins) as $allowedOrigin) {

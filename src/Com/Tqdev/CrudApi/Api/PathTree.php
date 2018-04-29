@@ -4,9 +4,9 @@ namespace Com\Tqdev\CrudApi\Api;
 class PathTree
 {
 
-    protected $values = array();
+    private $values = array();
 
-    protected $branches = array();
+    private $branches = array();
 
     public function getValues(): array
     {

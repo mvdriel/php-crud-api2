@@ -10,9 +10,9 @@ class Response
     const FORBIDDEN = 403;
     const NOT_ACCEPTABLE = 406;
 
-    protected $status;
-    protected $headers;
-    protected $body;
+    private $status;
+    private $headers;
+    private $body;
 
     public function __construct(int $status, $body)
     {
@@ -21,7 +21,7 @@ class Response
         $this->parseBody($body);
     }
 
-    protected function parseBody($body)
+    private function parseBody($body)
     {
         $data = json_encode($body);
         $this->addHeader('Content-Type', 'application/json');

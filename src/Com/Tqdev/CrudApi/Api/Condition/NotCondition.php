@@ -3,7 +3,7 @@ namespace Com\Tqdev\CrudApi\Api\Condition;
 
 class NotCondition extends Condition
 {
-    protected $condition;
+    private $condition;
 
     public function __construct(Condition $condition)
     {
