@@ -64,7 +64,11 @@ class CrudApiService
     {
         $table = $this->tables->get($tableName);
         $columnNames = $this->columns->getNames($table, true, $params);
-        return $this->db->selectSingle($table, $columnNames, $id);
+        $record = $this->db->selectSingle($table, $columnNames, $id);
+        if ($record != null) {
+            $this->includer->addIncludesToRecord($table, $record, $this->tables, $params, $this->db);
+        }
+        return $record;
     }
 
     public function update(String $tableName, String $id, array $record, array $params)

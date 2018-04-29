@@ -50,7 +50,7 @@ class RelationIncluder
 
     public function addIncludesToRecord(ReflectedTable $table, array &$record, DatabaseReflection $tables, array $params, GenericDB $db): void
     {
-        $records = array($record);
+        $records = array(&$record);
         $this->addIncludesToRecords($table, $records, $tables, $params, $db);
     }
 
@@ -201,7 +201,7 @@ class RelationIncluder
     private function addPkRecords(ReflectedTable $t1, ReflectedTable $t2, array $pkValues, array $params, GenericDB $db, array &$records): void
     {
         $fks = $t2->getFksTo($t1->getName());
-        $columnNames = $columns->getColumnNames($t2, false, $params);
+        $columnNames = $this->columns->getNames($t2, false, $params);
         $fkIds = array_keys($pkValues);
 
         foreach ($db->selectMultiple($t2, $columnNames, $fkIds) as $record) {
