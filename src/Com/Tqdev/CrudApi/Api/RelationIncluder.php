@@ -60,13 +60,14 @@ class RelationIncluder
         if (isset($params['include'])) {
             foreach ($params['include'] as $includedTableNames) {
                 $path = array();
+                $t = null;
                 foreach (explode(',', $includedTableNames) as $includedTableName) {
                     $t = $tables->get($includedTableName);
                     if ($t != null) {
                         $path[] = $t->getName();
                     }
                 }
-                $includes->put($path, null);
+                $includes->put($path, $t);
             }
         }
         return $includes;
