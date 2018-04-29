@@ -7,11 +7,17 @@ abstract class Condition
 {
     public function _and(Condition $condition): Condition
     {
+        if ($condition instanceof NoCondition) {
+            return $this;
+        }
         return new AndCondition($this, $condition);
     }
 
     public function _or(Condition $condition): Condition
     {
+        if ($condition instanceof NoCondition) {
+            return $this;
+        }
         return new OrCondition($this, $condition);
     }
 
@@ -20,7 +26,7 @@ abstract class Condition
         return new NotCondition($this);
     }
 
-    public static function fromString(ReflectedTable $table, String $value) /*: ?Condition*/
+    public static function fromString(ReflectedTable $table, String $value): Condition
     {
         $condition = null;
         $parts = explode(',', $value, 3);

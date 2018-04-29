@@ -3,7 +3,6 @@ namespace Com\Tqdev\CrudApi\Api;
 
 use Com\Tqdev\CrudApi\Api\Condition\AndCondition;
 use Com\Tqdev\CrudApi\Api\Condition\Condition;
-use Com\Tqdev\CrudApi\Api\Condition\NoCondition;
 use Com\Tqdev\CrudApi\Api\Condition\OrCondition;
 use Com\Tqdev\CrudApi\Api\PathTree;
 use Com\Tqdev\CrudApi\Meta\Reflection\ReflectedTable;
@@ -46,17 +45,7 @@ class FilterInfo
             $orConditions[] = $this->combinePathTreeOfConditions($tree->get($p));
         }
         $or = OrCondition::fromArray($orConditions);
-        if ($and == null) {
-            $and = $or;
-        } else {
-            if ($or != null) {
-                $and = $and->_and($or);
-            }
-        }
-        if ($and == null) {
-            $and = new NoCondition();
-        }
-        return $and;
+        return $and->_and($or);
     }
 
     public function getCombinedConditions(ReflectedTable $table, array $params): Condition

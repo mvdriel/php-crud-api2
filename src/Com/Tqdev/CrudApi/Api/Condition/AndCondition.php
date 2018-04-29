@@ -1,6 +1,8 @@
 <?php
 namespace Com\Tqdev\CrudApi\Api\Condition;
 
+use Com\Tqdev\CrudApi\Api\Condition\NoCondition;
+
 class AndCondition extends Condition
 {
     private $conditions;
@@ -21,10 +23,10 @@ class AndCondition extends Condition
         return $this->conditions;
     }
 
-    public static function fromArray(array $conditions) /*: ?Condition*/
+    public static function fromArray(array $conditions): Condition
     {
         if (count($conditions) == 0) {
-            return null;
+            return new NoCondition();
         }
         if (count($conditions) == 1) {
             return $conditions[0];
