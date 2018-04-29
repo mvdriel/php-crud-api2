@@ -17,6 +17,7 @@ class Api
 
     private $router;
     private $responder;
+    private $debug;
 
     public function __construct(Config $config)
     {
@@ -35,6 +36,7 @@ class Api
         new CrudApiController($router, $api, $responder);
         $this->router = $router;
         $this->responder = $responder;
+        $this->debug = $config->getDebug();
     }
 
     public function handle(Request $request): Response
@@ -43,7 +45,10 @@ class Api
         try {
             $response = $this->router->route($request);
         } catch (\Throwable $e) {
-            $response = $this->responder->error(ErrorCode::ERROR_NOT_FOUND, $e->getMessage() . ' in ' . $e->getFile() . ' on line ' . $e->getLine());
+            $response = $this->responder->error(ErrorCode::ERROR_NOT_FOUND, $e->getMessage());
+            if ($this->debug) {
+                $response->addHeader('X-Debug-Info', 'Exception in ' . $e->getFile() . ' on line ' . $e->getLine());
+            }
         }
         return $response;
     }

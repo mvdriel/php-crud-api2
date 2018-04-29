@@ -142,7 +142,7 @@ class Request
         $lines = explode("\n", $head);
         $line = explode(' ', trim(array_shift($lines)), 2);
         $method = $line[0];
-        $url = $line[1];
+        $url = isset($line[1]) ? $line[1] : '';
         $headers = array();
         $path = parse_url($url, PHP_URL_PATH);
         $query = parse_url($url, PHP_URL_QUERY);

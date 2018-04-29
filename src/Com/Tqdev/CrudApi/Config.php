@@ -12,6 +12,7 @@ class Config
         'username' => null,
         'password' => null,
         'allowedOrigins' => '*',
+        'debug' => false,
     ];
 
     private function getDefaultDriver(array $values): String
@@ -93,5 +94,10 @@ class Config
     public function getAllowedOrigins(): String
     {
         return $this->values['allowedOrigins'];
+    }
+
+    public function getDebug(): String
+    {
+        return $this->values['debug'];
     }
 }
