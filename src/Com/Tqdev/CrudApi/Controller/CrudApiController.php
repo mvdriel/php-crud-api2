@@ -39,6 +39,9 @@ class CrudApiController
     {
         $table = $request->getPath(1);
         $record = $request->getBody();
+        if ($record === null) {
+            return $this->responder->error(ErrorCode::HTTP_MESSAGE_NOT_READABLE, '');
+        }
         $params = $request->getParams();
         if (!$this->service->exists($table)) {
             return $this->responder->error(ErrorCode::TABLE_NOT_FOUND, $table);
@@ -75,6 +78,9 @@ class CrudApiController
         $table = $request->getPath(1);
         $id = $request->getPath(2);
         $record = $request->getBody();
+        if ($record === null) {
+            return $this->responder->error(ErrorCode::HTTP_MESSAGE_NOT_READABLE, '');
+        }
         $params = $request->getParams();
         if (!$this->service->exists($table)) {
             return $this->responder->error(ErrorCode::TABLE_NOT_FOUND, $table);

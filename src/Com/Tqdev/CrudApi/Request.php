@@ -93,7 +93,7 @@ class Request
             $body = json_decode($body, true);
             $causeCode = json_last_error();
             if ($causeCode !== JSON_ERROR_NONE) {
-                throw new \Exception("Error decoding input JSON. json_last_error code: " . $causeCode);
+                return null;
             }
         } else {
             parse_str($body, $input);
