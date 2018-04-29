@@ -4,6 +4,7 @@ namespace Com\Tqdev\CrudApi\Database;
 use Com\Tqdev\CrudApi\Api\Condition\AndCondition;
 use Com\Tqdev\CrudApi\Api\Condition\ColumnCondition;
 use Com\Tqdev\CrudApi\Api\Condition\Condition;
+use Com\Tqdev\CrudApi\Api\Condition\NoCondition;
 use Com\Tqdev\CrudApi\Api\Condition\NotCondition;
 use Com\Tqdev\CrudApi\Api\Condition\OrCondition;
 use Com\Tqdev\CrudApi\Api\Condition\SpatialCondition;
