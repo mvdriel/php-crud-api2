@@ -53,4 +53,15 @@ class ReflectedTable
     {
         return $this->columns[$columnName];
     }
+
+    public function getFksTo(String $tableName): array
+    {
+        $columns = array();
+        foreach ($this->fks as $columnName => $referencedTableName) {
+            if ($tableName == $referencedTableName) {
+                $columns[] = $this->columns[$columnName];
+            }
+        }
+        return $columns;
+    }
 }

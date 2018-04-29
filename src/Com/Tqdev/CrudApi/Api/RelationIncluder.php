@@ -10,7 +10,7 @@ class RelationIncluder
 
     protected $columns;
 
-    public function RelationIncluder(ColumnSelector $columns)
+    public function __construct(ColumnSelector $columns)
     {
         $this->columns = $columns;
     }
@@ -54,19 +54,19 @@ class RelationIncluder
         $this->addIncludesToRecords($table, $records, $tables, $params, $db);
     }
 
-    private function getIncludesAsTreeMap(DatabaseReflection $tables, array $params): TreeMap
+    private function getIncludesAsPathTree(DatabaseReflection $tables, array $params): PathTree
     {
-        $includes = new TreeMap();
+        $includes = new PathTree();
         if (isset($params['include'])) {
             foreach ($params['include'] as $includedTableNames) {
                 $path = array();
                 foreach (explode(',', $includedTableNames) as $includedTableName) {
                     $t = $tables->get($includedTableName);
                     if ($t != null) {
-                        $path[] = $t;
+                        $path[] = $t->getName();
                     }
                 }
-                $includes->put($path);
+                $includes->put($path, null);
             }
         }
         return $includes;
@@ -75,7 +75,7 @@ class RelationIncluder
     public function addIncludesToRecords(ReflectedTable $table, array &$records, DatabaseReflection $tables, array $params,
         GenericDB $db): void{
 
-        $includes = $this->getIncludesAsTreeMap($tables, $params);
+        $includes = $this->getIncludesAsPathTree($tables, $params);
         $this->addIncludesForTables($table, $includes, $records, $tables, $params, $db);
     }
 
@@ -90,15 +90,17 @@ class RelationIncluder
         return null;
     }
 
-    private function addIncludesForTables(ReflectedTable $t1, TreeMap $includes, array &$records,
+    private function addIncludesForTables(ReflectedTable $t1, PathTree $includes, array &$records,
         DatabaseReflection $tables, array $params, GenericDB $db) {
 
-        foreach ($includes->getKeys() as $t2) {
+        foreach ($includes->getKeys() as $t2Name) {
+
+            $t2 = $tables->get($t2Name);
 
             $belongsTo = count($t1->getFksTo($t2->getName())) > 0;
             $hasMany = count($t2->getFksTo($t1->getName())) > 0;
             $t3 = $this->hasAndBelongsToMany($t1, $t2, $tables);
-            $hasAndBelongsToMany = (t3 != null);
+            $hasAndBelongsToMany = ($t3 != null);
 
             $newRecords = array();
             $fkValues = null;
@@ -118,7 +120,7 @@ class RelationIncluder
                 $this->addFkRecords($t2, $habtmValues->fkValues, $params, $db, $newRecords);
             }
 
-            $this->addIncludesForTables($t2, $includes->get($t2), $newRecords, $tables, $params, $db);
+            $this->addIncludesForTables($t2, $includes->get($t2Name), $newRecords, $tables, $params, $db);
 
             if ($fkValues != null) {
                 $this->fillFkValues($t2, $newRecords, $fkValues);
@@ -154,7 +156,7 @@ class RelationIncluder
     private function addFkRecords(ReflectedTable $t2, array $fkValues, array $params, GenericDB $db, array &$records): void
     {
         $pk = $t2->getPk();
-        $columnNames = $columns->getColumnNames($t2, false, $params);
+        $columnNames = $this->columns->getNames($t2, false, $params);
         $fkIds = array_keys($fkValues);
 
         foreach ($db->selectMultiple($t2, $columnNames, $fkIds) as $record) {
@@ -178,6 +180,7 @@ class RelationIncluder
             $fkName = $fk->getName();
             foreach ($records as $i => $record) {
                 if (isset($record[$fkName])) {
+                    $key = $record[$fkName];
                     $records[$i][$fkName] = $fkValues[$key];
                 }
             }

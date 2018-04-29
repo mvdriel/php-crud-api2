@@ -43,7 +43,7 @@ class Api
         try {
             $response = $this->router->route($request);
         } catch (\Throwable $e) {
-            $response = $this->responder->error(ErrorCode::ERROR_NOT_FOUND, $e->getMessage());
+            $response = $this->responder->error(ErrorCode::ERROR_NOT_FOUND, $e->getMessage() . ' in ' . $e->getFile() . ' on line ' . $e->getLine());
         }
         return $response;
     }
