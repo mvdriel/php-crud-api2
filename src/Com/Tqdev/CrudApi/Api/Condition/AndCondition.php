@@ -25,15 +25,9 @@ class AndCondition extends Condition
 
     public static function fromArray(array $conditions): Condition
     {
-        if (count($conditions) == 0) {
-            return new NoCondition();
-        }
-        if (count($conditions) == 1) {
-            return $conditions[0];
-        }
-        $condition = new AndCondition($conditions[0], $conditions[1]);
-        for ($i = 2; $i < count($conditions); $i++) {
-            $condition = $condition->_and($conditions[$i]);
+        $condition = new NoCondition();
+        foreach ($conditions as $c) {
+            $condition = $condition->_and($c);
         }
         return $condition;
     }
