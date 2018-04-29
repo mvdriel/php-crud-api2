@@ -14,7 +14,7 @@ class GenericDB
     private $meta;
     private $columns;
     private $conditions;
-    private $types;
+    private $converter;
 
     private function getDsn(String $address, String $port = null, String $database = null): String
     {
@@ -54,9 +54,9 @@ class GenericDB
             $this->pdo->query($command);
         }
         $this->meta = new GenericMeta($this->pdo, $driver, $database);
-        $this->columns = new ColumnsBuilder($driver);
         $this->conditions = new ConditionsBuilder($driver);
-        $this->types = new TypeConverter($driver);
+        $this->columns = new ColumnsBuilder($driver);
+        $this->converter = new DataConverter($driver);
     }
 
     public function pdo(): \PDO
@@ -71,13 +71,14 @@ class GenericDB
 
     public function createSingle(ReflectedTable $table, array $columnValues) /*: ?String*/
     {
+        $this->converter->convertColumnValues($table, $columnValues);
         $insertColumns = $this->columns->getInsert($table, $columnValues);
         $tableName = $table->getName();
         $parameters = array_values($columnValues);
-        $stmt = $this->pdo->prepare('INSERT INTO "' . $tableName . '" ' . $insertColumns);
-        $stmt->execute($parameters);
-        $stmt = $this->pdo->prepare('SELECT ' . $this->columns->getLastInsertId());
-        $stmt->execute();
+        $sql = 'INSERT INTO "' . $tableName . '" ' . $insertColumns;
+        $stmt = $this->query($sql, $parameters);
+        $sql = 'SELECT ' . $this->columns->getLastInsertId();
+        $stmt = $this->query($sql, array());
         return $stmt->fetchColumn();
     }
 
@@ -88,14 +89,14 @@ class GenericDB
         $condition = new ColumnCondition($table->getPk(), 'eq', $id);
         $parameters = array();
         $whereClause = $this->conditions->getWhereClause($condition, $parameters);
-        $stmt = $this->pdo->prepare('SELECT ' . $selectColumns . ' FROM "' . $tableName . '" ' . $whereClause);
-        $stmt->execute($parameters);
+        $sql = 'SELECT ' . $selectColumns . ' FROM "' . $tableName . '" ' . $whereClause;
+        $stmt = $this->query($sql, $parameters);
         $record = $stmt->fetch() ?: null;
         if ($record === null) {
             return null;
         }
         $records = array($record);
-        $this->types->convertRecords($table, $columnNames, $records);
+        $this->converter->convertRecords($table, $columnNames, $records);
         return $records[0];
     }
 
@@ -109,10 +110,10 @@ class GenericDB
         $condition = new ColumnCondition($table->getPk(), 'in', implode(',', $ids));
         $parameters = array();
         $whereClause = $this->conditions->getWhereClause($condition, $parameters);
-        $stmt = $this->pdo->prepare('SELECT ' . $selectColumns . ' FROM "' . $tableName . '" ' . $whereClause);
-        $stmt->execute($parameters);
+        $sql = 'SELECT ' . $selectColumns . ' FROM "' . $tableName . '" ' . $whereClause;
+        $stmt = $this->query($sql, $parameters);
         $records = $stmt->fetchAll();
-        $this->types->convertRecords($table, $columnNames, $records);
+        $this->converter->convertRecords($table, $columnNames, $records);
         return $records;
     }
 
@@ -121,8 +122,8 @@ class GenericDB
         $tableName = $table->getName();
         $parameters = array();
         $whereClause = $this->conditions->getWhereClause($condition, $parameters);
-        $stmt = $this->pdo->prepare('SELECT COUNT(*) FROM "' . $tableName . '"' . $whereClause);
-        $stmt->execute($parameters);
+        $sql = 'SELECT COUNT(*) FROM "' . $tableName . '"' . $whereClause;
+        $stmt = $this->query($sql, $parameters);
         return $stmt->fetchColumn(0);
     }
 
@@ -132,10 +133,10 @@ class GenericDB
         $tableName = $table->getName();
         $parameters = array();
         $whereClause = $this->conditions->getWhereClause($condition, $parameters);
-        $stmt = $this->pdo->prepare('SELECT ' . $selectColumns . ' FROM "' . $tableName . '"' . $whereClause);
-        $stmt->execute($parameters);
+        $sql = 'SELECT ' . $selectColumns . ' FROM "' . $tableName . '"' . $whereClause;
+        $stmt = $this->query($sql, $parameters);
         $records = $stmt->fetchAll();
-        $this->types->convertRecords($table, $columnNames, $records);
+        $this->converter->convertRecords($table, $columnNames, $records);
         return $records;
     }
 
@@ -147,22 +148,23 @@ class GenericDB
         $whereClause = $this->conditions->getWhereClause($condition, $parameters);
         $orderBy = $this->columns->getOrderBy($table, $columnOrdering);
         $offsetLimit = $this->columns->getOffsetLimit($offset, $limit);
-        $stmt = $this->pdo->prepare('SELECT ' . $selectColumns . ' FROM "' . $tableName . '"' . $whereClause . ' ORDER BY ' . $orderBy . ' ' . $offsetLimit);
-        $stmt->execute($parameters);
+        $sql = 'SELECT ' . $selectColumns . ' FROM "' . $tableName . '"' . $whereClause . ' ORDER BY ' . $orderBy . ' ' . $offsetLimit;
+        $stmt = $this->query($sql, $parameters);
         $records = $stmt->fetchAll();
-        $this->types->convertRecords($table, $columnNames, $records);
+        $this->converter->convertRecords($table, $columnNames, $records);
         return $records;
     }
 
     public function updateSingle(ReflectedTable $table, array $columnValues, String $id)
     {
+        $this->converter->convertColumnValues($table, $columnValues);
         $updateColumns = $this->columns->getUpdate($table, $columnValues);
         $tableName = $table->getName();
         $condition = new ColumnCondition($table->getPk(), 'eq', $id);
         $parameters = array_values($columnValues);
         $whereClause = $this->conditions->getWhereClause($condition, $parameters);
-        $stmt = $this->pdo->prepare('UPDATE "' . $tableName . '" SET ' . $updateColumns . $whereClause);
-        $stmt->execute($parameters);
+        $sql = 'UPDATE "' . $tableName . '" SET ' . $updateColumns . $whereClause;
+        $stmt = $this->query($sql, $parameters);
         return $stmt->rowCount();
     }
 
@@ -172,8 +174,16 @@ class GenericDB
         $condition = new ColumnCondition($table->getPk(), 'eq', $id);
         $parameters = array();
         $whereClause = $this->conditions->getWhereClause($condition, $parameters);
-        $stmt = $this->pdo->prepare('DELETE FROM "' . $tableName . '" ' . $whereClause);
-        $stmt->execute($parameters);
+        $sql = 'DELETE FROM "' . $tableName . '" ' . $whereClause;
+        $stmt = $this->query($sql, $parameters);
         return $stmt->rowCount();
+    }
+
+    private function query(String $sql, array $parameters): \PDOStatement
+    {
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($parameters);
+        //echo "- $sql -- " . json_encode($parameters) . "\n";
+        return $stmt;
     }
 }

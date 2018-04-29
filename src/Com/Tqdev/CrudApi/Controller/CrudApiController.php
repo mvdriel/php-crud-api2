@@ -16,7 +16,7 @@ class CrudApiController
 
     public function __construct(CorsProtectedRouter $router, CrudApiService $service, Responder $responder)
     {
-        $router->registerListHandler(array($this, 'list'));
+        $router->registerListHandler(array($this, '_list'));
         $router->registerCreateHandler(array($this, 'create'));
         $router->registerReadHandler(array($this, 'read'));
         $router->registerUpdateHandler(array($this, 'update'));
@@ -25,13 +25,14 @@ class CrudApiController
         $this->responder = $responder;
     }
 
-    function list(Request $request): Response{
+    public function _list(Request $request): Response
+    {
         $table = $request->getPath(1);
         $params = $request->getParams();
         if (!$this->service->exists($table)) {
             return $this->responder->error(ErrorCode::TABLE_NOT_FOUND, $table);
         }
-        return $this->responder->success($this->service->list($table, $params));
+        return $this->responder->success($this->service->_list($table, $params));
     }
 
     public function create(Request $request): Response

@@ -56,7 +56,7 @@ class ColumnSelector
         $results = array();
         $columnNames = $this->getNames($table, $primaryTable, $params);
         foreach ($columnNames as $columnName) {
-            if (isset($record[$columnName])) {
+            if (array_key_exists($columnName, $record)) {
                 $results[$columnName] = $record[$columnName];
             }
         }

@@ -1,6 +1,7 @@
 <?php
 namespace Com\Tqdev\CrudApi\Database;
 
+use Com\Tqdev\CrudApi\Database\ColumnConverter;
 use Com\Tqdev\CrudApi\Meta\Reflection\ReflectedColumn;
 use Com\Tqdev\CrudApi\Meta\Reflection\ReflectedTable;
 
@@ -8,10 +9,12 @@ class ColumnsBuilder
 {
 
     private $driver;
+    private $converter;
 
     public function __construct(String $driver)
     {
         $this->driver = $driver;
+        $this->converter = new ColumnConverter($driver);
     }
 
     public function getLastInsertId(): String
@@ -55,6 +58,7 @@ class ColumnsBuilder
         foreach ($columnNames as $columnName) {
             $column = $table->get($columnName);
             $quotedColumnName = $this->quoteColumnName($column);
+            $quotedColumnName = $this->converter->convertColumnName($column, $quotedColumnName);
             $results[] = $quotedColumnName;
         }
         return implode(',', $results);
@@ -68,7 +72,8 @@ class ColumnsBuilder
             $column = $table->get($columnName);
             $quotedColumnName = $this->quoteColumnName($column);
             $columns[] = $quotedColumnName;
-            $values[] = '?';
+            $columnValue = $this->converter->convertColumnValue($column);
+            $values[] = $columnValue;
         }
         return '(' . implode(',', $columns) . ') VALUES (' . implode(',', $values) . ')';
     }
@@ -79,7 +84,8 @@ class ColumnsBuilder
         foreach ($columnValues as $columnName => $columnValue) {
             $column = $table->get($columnName);
             $quotedColumnName = $this->quoteColumnName($column);
-            $results[] = $quotedColumnName . '=?';
+            $columnValue = $this->converter->convertColumnValue($column);
+            $results[] = $quotedColumnName . '=' . $columnValue;
         }
         return implode(',', $results);
     }
@@ -93,7 +99,8 @@ class ColumnsBuilder
             }
             $column = $table->get($columnName);
             $quotedColumnName = $this->quoteColumnName($column);
-            $results[] = $quotedColumnName . '=' . $quotedColumnName . '+?';
+            $columnValue = $this->converter->convertColumnValue($column);
+            $results[] = $quotedColumnName . '=' . $quotedColumnName . '+' . $columnValue;
         }
         return implode(',', $results);
     }

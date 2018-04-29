@@ -88,7 +88,8 @@ class CrudApiService
         return $this->db->deleteSingle($table, $id);
     }
 
-    function list(String $tableName, array $params): ListResponse{
+    public function _list(String $tableName, array $params): ListResponse
+    {
         $table = $this->tables->get($tableName);
         $this->includer->addMandatoryColumns($table, $this->tables, $params);
         $columnNames = $this->columns->getNames($table, true, $params);
