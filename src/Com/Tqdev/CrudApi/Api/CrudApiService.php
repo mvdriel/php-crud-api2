@@ -96,6 +96,7 @@ class CrudApiService
             $count = $this->db->selectCount($table, $conditions);
         }
         $records = $this->db->selectAll($table, $columnNames, $conditions, $columnOrdering, $offset, $limit);
+        $this->includer->addIncludesToRecords($table, $records, $this->tables, $params, $this->db);
         return new ListResponse($records, $count);
     }
 }

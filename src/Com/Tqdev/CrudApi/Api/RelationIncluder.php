@@ -3,6 +3,7 @@ namespace Com\Tqdev\CrudApi\Api;
 
 use Com\Tqdev\CrudApi\Database\GenericDB;
 use Com\Tqdev\CrudApi\Meta\Reflection\DatabaseReflection;
+use Com\Tqdev\CrudApi\Meta\Reflection\ReflectedTable;
 
 class RelationIncluder
 {
@@ -14,7 +15,7 @@ class RelationIncluder
         $this->columns = $columns;
     }
 
-    public function addMandatoryColumns(String $tableName, DatabaseReflection $tables, array $params): void
+    public function addMandatoryColumns(String $tableName, DatabaseReflection $tables, array &$params): void
     {
         if (!isset($params['include']) || !isset($params['columns'])) {
             return;
@@ -47,10 +48,10 @@ class RelationIncluder
         }
     }
 
-    public function addIncludesToRecord(String $tableName, Record $record, DatabaseReflection $tables, array $params, GenericDB $db): void
+    public function addIncludesToRecord(ReflectedTable $table, array &$record, DatabaseReflection $tables, array $params, GenericDB $db): void
     {
         $records = array($record);
-        $this->addIncludes($tableName, $records, $tables, $params, $db);
+        $this->addIncludesToRecords($table, $records, $tables, $params, $db);
     }
 
     private function getIncludesAsTreeMap(DatabaseReflection $tables, array $params): TreeMap
@@ -71,11 +72,11 @@ class RelationIncluder
         return $includes;
     }
 
-    public function addIncludesToRecords(String $tableName, array $records, DatabaseReflection $tables, array $params,
+    public function addIncludesToRecords(ReflectedTable $table, array &$records, DatabaseReflection $tables, array $params,
         GenericDB $db): void{
 
         $includes = $this->getIncludesAsTreeMap($tables, $params);
-        $this->addIncludesForTables($tables->get(tableName), $includes, $records, $tables, $params, $db);
+        $this->addIncludesForTables($table, $includes, $records, $tables, $params, $db);
     }
 
     private function hasAndBelongsToMany(ReflectedTable $t1, ReflectedTable $t2, DatabaseReflection $tables) /*: ?ReflectedTable*/
@@ -89,7 +90,7 @@ class RelationIncluder
         return null;
     }
 
-    private function addIncludesForTables(ReflectedTable $t1, TreeMap $includes, array $records,
+    private function addIncludesForTables(ReflectedTable $t1, TreeMap $includes, array &$records,
         DatabaseReflection $tables, array $params, GenericDB $db) {
 
         foreach ($includes->getKeys() as $t2) {
