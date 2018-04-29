@@ -6,30 +6,36 @@ use Com\Tqdev\CrudApi\Meta\Reflection\ReflectedColumn;
 class ColumnConverter
 {
     private $driver;
+    private $types;
 
     public function __construct(String $driver)
     {
         $this->driver = $driver;
+        $this->types = new TypeInfo($driver);
     }
 
     public function convertColumnValue(ReflectedColumn $column): String
     {
-        if ($this->driver == 'pgsql' && $column->getType() == 'bytea') {
-            return "decode(?, 'base64')";
-        }
-        if ($this->driver == 'mysql' && $column->getType() == 'blob') {
-            return "FROM_BASE64(?)";
+        if ($this->types->isBinary($column)) {
+            switch ($this->driver) {
+                case 'mysql':
+                    return "FROM_BASE64(?)";
+                case 'pgsql':
+                    return "decode(?, 'base64')";
+            }
         }
         return '?';
     }
 
     public function convertColumnName(ReflectedColumn $column, $value): String
     {
-        if ($this->driver == 'pgsql' && $column->getType() == 'bytea') {
-            return "encode($value::bytea, 'base64') as $value";
-        }
-        if ($this->driver == 'mysql' && $column->getType() == 'blob') {
-            return "TO_BASE64($value) as $value";
+        if ($this->types->isBinary($column)) {
+            switch ($this->driver) {
+                case 'mysql':
+                    return "TO_BASE64($value) as $value";
+                case 'pgsql':
+                    return "encode($value::bytea, 'base64') as $value";
+            }
         }
         return $value;
     }
