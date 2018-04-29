@@ -36,7 +36,7 @@ class CrudApiService
                 unset($record[$key]);
             }
         }
-        if ($id != "") {
+        if ($id != '') {
             $pk = $this->tables->get($tableName)->getPk();
             foreach ($this->tables->get($tableName)->columnNames() as $key) {
                 $field = $this->tables->get($tableName)->get($key);
@@ -54,7 +54,7 @@ class CrudApiService
 
     public function create(String $tableName, array $record, array $params)
     {
-        $this->sanitizeRecord($tableName, $record, "");
+        $this->sanitizeRecord($tableName, $record, '');
         $table = $this->tables->get($tableName);
         $columnValues = $this->columns->getValues($table, true, $record, $params);
         return $this->db->createSingle($table, $columnValues);
