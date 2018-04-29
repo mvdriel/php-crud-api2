@@ -63,6 +63,7 @@ class CrudApiService
     public function read(String $tableName, String $id, array $params) /*: ?array*/
     {
         $table = $this->tables->get($tableName);
+        $this->includer->addMandatoryColumns($table, $this->tables, $params);
         $columnNames = $this->columns->getNames($table, true, $params);
         $record = $this->db->selectSingle($table, $columnNames, $id);
         if ($record == null) {
@@ -89,6 +90,7 @@ class CrudApiService
 
     function list(String $tableName, array $params): ListResponse{
         $table = $this->tables->get($tableName);
+        $this->includer->addMandatoryColumns($table, $this->tables, $params);
         $columnNames = $this->columns->getNames($table, true, $params);
         $condition = $this->filters->getCombinedConditions($table, $params);
         $columnOrdering = $this->ordering->getColumnOrdering($table, $params);

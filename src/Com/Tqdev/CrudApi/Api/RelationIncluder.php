@@ -17,19 +17,19 @@ class RelationIncluder
         $this->columns = $columns;
     }
 
-    public function addMandatoryColumns(String $tableName, DatabaseReflection $tables, array &$params): void
+    public function addMandatoryColumns(ReflectedTable $table, DatabaseReflection $tables, array &$params): void
     {
         if (!isset($params['include']) || !isset($params['columns'])) {
             return;
         }
-        foreach ($params['include'] as $includedTableNames) {
-            $t1 = $tables->get($tableName);
-            foreach (explode(',', $includedTableNames) as $includedTableName) {
-                if (!$tables->exists($includedTableName)) {
+        $params['mandatory'] = array();
+        foreach ($params['include'] as $tableNames) {
+            $t1 = $table;
+            foreach (explode(',', $tableNames) as $tableName) {
+                if (!$tables->exists($tableName)) {
                     continue;
                 }
-                $t2 = $tables->get($includedTableName);
-                $params['mandatory'] = array();
+                $t2 = $tables->get($tableName);
                 $fks1 = $t1->getFksTo($t2->getName());
                 $t3 = $this->hasAndBelongsToMany($t1, $t2, $tables);
                 if ($t3 != null || count($fks1) > 0) {
@@ -54,10 +54,10 @@ class RelationIncluder
     {
         $includes = new PathTree();
         if (isset($params['include'])) {
-            foreach ($params['include'] as $includedTableNames) {
+            foreach ($params['include'] as $tableNames) {
                 $path = array();
-                foreach (explode(',', $includedTableNames) as $includedTableName) {
-                    $t = $tables->get($includedTableName);
+                foreach (explode(',', $tableNames) as $tableName) {
+                    $t = $tables->get($tableName);
                     if ($t != null) {
                         $path[] = $t->getName();
                     }

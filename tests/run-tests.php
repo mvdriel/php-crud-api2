@@ -8,7 +8,7 @@ spl_autoload_register(function ($class) {
     include str_replace('\\', DIRECTORY_SEPARATOR, "..\\src\\$class.php");
 });
 
-function runDir(Api $api, String $dir): array
+function runDir(Api $api, String $dir, String $match): array
 {
     $success = 0;
     $total = 0;
@@ -21,6 +21,11 @@ function runDir(Api $api, String $dir): array
         if (is_file($file)) {
             if (substr($entry, -4) != '.log') {
                 continue;
+            }
+            if ($match != '') {
+                if (!preg_match('/' . preg_quote($match) . '/', $entry)) {
+                    continue;
+                }
             }
             $success += runTest($api, $file);
             $total += 1;
@@ -96,7 +101,7 @@ function loadFixture(Config $config)
     }
 }
 
-function run(array $drivers)
+function run(array $drivers, String $match)
 {
     foreach ($drivers as $driver) {
         $dir = __DIR__;
@@ -105,7 +110,7 @@ function run(array $drivers)
         $config = new Config($ini);
         loadFixture($config);
         $api = new Api($config);
-        $stats = runDir($api, $dir);
+        $stats = runDir($api, $dir, $match);
         $end = microtime(true);
         $time = ($end - $start) * 1000;
         $total = $stats['total'];
@@ -114,4 +119,4 @@ function run(array $drivers)
     }
 }
 
-run(['mysql', 'pgsql']);
+run(['mysql', 'pgsql'], '');
