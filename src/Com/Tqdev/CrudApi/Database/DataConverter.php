@@ -29,7 +29,7 @@ class DataConverter
         if ($this->driver == 'mysql' && $this->types->isBoolean($column)) {
             return 'boolean';
         }
-        return '';
+        return 'none';
     }
 
     public function convertRecords(ReflectedTable $table, array $columnNames, array &$records): void
@@ -37,7 +37,7 @@ class DataConverter
         foreach ($columnNames as $columnName) {
             $column = $table->get($columnName);
             $conversion = $this->getRecordValueConversion($column);
-            if ($conversion != '') {
+            if ($conversion != 'none') {
                 foreach ($records as $i => $record) {
                     $value = $records[$i][$columnName];
                     if ($value === null) {
@@ -63,7 +63,7 @@ class DataConverter
         if ($this->types->isBinary($column)) {
             return 'base64url_to_base64';
         }
-        return '';
+        return 'none';
     }
 
     public function convertColumnValues(ReflectedTable $table, array &$columnValues): void
@@ -72,7 +72,7 @@ class DataConverter
         foreach ($columnNames as $columnName) {
             $column = $table->get($columnName);
             $conversion = $this->getInputValueConversion($column);
-            if ($conversion != '') {
+            if ($conversion != 'none') {
                 $value = $columnValues[$columnName];
                 if ($value !== null) {
                     $columnValues[$columnName] = $this->convertInputValue($conversion, $value);
