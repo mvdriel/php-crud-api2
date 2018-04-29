@@ -3,11 +3,13 @@ namespace Com\Tqdev\CrudApi\Api\Condition;
 
 class NoCondition extends Condition
 {
-    function  and (Condition $condition): Condition {
+    public function _and(Condition $condition): Condition
+    {
         return $condition;
     }
 
-    function  or (Condition $condition): Condition {
+    public function _or(Condition $condition): Condition
+    {
         return $condition;
     }
 

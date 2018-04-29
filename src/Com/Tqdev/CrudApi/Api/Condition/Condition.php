@@ -5,15 +5,17 @@ use Com\Tqdev\CrudApi\Meta\Reflection\ReflectedTable;
 
 abstract class Condition
 {
-    function  and (Condition $condition): Condition {
+    public function _and(Condition $condition): Condition
+    {
         return new AndCondition($this, $condition);
     }
 
-    function  or (Condition $condition): Condition {
+    public function _or(Condition $condition): Condition
+    {
         return new OrCondition($this, $condition);
     }
 
-    public function not(): Condition
+    public function _not(): Condition
     {
         return new NotCondition($this);
     }
@@ -52,7 +54,7 @@ abstract class Condition
         }
         if ($condition != null) {
             if ($negate) {
-                $condition = $condition->not();
+                $condition = $condition->_not();
             }
         }
         return $condition;

@@ -10,7 +10,8 @@ class OrCondition extends Condition
         $this->conditions = [$condition1, $condition2];
     }
 
-    function  or (Condition $condition): Condition{
+    public function _or(Condition $condition): Condition
+    {
         $this->conditions[] = $condition;
         return $this;
     }
@@ -30,7 +31,7 @@ class OrCondition extends Condition
         }
         $condition = new OrCondition($conditions[0], $conditions[1]);
         for ($i = 2; $i < count($conditions); $i++) {
-            $condition = $condition->or($conditions[$i]);
+            $condition = $condition->_or($conditions[$i]);
         }
         return $condition;
     }

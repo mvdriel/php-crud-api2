@@ -50,7 +50,7 @@ class FilterInfo
             $and = $or;
         } else {
             if ($or != null) {
-                $and = $and->and($or);
+                $and = $and->_and($or);
             }
         }
         if ($and == null) {
