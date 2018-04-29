@@ -4,7 +4,6 @@ namespace Com\Tqdev\CrudApi\Database;
 use Com\Tqdev\CrudApi\Api\Condition\AndCondition;
 use Com\Tqdev\CrudApi\Api\Condition\ColumnCondition;
 use Com\Tqdev\CrudApi\Api\Condition\Condition;
-use Com\Tqdev\CrudApi\Api\Condition\NoCondition;
 use Com\Tqdev\CrudApi\Api\Condition\NotCondition;
 use Com\Tqdev\CrudApi\Api\Condition\OrCondition;
 use Com\Tqdev\CrudApi\Api\Condition\SpatialCondition;
@@ -22,9 +21,6 @@ class ConditionsBuilder
 
     protected function getConditionSql(Condition $condition, array &$arguments): String
     {
-        if ($condition instanceof NoCondition) {
-            return '';
-        }
         if ($condition instanceof AndCondition) {
             return $this->getAndConditionSql($condition, $arguments);
         }
@@ -198,10 +194,9 @@ class ConditionsBuilder
 
     public function getWhereClause(Condition $condition, array &$arguments): String
     {
-        $sql = $this->getConditionSql($condition, $arguments);
-        if ($sql != '') {
-            $sql = ' WHERE ' . $sql;
+        if ($condition instanceof NoCondition) {
+            return '';
         }
-        return $sql;
+        return ' WHERE ' . $this->getConditionSql($condition, $arguments);
     }
 }
