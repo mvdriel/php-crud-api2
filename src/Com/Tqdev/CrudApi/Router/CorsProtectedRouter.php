@@ -42,7 +42,7 @@ class CorsProtectedRouter extends Router
         }
         $method = $request->getMethod();
         if ($method == 'OPTIONS') {
-            $response = new Response();
+            $response = new Response(Response::OK, '');
             $response->addHeader('Access-Control-Allow-Headers', 'Content-Type, X-XSRF-TOKEN');
             $response->addHeader('Access-Control-Allow-Methods', 'OPTIONS, GET, PUT, POST, DELETE, PATCH');
             $response->addHeader('Access-Control-Allow-Credentials', 'true');

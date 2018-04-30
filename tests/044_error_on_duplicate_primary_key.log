@@ -1,0 +1,10 @@
+POST /posts
+Content-Type: application/json
+
+{"id":1,"user_id":1,"category_id":1,"content":"blog started (duplicate)"}
+===
+406
+Content-Type: application/json
+Content-Length: 49
+
+{"code":1009,"message":"Duplicate key exception"}

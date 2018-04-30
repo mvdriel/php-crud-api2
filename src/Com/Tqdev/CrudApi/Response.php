@@ -23,10 +23,14 @@ class Response
 
     private function parseBody($body)
     {
-        $data = json_encode($body);
-        $this->addHeader('Content-Type', 'application/json');
-        $this->addHeader('Content-Length', strlen($data));
-        $this->body = $data;
+        if ($body) {
+            $data = json_encode($body);
+            $this->addHeader('Content-Type', 'application/json');
+            $this->addHeader('Content-Length', strlen($data));
+            $this->body = $data;
+        } else {
+            $this->body = '';
+        }
     }
 
     public function getStatus(): int
@@ -72,8 +76,10 @@ class Response
         foreach ($this->headers as $key => $value) {
             $str .= "$key: $value\n";
         }
-        $str .= "\n";
-        $str .= "$this->body\n";
+        if ($this->body) {
+            $str .= "\n";
+            $str .= "$this->body\n";
+        }
         return $str;
     }
 }

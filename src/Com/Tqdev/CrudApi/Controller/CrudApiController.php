@@ -46,7 +46,14 @@ class CrudApiController
         if (!$this->service->exists($table)) {
             return $this->responder->error(ErrorCode::TABLE_NOT_FOUND, $table);
         }
-        return $this->responder->success($this->service->create($table, $record, $params));
+        try {
+            return $this->responder->success($this->service->create($table, $record, $params));
+        } catch (\PDOException $e) {
+            if (strpos(strtolower($e->getMessage()), 'duplicate') !== false) {
+                return $this->responder->error(ErrorCode::DUPLICATE_KEY_EXCEPTION, '');
+            }
+            throw $e;
+        }
     }
 
     public function read(Request $request): Response
