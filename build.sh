@@ -13,6 +13,7 @@ tee -a target/api.php >/dev/null <<'EOF'
  * Maurits van der Schee: maurits@vdschee.nl
  * https://github.com/mevdschee/php-crud-api
  **/
+ 
 EOF
 echo 'namespace Com\Tqdev\CrudApi;' >> target/api.php
 find . -path ./tests -prune -o -path ./target -prune -o -iname '*.php' | grep '\.php$' | sort -r | xargs cat | grep -v "^<?php\|^namespace \|^use \|spl_autoload_register\|^\s*//" >> target/api.php
