@@ -1,4 +1,4 @@
-GET /posts?order=id&size=1
+GET /data/posts?order=id&size=1
 ===
 200
 Content-Type: application/json

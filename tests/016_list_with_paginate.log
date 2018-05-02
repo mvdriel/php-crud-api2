@@ -1,4 +1,4 @@
-POST /posts
+POST /data/posts
 
 {"user_id":1,"category_id":1,"content":"#1"}
 ===
@@ -8,7 +8,7 @@ Content-Length: 1
 
 5
 ===
-POST /posts
+POST /data/posts
 
 {"user_id":1,"category_id":1,"content":"#2"}
 ===
@@ -18,7 +18,7 @@ Content-Length: 1
 
 6
 ===
-POST /posts
+POST /data/posts
 
 {"user_id":1,"category_id":1,"content":"#3"}
 ===
@@ -28,7 +28,7 @@ Content-Length: 1
 
 7
 ===
-POST /posts
+POST /data/posts
 
 {"user_id":1,"category_id":1,"content":"#4"}
 ===
@@ -38,7 +38,7 @@ Content-Length: 1
 
 8
 ===
-POST /posts
+POST /data/posts
 
 {"user_id":1,"category_id":1,"content":"#5"}
 ===
@@ -48,7 +48,7 @@ Content-Length: 1
 
 9
 ===
-POST /posts
+POST /data/posts
 
 {"user_id":1,"category_id":1,"content":"#6"}
 ===
@@ -58,7 +58,7 @@ Content-Length: 2
 
 10
 ===
-POST /posts
+POST /data/posts
 
 {"user_id":1,"category_id":1,"content":"#7"}
 ===
@@ -68,7 +68,7 @@ Content-Length: 2
 
 11
 ===
-POST /posts
+POST /data/posts
 
 {"user_id":1,"category_id":1,"content":"#8"}
 ===
@@ -78,7 +78,7 @@ Content-Length: 2
 
 12
 ===
-POST /posts
+POST /data/posts
 
 {"user_id":1,"category_id":1,"content":"#9"}
 ===
@@ -88,7 +88,7 @@ Content-Length: 2
 
 13
 ===
-POST /posts
+POST /data/posts
 
 {"user_id":1,"category_id":1,"content":"#10"}
 ===
@@ -98,7 +98,7 @@ Content-Length: 2
 
 14
 ===
-GET /posts?page=2,2&order=id
+GET /data/posts?page=2,2&order=id
 ===
 200
 Content-Type: application/json

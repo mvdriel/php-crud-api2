@@ -1,4 +1,4 @@
-GET /posts?include=tags&filter=id,eq,1
+GET /data/posts?include=tags&filter=id,eq,1
 ===
 200
 Content-Type: application/json

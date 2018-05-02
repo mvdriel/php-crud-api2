@@ -1,4 +1,4 @@
-GET /posts?exclude=id&filter=id,eq,1
+GET /data/posts?exclude=id&filter=id,eq,1
 ===
 200
 Content-Type: application/json

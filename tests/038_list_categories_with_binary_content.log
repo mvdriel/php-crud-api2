@@ -1,4 +1,4 @@
-GET /categories
+GET /data/categories
 ===
 200
 Content-Type: application/json

@@ -1,4 +1,4 @@
-GET /posts?page=3,5&order=id
+GET /data/posts?page=3,5&order=id
 ===
 200
 Content-Type: application/json

@@ -1,4 +1,4 @@
-GET /posts/2
+GET /data/posts/2
 ===
 200
 Content-Type: application/json

@@ -1,4 +1,4 @@
-GET /posts?columns=id,content
+GET /data/posts?columns=id,content
 ===
 200
 Content-Type: application/json

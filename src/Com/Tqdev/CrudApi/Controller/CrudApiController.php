@@ -16,18 +16,18 @@ class CrudApiController
 
     public function __construct(CorsProtectedRouter $router, CrudApiService $service, Responder $responder)
     {
-        $router->registerListHandler(array($this, '_list'));
-        $router->registerCreateHandler(array($this, 'create'));
-        $router->registerReadHandler(array($this, 'read'));
-        $router->registerUpdateHandler(array($this, 'update'));
-        $router->registerDeleteHandler(array($this, 'delete'));
+        $router->register('GET', '/data/*', array($this, '_list'));
+        $router->register('POST', '/data/*', array($this, 'create'));
+        $router->register('GET', '/data/*/*', array($this, 'read'));
+        $router->register('PUT', '/data/*/*', array($this, 'update'));
+        $router->register('DELETE', '/data/*/*', array($this, 'delete'));
         $this->service = $service;
         $this->responder = $responder;
     }
 
     public function _list(Request $request): Response
     {
-        $table = $request->getPath(1);
+        $table = $request->getPath(2);
         $params = $request->getParams();
         if (!$this->service->exists($table)) {
             return $this->responder->error(ErrorCode::TABLE_NOT_FOUND, $table);
@@ -37,7 +37,7 @@ class CrudApiController
 
     public function create(Request $request): Response
     {
-        $table = $request->getPath(1);
+        $table = $request->getPath(2);
         $record = $request->getBody();
         if ($record === null) {
             return $this->responder->error(ErrorCode::HTTP_MESSAGE_NOT_READABLE, '');
@@ -61,8 +61,8 @@ class CrudApiController
 
     public function read(Request $request): Response
     {
-        $table = $request->getPath(1);
-        $id = $request->getPath(2);
+        $table = $request->getPath(2);
+        $id = $request->getPath(3);
         $params = $request->getParams();
         if (!$this->service->exists($table)) {
             return $this->responder->error(ErrorCode::TABLE_NOT_FOUND, $table);
@@ -85,8 +85,8 @@ class CrudApiController
 
     public function update(Request $request): Response
     {
-        $table = $request->getPath(1);
-        $id = $request->getPath(2);
+        $table = $request->getPath(2);
+        $id = $request->getPath(3);
         $record = $request->getBody();
         if ($record === null) {
             return $this->responder->error(ErrorCode::HTTP_MESSAGE_NOT_READABLE, '');
@@ -100,8 +100,8 @@ class CrudApiController
 
     public function delete(Request $request): Response
     {
-        $table = $request->getPath(1);
-        $id = $request->getPath(2);
+        $table = $request->getPath(2);
+        $id = $request->getPath(3);
         $params = $request->getParams();
         if (!$this->service->exists($table)) {
             return $this->responder->error(ErrorCode::TABLE_NOT_FOUND, $table);

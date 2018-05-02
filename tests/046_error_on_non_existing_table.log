@@ -1,4 +1,4 @@
-GET /postzzz
+GET /data/postzzz
 ===
 404
 Content-Type: application/json

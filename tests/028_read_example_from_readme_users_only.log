@@ -1,4 +1,4 @@
-GET /posts/1?include=users
+GET /data/posts/1?include=users
 ===
 200
 Content-Type: application/json

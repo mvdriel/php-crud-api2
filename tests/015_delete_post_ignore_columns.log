@@ -1,4 +1,4 @@
-DELETE /posts/4?columns=id,content
+DELETE /data/posts/4?columns=id,content
 ===
 200
 Content-Type: application/json
@@ -6,7 +6,7 @@ Content-Length: 1
 
 1
 ===
-GET /posts/4
+GET /data/posts/4
 ===
 404
 Content-Type: application/json

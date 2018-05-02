@@ -27,7 +27,7 @@ The CRUD + List operations below act on this table.
 
 If you want to create a record the request can be written in URL format as: 
 
-    POST /posts
+    POST /data/posts
 
 You have to send a body containing:
 
@@ -45,7 +45,7 @@ And it will return the value of the primary key of the newly created record:
 
 To read a record from this table the request can be written in URL format as:
 
-    GET /posts/1
+    GET /data/posts/1
 
 Where "1" is the value of the primary key of the record that you want to read. It will return:
 
@@ -61,7 +61,7 @@ On read operations you may apply includes.
 
 To update a record in this table the request can be written in URL format as:
 
-    PUT /posts/1
+    PUT /data/posts/1
 
 Where "1" is the value of the primary key of the record that you want to update. Send as a body:
 
@@ -77,7 +77,7 @@ This adjusts the title of the post. And the return value is the number of rows t
 
 If you want to delete a record from this table the request can be written in URL format as:
 
-    DELETE /posts/1
+    DELETE /data/posts/1
 
 And it will return the number of deleted rows:
 
@@ -87,7 +87,7 @@ And it will return the number of deleted rows:
 
 To list records from this table the request can be written in URL format as:
 
-    GET /posts
+    GET /data/posts
 
 It will return:
 
@@ -131,7 +131,7 @@ When you want to list posts with their comments users and tags you can ask for t
 
 These paths have the same root and this request can be written in URL format as:
 
-    GET /posts?include=comments,users&include=tags
+    GET /data/posts?include=comments,users&include=tags
 
 Here you are allowed to leave out the intermediate table that binds posts to tags. In this example
 you see all three table relation types (hasMany belongsTo and hasAndBelongsToMany) in effect:

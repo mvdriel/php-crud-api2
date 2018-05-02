@@ -2,6 +2,7 @@
 namespace Com\Tqdev\CrudApi\Router;
 
 use Com\Tqdev\CrudApi\Api\ErrorCode;
+use Com\Tqdev\CrudApi\Api\PathTree;
 use Com\Tqdev\CrudApi\Controller\Responder;
 use Com\Tqdev\CrudApi\Request;
 use Com\Tqdev\CrudApi\Response;
@@ -9,85 +10,52 @@ use Com\Tqdev\CrudApi\Response;
 class Router
 {
 
-    private $handlers;
     private $responder;
+    private $routes;
 
     public function __construct(Responder $responder)
     {
-        $this->handlers = array();
         $this->responder = $responder;
+        $this->routes = new PathTree();
     }
 
-    public function registerListHandler($handler)
+    public function register(String $method, String $pathGlob, array $handler)
     {
-        $this->handlers['list'] = $handler;
-    }
-
-    public function registerCreateHandler($handler)
-    {
-        $this->handlers['create'] = $handler;
-    }
-
-    public function registerReadHandler($handler)
-    {
-        $this->handlers['read'] = $handler;
-    }
-
-    public function registerUpdateHandler($handler)
-    {
-        $this->handlers['update'] = $handler;
-    }
-
-    public function registerDeleteHandler($handler)
-    {
-        $this->handlers['delete'] = $handler;
-    }
-
-    public function registerOpenApiHandler($handler)
-    {
-        $this->handlers['openapi'] = $handler;
+        $path = explode('/', trim($pathGlob, '/'));
+        array_unshift($path, $method);
+        $this->routes->put($path, $handler);
     }
 
     public function route(Request $request): Response
     {
         $method = strtoupper($request->getMethod());
-        $table = $request->getPath(1);
-        $id = $request->getPath(2);
-        if ($table) {
-            switch ($method) {
-                case 'POST':
-                    if (!$id) {
-                        $func = 'create';
-                    }
-                    break;
-                case 'GET':
-                    if ($id) {
-                        $func = 'read';
-                    } else {
-                        $func = 'list';
-                    }
-                    break;
-                case 'PUT':
-                    if ($id) {
-                        $func = 'update';
-                    }
-                    break;
-                case 'DELETE':
-                    if ($id) {
-                        $func = 'delete';
-                    }
-                    break;
-            }
-        } else {
-            switch ($method) {
-                case 'GET':
-                    $func = 'openapi';
-                    break;
-            }
-        }
-        if (!isset($this->handlers[$func])) {
+        $path = explode('/', trim($request->getPath(0), '/'));
+        array_unshift($path, $method);
+
+        $functions = $this->matchPath($path, $this->routes);
+        if (count($functions) == 0) {
             return $this->responder->error(ErrorCode::ROUTE_NOT_FOUND, $request->getPath());
         }
-        return call_user_func($this->handlers[$func], $request);
+        return call_user_func($functions[0], $request);
+    }
+
+    private function matchPath(array $path, PathTree $tree): array
+    {
+        $values = array();
+        while (count($path) > 0) {
+            $key = array_shift($path);
+            if ($tree->has($key)) {
+                $tree = $tree->get($key);
+            } else if ($tree->has('*')) {
+                $tree = $tree->get('*');
+            } else {
+                $tree = null;
+                break;
+            }
+        }
+        if ($tree !== null) {
+            $values = $tree->getValues();
+        }
+        return $values;
     }
 }

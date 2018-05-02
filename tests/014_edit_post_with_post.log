@@ -1,4 +1,4 @@
-PUT /posts/4
+PUT /data/posts/4
 
 user_id=1&category_id=1&content=test+(edited)
 ===
@@ -8,7 +8,7 @@ Content-Length: 1
 
 1
 ===
-GET /posts/4
+GET /data/posts/4
 ===
 200
 Content-Type: application/json

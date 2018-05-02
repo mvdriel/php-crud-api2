@@ -1,4 +1,4 @@
-PUT /posts/3?columns=id,content
+PUT /data/posts/3?columns=id,content
 
 {"user_id":2,"content":"test (edited 3)"}
 ===
@@ -8,7 +8,7 @@ Content-Length: 1
 
 1
 ===
-GET /posts/3
+GET /data/posts/3
 ===
 200
 Content-Type: application/json

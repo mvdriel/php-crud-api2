@@ -1,4 +1,4 @@
-POST /posts
+POST /data/posts
 
 user_id=1&category_id=1&content=test
 ===

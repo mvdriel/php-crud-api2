@@ -1,4 +1,4 @@
-GET /posts?page=1,2&order=category_id,asc&order=id,desc
+GET /data/posts?page=1,2&order=category_id,asc&order=id,desc
 ===
 200
 Content-Type: application/json

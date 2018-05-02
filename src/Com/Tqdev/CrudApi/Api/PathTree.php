@@ -32,6 +32,11 @@ class PathTree
         return array_keys($this->branches);
     }
 
+    public function has($key): bool
+    {
+        return isset($this->branches[$key]);
+    }
+
     public function get($key): PathTree
     {
         return $this->branches[$key];

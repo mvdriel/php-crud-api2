@@ -1,4 +1,4 @@
-PUT /categories/2
+PUT /data/categories/2
 
 {"icon":null}
 ===
@@ -8,7 +8,7 @@ Content-Length: 1
 
 1
 ===
-GET /categories/2
+GET /data/categories/2
 ===
 200
 Content-Type: application/json
