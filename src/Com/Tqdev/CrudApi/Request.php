@@ -90,7 +90,7 @@ class Request
         $body = $this->body;
         $first = substr($body, 0, 1);
         if ($first == '[' || $first == '{') {
-            $body = json_decode($body, true);
+            $body = json_decode($body);
             $causeCode = json_last_error();
             if ($causeCode !== JSON_ERROR_NONE) {
                 return null;
@@ -103,7 +103,7 @@ class Request
                     unset($input[$key]);
                 }
             }
-            $body = $input;
+            $body = (object) $input;
         }
         return $body;
     }

@@ -45,6 +45,14 @@ class Api
         try {
             $response = $this->router->route($request);
         } catch (\Throwable $e) {
+            if ($e instanceof \PDOException) {
+                if (strpos(strtolower($e->getMessage()), 'duplicate') !== false) {
+                    return $this->responder->error(ErrorCode::DUPLICATE_KEY_EXCEPTION, '');
+                }
+                if (strpos(strtolower($e->getMessage()), 'constraint') !== false) {
+                    return $this->responder->error(ErrorCode::DATA_INTEGRITY_VIOLATION, '');
+                }
+            }
             $response = $this->responder->error(ErrorCode::ERROR_NOT_FOUND, $e->getMessage());
             if ($this->debug) {
                 $response->addHeader('X-Debug-Info', 'Exception in ' . $e->getFile() . ' on line ' . $e->getLine());

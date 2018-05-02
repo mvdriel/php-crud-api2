@@ -35,30 +35,6 @@ class CrudApiController
         return $this->responder->success($this->service->_list($table, $params));
     }
 
-    public function create(Request $request): Response
-    {
-        $table = $request->getPath(2);
-        $record = $request->getBody();
-        if ($record === null) {
-            return $this->responder->error(ErrorCode::HTTP_MESSAGE_NOT_READABLE, '');
-        }
-        $params = $request->getParams();
-        if (!$this->service->exists($table)) {
-            return $this->responder->error(ErrorCode::TABLE_NOT_FOUND, $table);
-        }
-        try {
-            return $this->responder->success($this->service->create($table, $record, $params));
-        } catch (\PDOException $e) {
-            if (strpos(strtolower($e->getMessage()), 'duplicate') !== false) {
-                return $this->responder->error(ErrorCode::DUPLICATE_KEY_EXCEPTION, '');
-            }
-            if (strpos(strtolower($e->getMessage()), 'constraint') !== false) {
-                return $this->responder->error(ErrorCode::DATA_INTEGRITY_VIOLATION, '');
-            }
-            throw $e;
-        }
-    }
-
     public function read(Request $request): Response
     {
         $table = $request->getPath(2);
@@ -83,6 +59,28 @@ class CrudApiController
         }
     }
 
+    public function create(Request $request): Response
+    {
+        $table = $request->getPath(2);
+        $record = $request->getBody();
+        if ($record === null) {
+            return $this->responder->error(ErrorCode::HTTP_MESSAGE_NOT_READABLE, '');
+        }
+        $params = $request->getParams();
+        if (!$this->service->exists($table)) {
+            return $this->responder->error(ErrorCode::TABLE_NOT_FOUND, $table);
+        }
+        if (is_array($record)) {
+            $result = array();
+            foreach ($record as $r) {
+                $result[] = $this->service->create($table, $r, $params);
+            }
+            return $this->responder->success($result);
+        } else {
+            return $this->responder->success($this->service->create($table, $record, $params));
+        }
+    }
+
     public function update(Request $request): Response
     {
         $table = $request->getPath(2);
@@ -95,7 +93,22 @@ class CrudApiController
         if (!$this->service->exists($table)) {
             return $this->responder->error(ErrorCode::TABLE_NOT_FOUND, $table);
         }
-        return $this->responder->success($this->service->update($table, $id, $record, $params));
+        $ids = explode(',', $id);
+        if (is_array($record)) {
+            if (count($ids) != count($record)) {
+                return $this->responder->error(ErrorCode::ARGUMENT_COUNT_MISMATCH, $id);
+            }
+            $result = array();
+            for ($i = 0; $i < count($ids); $i++) {
+                $result[] = $this->service->update($table, $ids[$i], $record[$i], $params);
+            }
+            return $this->responder->success($result);
+        } else {
+            if (count($ids) != 1) {
+                return $this->responder->error(ErrorCode::ARGUMENT_COUNT_MISMATCH, $id);
+            }
+            return $this->responder->success($this->service->update($table, $id, $record, $params));
+        }
     }
 
     public function delete(Request $request): Response
@@ -106,7 +119,16 @@ class CrudApiController
         if (!$this->service->exists($table)) {
             return $this->responder->error(ErrorCode::TABLE_NOT_FOUND, $table);
         }
-        return $this->responder->success($this->service->delete($table, $id, $params));
+        $ids = explode(',', $id);
+        if (count($ids) > 1) {
+            $result = array();
+            for ($i = 0; $i < count($ids); $i++) {
+                $result[] = $this->service->delete($table, $ids[$i], $params);
+            }
+            return $this->responder->success($result);
+        } else {
+            return $this->responder->success($this->service->delete($table, $id, $params));
+        }
     }
 
 }

@@ -51,13 +51,13 @@ class ColumnSelector
         return $results;
     }
 
-    public function getValues(ReflectedTable $table, bool $primaryTable, array $record, array $params): array
+    public function getValues(ReflectedTable $table, bool $primaryTable, object $record, array $params): array
     {
         $results = array();
         $columnNames = $this->getNames($table, $primaryTable, $params);
         foreach ($columnNames as $columnName) {
-            if (array_key_exists($columnName, $record)) {
-                $results[$columnName] = $record[$columnName];
+            if (property_exists($record, $columnName)) {
+                $results[$columnName] = $record->$columnName;
             }
         }
         return $results;

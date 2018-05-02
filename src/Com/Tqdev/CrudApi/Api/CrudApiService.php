@@ -28,7 +28,7 @@ class CrudApiService
         $this->pagination = new PaginationInfo();
     }
 
-    private function sanitizeRecord(String $tableName, array $record, String $id)
+    private function sanitizeRecord(String $tableName, object $record, String $id)
     {
         $keyset = array_keys((array) $record);
         foreach ($keyset as $key) {
@@ -41,7 +41,7 @@ class CrudApiService
             foreach ($this->tables->get($tableName)->columnNames() as $key) {
                 $field = $this->tables->get($tableName)->get($key);
                 if ($field->getName() == $pk->getName()) {
-                    unset($record[$key]);
+                    unset($record->$key);
                 }
             }
         }
@@ -52,7 +52,7 @@ class CrudApiService
         return $this->tables->exists($table);
     }
 
-    public function create(String $tableName, array $record, array $params)
+    public function create(String $tableName, object $record, array $params)
     {
         $this->sanitizeRecord($tableName, $record, '');
         $table = $this->tables->get($tableName);
@@ -74,7 +74,7 @@ class CrudApiService
         return $records[0];
     }
 
-    public function update(String $tableName, String $id, array $record, array $params)
+    public function update(String $tableName, String $id, object $record, array $params)
     {
         $this->sanitizeRecord($tableName, $record, $id);
         $table = $this->tables->get($tableName);

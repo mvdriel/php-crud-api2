@@ -38,16 +38,28 @@ class GenericDB
         }
     }
 
-    public function __construct(String $driver, String $address, String $port = null, String $database = null, String $username = null, String $password = null)
+    private function getOptions(): array
     {
         $options = array(
             \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
             \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
             \PDO::ATTR_EMULATE_PREPARES => false,
         );
+        switch ($this->driver) {
+            case 'mysql':return $options + [
+                    \PDO::MYSQL_ATTR_FOUND_ROWS => true,
+                ];
+            case 'pgsql':return $options + [
+                ];
+        }
+    }
+
+    public function __construct(String $driver, String $address, String $port = null, String $database = null, String $username = null, String $password = null)
+    {
         $this->driver = $driver;
         $this->database = $database;
         $dsn = $this->getDsn($address, $port, $database);
+        $options = $this->getOptions();
         $this->pdo = new \PDO($dsn, $username, $password, $options);
         $commands = $this->getCommands();
         foreach ($commands as $command) {
