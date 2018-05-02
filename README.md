@@ -50,6 +50,7 @@ To read a record from this table the request can be written in URL format as:
 Where "1" is the value of the primary key of the record that you want to read. It will return:
 
     {
+        "id": 1
         "title": "Hello world!",
         "content": "Welcome to the first post.",
         "created": "2018-03-05T20:12:56Z"
