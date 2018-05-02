@@ -19,7 +19,7 @@ class GenericMeta
     {
         switch ($this->driver) {
             case 'mysql':return 'SELECT "TABLE_NAME" FROM "INFORMATION_SCHEMA"."TABLES" WHERE "TABLE_TYPE" IN (\'BASE TABLE\', \'VIEW\') AND "TABLE_SCHEMA" = ?';
-            case 'pgsql':return 'SELECT "table_name" as "TABLE_NAME" FROM "information_schema"."tables" WHERE "table_type" IN (\'BASE TABLE\', \'VIEW\') AND "table_catalog" = ?';
+            case 'pgsql':return 'SELECT c.relname as "TABLE_NAME" FROM pg_catalog.pg_class c LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace WHERE c.relkind IN (\'r\',\'p\',\'\') AND n.nspname <> \'pg_catalog\' AND n.nspname <> \'information_schema\' AND n.nspname !~ \'^pg_toast\' AND pg_catalog.pg_table_is_visible(c.oid) AND \'\' <> ?;';
         }
     }
 
@@ -27,7 +27,7 @@ class GenericMeta
     {
         switch ($this->driver) {
             case 'mysql':return 'SELECT "COLUMN_NAME", "IS_NULLABLE", "DATA_TYPE", "CHARACTER_MAXIMUM_LENGTH", "NUMERIC_PRECISION", "NUMERIC_SCALE" FROM "INFORMATION_SCHEMA"."COLUMNS" WHERE "TABLE_NAME" = ? AND "TABLE_SCHEMA" = ?';
-            case 'pgsql':return 'SELECT a.attname AS "COLUMN_NAME", NOT a.attnotnull as "IS_NULLABLE", pg_catalog.format_type(a.atttypid, -1) as "DATA_TYPE", 0 as "CHARACTER_MAXIMUM_LENGTH", 0 as "NUMERIC_PRECISION", 0 as "NUMERIC_SCALE" FROM pg_attribute a JOIN pg_class pgc ON pgc.oid = a.attrelid WHERE pgc.relname = ? AND \'\' <> ? AND a.attnum > 0 AND NOT a.attisdropped;';
+            case 'pgsql':return 'SELECT a.attname AS "COLUMN_NAME", case when a.attnotnull then \'NO\' else \'YES\' end as "IS_NULLABLE", pg_catalog.format_type(a.atttypid, -1) as "DATA_TYPE", case when a.atttypmod < 0 then -1 else a.atttypmod-4 end as "CHARACTER_MAXIMUM_LENGTH", 0 as "NUMERIC_PRECISION", 0 as "NUMERIC_SCALE" FROM pg_attribute a JOIN pg_class pgc ON pgc.oid = a.attrelid WHERE pgc.relname = ? AND \'\' <> ? AND a.attnum > 0 AND NOT a.attisdropped;';
         }
     }
 
