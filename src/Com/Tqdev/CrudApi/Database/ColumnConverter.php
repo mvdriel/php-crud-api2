@@ -24,6 +24,9 @@ class ColumnConverter
                     return "decode(?, 'base64')";
             }
         }
+        if ($this->types->isGeometry($column)) {
+            return "ST_GeomFromText(?)";
+        }
         return '?';
     }
 
@@ -36,6 +39,9 @@ class ColumnConverter
                 case 'pgsql':
                     return "encode($value::bytea, 'base64') as $value";
             }
+        }
+        if ($this->types->isGeometry($column)) {
+            return "ST_AsText($value) as $value";
         }
         return $value;
     }

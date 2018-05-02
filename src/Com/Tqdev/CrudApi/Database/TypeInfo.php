@@ -31,4 +31,15 @@ class TypeInfo
         }
         return false;
     }
+
+    public function isGeometry(ReflectedColumn $column): bool
+    {
+        switch ($this->driver) {
+            case 'mysql':
+                return in_array($column->getType(), ['geometry', 'point', 'polygon']);
+            case 'pgsql':
+                return in_array($column->getType(), ['geometry']);
+        }
+        return false;
+    }
 }

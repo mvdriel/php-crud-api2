@@ -27,7 +27,7 @@ class GenericMeta
     {
         switch ($this->driver) {
             case 'mysql':return 'SELECT "COLUMN_NAME", "IS_NULLABLE", "DATA_TYPE", "CHARACTER_MAXIMUM_LENGTH", "NUMERIC_PRECISION", "NUMERIC_SCALE" FROM "INFORMATION_SCHEMA"."COLUMNS" WHERE "TABLE_NAME" = ? AND "TABLE_SCHEMA" = ?';
-            case 'pgsql':return 'SELECT "column_name" as "COLUMN_NAME", "is_nullable" as "IS_NULLABLE", "data_type" as "DATA_TYPE", "character_maximum_length" as "CHARACTER_MAXIMUM_LENGTH", "numeric_precision" as "NUMERIC_PRECISION", "numeric_scale" as "NUMERIC_SCALE" FROM "information_schema"."columns" WHERE "table_name" = ? and "table_catalog" = ?';
+            case 'pgsql':return 'SELECT a.attname AS "COLUMN_NAME", NOT a.attnotnull as "IS_NULLABLE", pg_catalog.format_type(a.atttypid, -1) as "DATA_TYPE", 0 as "CHARACTER_MAXIMUM_LENGTH", 0 as "NUMERIC_PRECISION", 0 as "NUMERIC_SCALE" FROM pg_attribute a JOIN pg_class pgc ON pgc.oid = a.attrelid WHERE pgc.relname = ? AND \'\' <> ? AND a.attnum > 0 AND NOT a.attisdropped;';
         }
     }
 
