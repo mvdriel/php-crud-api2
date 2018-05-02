@@ -5,14 +5,13 @@ use Com\Tqdev\CrudApi\Controller\Responder;
 use Com\Tqdev\CrudApi\Request;
 use Com\Tqdev\CrudApi\Response;
 
-class CorsProtectedRouter extends GlobRouter
+class CorsMiddleware extends Middleware
 {
     private $allowedOrigins;
 
     public function __construct(Responder $responder, String $allowedOrigins)
     {
         $this->allowedOrigins = $allowedOrigins;
-        parent::__construct($responder);
     }
 
     private function isOriginAllowed(String $origin, String $allowedOrigins): bool
@@ -29,7 +28,7 @@ class CorsProtectedRouter extends GlobRouter
         return $found;
     }
 
-    public function route(Request $request): Response
+    public function handle(Request $request): Response
     {
         $origin = $request->getHeader('Origin');
         if ($origin) {
@@ -46,7 +45,7 @@ class CorsProtectedRouter extends GlobRouter
             $response->addHeader('Access-Control-Allow-Credentials', 'true');
             $response->addHeader('Access-Control-Max-Age', '1728000');
         } else {
-            $response = parent::route($request);
+            $response = $this->next->handle($request);
         }
         if ($origin) {
             $response->addHeader('Access-Control-Allow-Credentials', 'true');

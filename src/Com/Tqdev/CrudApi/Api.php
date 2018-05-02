@@ -10,7 +10,8 @@ use Com\Tqdev\CrudApi\Database\GenericDB;
 use Com\Tqdev\CrudApi\Meta\CrudMetaService;
 use Com\Tqdev\CrudApi\Request;
 use Com\Tqdev\CrudApi\Response;
-use Com\Tqdev\CrudApi\Router\CorsProtectedRouter;
+use Com\Tqdev\CrudApi\Router\CorsMiddleware;
+use Com\Tqdev\CrudApi\Router\GlobRouter;
 
 class Api
 {
@@ -31,7 +32,8 @@ class Api
         );
         $meta = new CrudMetaService($db);
         $responder = new Responder();
-        $router = new CorsProtectedRouter($responder, $config->getAllowedOrigins());
+        $cors = new CorsMiddleware($responder, $config->getAllowedOrigins());
+        $router = new GlobRouter($responder, [$cors]);
         $api = new CrudApiService($db, $meta);
         new CrudApiController($router, $api, $responder);
         $this->router = $router;

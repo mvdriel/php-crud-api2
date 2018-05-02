@@ -11,11 +11,13 @@ class GlobRouter implements Router
 {
     private $responder;
     private $routes;
+    private $midlewares;
 
-    public function __construct(Responder $responder)
+    public function __construct(Responder $responder, array $middlewares)
     {
         $this->responder = $responder;
         $this->routes = new PathTree();
+        $this->middlewares = $middlewares;
     }
 
     public function register(String $method, String $path, array $handler)
@@ -26,6 +28,23 @@ class GlobRouter implements Router
     }
 
     public function route(Request $request): Response
+    {
+        foreach ($this->middlewares as $i => $middleware) {
+            if (isset($this->middlewares[$i + 1])) {
+                $next = $this->middlewares[$i + 1];
+            } else {
+                $next = $this;
+            }
+            $middleware->setNext($next);
+        }
+        $obj = $this;
+        if (count($this->middlewares) > 0) {
+            $obj = $this->middlewares[0];
+        }
+        return $obj->handle($request);
+    }
+
+    public function handle(Request $request): Response
     {
         $method = strtoupper($request->getMethod());
         $path = explode('/', trim($request->getPath(0), '/'));
