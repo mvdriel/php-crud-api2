@@ -14,6 +14,9 @@ class OrCondition extends Condition
 
     public function _or(Condition $condition): Condition
     {
+        if ($condition instanceof NoCondition) {
+            return $this;
+        }
         $this->conditions[] = $condition;
         return $this;
     }

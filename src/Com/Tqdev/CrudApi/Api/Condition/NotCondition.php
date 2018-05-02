@@ -10,7 +10,7 @@ class NotCondition extends Condition
         $this->condition = $condition;
     }
 
-    public function getCondition(): array
+    public function getCondition(): Condition
     {
         return $this->condition;
     }

@@ -14,6 +14,9 @@ class AndCondition extends Condition
 
     public function _and(Condition $condition): Condition
     {
+        if ($condition instanceof NoCondition) {
+            return $this;
+        }
         $this->conditions[] = $condition;
         return $this;
     }
