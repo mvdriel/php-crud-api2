@@ -1,7 +1,6 @@
 <?php
 namespace Com\Tqdev\CrudApi\Api;
 
-use Com\Tqdev\CrudApi\Api\ColumnSelector;
 use Com\Tqdev\CrudApi\Api\Record\ListResponse;
 use Com\Tqdev\CrudApi\Database\GenericDB;
 use Com\Tqdev\CrudApi\Meta\CrudMetaService;

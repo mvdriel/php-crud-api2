@@ -12,7 +12,6 @@ use Com\Tqdev\CrudApi\Meta\Reflection\ReflectedColumn;
 
 class ConditionsBuilder
 {
-
     private $driver;
 
     public function __construct(String $driver)

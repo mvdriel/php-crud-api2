@@ -3,7 +3,6 @@ namespace Com\Tqdev\CrudApi;
 
 class Request
 {
-
     private $method;
     private $path;
     private $params;

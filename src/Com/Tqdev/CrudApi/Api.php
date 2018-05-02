@@ -3,13 +3,10 @@ namespace Com\Tqdev\CrudApi;
 
 use Com\Tqdev\CrudApi\Api\CrudApiService;
 use Com\Tqdev\CrudApi\Api\ErrorCode;
-use Com\Tqdev\CrudApi\Config;
 use Com\Tqdev\CrudApi\Controller\CrudApiController;
 use Com\Tqdev\CrudApi\Controller\Responder;
 use Com\Tqdev\CrudApi\Database\GenericDB;
 use Com\Tqdev\CrudApi\Meta\CrudMetaService;
-use Com\Tqdev\CrudApi\Request;
-use Com\Tqdev\CrudApi\Response;
 use Com\Tqdev\CrudApi\Router\CorsMiddleware;
 use Com\Tqdev\CrudApi\Router\GlobRouter;
 

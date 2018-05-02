@@ -3,7 +3,6 @@ namespace Com\Tqdev\CrudApi;
 
 class Response
 {
-
     const OK = 200;
     const INTERNAL_SERVER_ERROR = 500;
     const NOT_FOUND = 404;

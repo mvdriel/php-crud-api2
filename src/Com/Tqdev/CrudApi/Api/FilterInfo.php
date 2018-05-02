@@ -4,7 +4,6 @@ namespace Com\Tqdev\CrudApi\Api;
 use Com\Tqdev\CrudApi\Api\Condition\AndCondition;
 use Com\Tqdev\CrudApi\Api\Condition\Condition;
 use Com\Tqdev\CrudApi\Api\Condition\OrCondition;
-use Com\Tqdev\CrudApi\Api\PathTree;
 use Com\Tqdev\CrudApi\Meta\Reflection\ReflectedTable;
 
 class FilterInfo

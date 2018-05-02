@@ -3,7 +3,6 @@ namespace Com\Tqdev\CrudApi\Database;
 
 class GenericMeta
 {
-
     private $pdo;
     private $driver;
     private $database;

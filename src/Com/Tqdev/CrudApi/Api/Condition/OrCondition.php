@@ -1,8 +1,6 @@
 <?php
 namespace Com\Tqdev\CrudApi\Api\Condition;
 
-use Com\Tqdev\CrudApi\Api\Condition\NoCondition;
-
 class OrCondition extends Condition
 {
     private $conditions;

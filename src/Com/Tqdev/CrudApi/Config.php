@@ -3,7 +3,6 @@ namespace Com\Tqdev\CrudApi;
 
 class Config
 {
-
     private $values = [
         'driver' => null,
         'address' => 'localhost',

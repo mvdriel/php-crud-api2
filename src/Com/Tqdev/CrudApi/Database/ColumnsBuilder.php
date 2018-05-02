@@ -1,13 +1,11 @@
 <?php
 namespace Com\Tqdev\CrudApi\Database;
 
-use Com\Tqdev\CrudApi\Database\ColumnConverter;
 use Com\Tqdev\CrudApi\Meta\Reflection\ReflectedColumn;
 use Com\Tqdev\CrudApi\Meta\Reflection\ReflectedTable;
 
 class ColumnsBuilder
 {
-
     private $driver;
     private $converter;
 

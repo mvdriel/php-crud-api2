@@ -7,7 +7,6 @@ use Com\Tqdev\CrudApi\Meta\Reflection\ReflectedTable;
 
 class GenericDB
 {
-
     private $driver;
     private $database;
     private $pdo;

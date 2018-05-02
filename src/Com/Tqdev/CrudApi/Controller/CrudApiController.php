@@ -3,7 +3,6 @@ namespace Com\Tqdev\CrudApi\Controller;
 
 use Com\Tqdev\CrudApi\Api\CrudApiService;
 use Com\Tqdev\CrudApi\Api\ErrorCode;
-use Com\Tqdev\CrudApi\Controller\Responder;
 use Com\Tqdev\CrudApi\Request;
 use Com\Tqdev\CrudApi\Response;
 use Com\Tqdev\CrudApi\Router\Router;
