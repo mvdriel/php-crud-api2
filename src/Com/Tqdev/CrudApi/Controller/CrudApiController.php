@@ -6,15 +6,14 @@ use Com\Tqdev\CrudApi\Api\ErrorCode;
 use Com\Tqdev\CrudApi\Controller\Responder;
 use Com\Tqdev\CrudApi\Request;
 use Com\Tqdev\CrudApi\Response;
-use Com\Tqdev\CrudApi\Router\CorsProtectedRouter;
+use Com\Tqdev\CrudApi\Router\Router;
 
 class CrudApiController
 {
-
     private $service;
     private $responder;
 
-    public function __construct(CorsProtectedRouter $router, CrudApiService $service, Responder $responder)
+    public function __construct(Router $router, CrudApiService $service, Responder $responder)
     {
         $router->register('GET', '/data/*', array($this, '_list'));
         $router->register('POST', '/data/*', array($this, 'create'));

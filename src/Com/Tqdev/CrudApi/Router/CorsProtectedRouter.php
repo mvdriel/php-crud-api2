@@ -4,11 +4,9 @@ namespace Com\Tqdev\CrudApi\Router;
 use Com\Tqdev\CrudApi\Controller\Responder;
 use Com\Tqdev\CrudApi\Request;
 use Com\Tqdev\CrudApi\Response;
-use Com\Tqdev\CrudApi\Router\Router;
 
-class CorsProtectedRouter extends Router
+class CorsProtectedRouter extends GlobRouter
 {
-
     private $allowedOrigins;
 
     public function __construct(Responder $responder, String $allowedOrigins)
