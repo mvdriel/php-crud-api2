@@ -95,7 +95,7 @@ It will return:
     {
         "records":[
             {
-                "id": 1
+                "id": 1,
                 "title": "Hello world!",
                 "content": "Welcome to the first post.",
                 "created": "2018-03-05T20:12:56Z"
