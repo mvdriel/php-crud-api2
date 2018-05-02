@@ -143,54 +143,56 @@ you see all three table relation types (hasMany belongsTo and hasAndBelongsToMan
 
 This may lead to the following JSON data:
 
-    [
-        {
-            "id": 1,
-            "title": "Hello world!",
-            "content": "Welcome to the first post.",
-            "created": "2018-03-05T20:12:56Z",
-            "comments": [
-                {
-                    id: 1,
-                    post_id: 1,
-                    user_id: {
+    {
+        "records":[
+            {
+                "id": 1,
+                "title": "Hello world!",
+                "content": "Welcome to the first post.",
+                "created": "2018-03-05T20:12:56Z",
+                "comments": [
+                    {
                         id: 1,
-                        username: "mevdschee",
-                        phone: null,
+                        post_id: 1,
+                        user_id: {
+                            id: 1,
+                            username: "mevdschee",
+                            phone: null,
+                        },
+                        message: "Hi!"
                     },
-                    message: "Hi!"
-                },
-                {
-                    id: 2,
-                    post_id: 1,
-                    user_id: {
+                    {
+                        id: 2,
+                        post_id: 1,
+                        user_id: {
+                            id: 1,
+                            username: "mevdschee",
+                            phone: null,
+                        },
+                        message: "Hi again!"
+                    }
+                ],
+                "tags": []
+            },
+            {
+                "id": 2,
+                "title": "Black is the new red",
+                "content": "This is the second post.",
+                "created": "2018-03-06T21:34:01Z",
+                "comments": [],
+                "tags": [
+                    {
                         id: 1,
-                        username: "mevdschee",
-                        phone: null,
+                        message: "Funny"
                     },
-                    message: "Hi again!"
-                }
-            ],
-            "tags": []
-        },
-        {
-            "id": 2,
-            "title": "Black is the new red",
-            "content": "This is the second post.",
-            "created": "2018-03-06T21:34:01Z",
-            "comments": [],
-            "tags": [
-                {
-                    id: 1,
-                    message: "Funny"
-                },
-                {
-                    id: 2,
-                    message: "Informational"
-                }
-            ]
-        }
-    ]
+                    {
+                        id: 2,
+                        message: "Informational"
+                    }
+                ]
+            }
+        ]
+    }
 
 You see that the "belongsTo" relationships are detected and the foreign key value is replaced by the referenced object.
 In case of "hasMany" and "hasAndBelongsToMany" the table name is used a new property on the object.
