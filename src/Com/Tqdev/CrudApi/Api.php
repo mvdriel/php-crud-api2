@@ -15,7 +15,6 @@ use Com\Tqdev\CrudApi\Router\GlobRouter;
 
 class Api
 {
-
     private $router;
     private $responder;
     private $debug;

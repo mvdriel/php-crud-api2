@@ -11,7 +11,7 @@ $config = new Config([
     'database' => 'php-crud-api',
     'username' => 'php-crud-api',
     'password' => 'php-crud-api',
-    'debug' => true,
+//    'debug' => true,
 ]);
 $request = new Request('GET', '/posts/1');
 $request->addHeader('Origin');
