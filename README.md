@@ -112,9 +112,9 @@ You also need to send an array instead of an object in the request body for crea
 
 (may need examples)  
 
-### Filter
+### Filters
 
-### Include
+### Includes
 
 Let's say that you have a posts table that has comments (made by users) and the posts can have tags.
 
