@@ -13,11 +13,11 @@ class GlobRouter implements Router
     private $routes;
     private $midlewares;
 
-    public function __construct(Responder $responder, array $middlewares)
+    public function __construct(Responder $responder)
     {
         $this->responder = $responder;
         $this->routes = new PathTree();
-        $this->middlewares = $middlewares;
+        $this->middlewares = array();
     }
 
     public function register(String $method, String $path, array $handler)
@@ -27,16 +27,19 @@ class GlobRouter implements Router
         $this->routes->put($parts, $handler);
     }
 
+    public function load(Middleware $middleware): void
+    {
+        if (count($this->middlewares) > 0) {
+            $next = $this->middlewares[0];
+        } else {
+            $next = $this;
+        }
+        $middleware->setNext($next);
+        array_unshift($this->middlewares, $middleware);
+    }
+
     public function route(Request $request): Response
     {
-        foreach ($this->middlewares as $i => $middleware) {
-            if (isset($this->middlewares[$i + 1])) {
-                $next = $this->middlewares[$i + 1];
-            } else {
-                $next = $this;
-            }
-            $middleware->setNext($next);
-        }
         $obj = $this;
         if (count($this->middlewares) > 0) {
             $obj = $this->middlewares[0];

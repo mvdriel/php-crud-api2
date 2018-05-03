@@ -12,7 +12,7 @@ class CrudApiController
     private $service;
     private $responder;
 
-    public function __construct(Router $router, CrudApiService $service, Responder $responder)
+    public function __construct(Router $router, Responder $responder, CrudApiService $service)
     {
         $router->register('GET', '/data/*', array($this, '_list'));
         $router->register('POST', '/data/*', array($this, 'create'));

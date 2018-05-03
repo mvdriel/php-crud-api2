@@ -28,10 +28,10 @@ class Api
         );
         $meta = new CrudMetaService($db);
         $responder = new Responder();
-        $cors = new CorsMiddleware($responder, $config->getAllowedOrigins());
-        $router = new GlobRouter($responder, [$cors]);
+        $router = new GlobRouter($responder);
+        new CorsMiddleware($router, $responder, $config->getAllowedOrigins());
         $api = new CrudApiService($db, $meta);
-        new CrudApiController($router, $api, $responder);
+        new CrudApiController($router, $responder, $api);
         $this->router = $router;
         $this->responder = $responder;
         $this->debug = $config->getDebug();

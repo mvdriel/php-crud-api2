@@ -9,8 +9,9 @@ class CorsMiddleware extends Middleware
 {
     private $allowedOrigins;
 
-    public function __construct(Responder $responder, String $allowedOrigins)
+    public function __construct(Router $router, Responder $responder, String $allowedOrigins)
     {
+        $router->load($this);
         $this->allowedOrigins = $allowedOrigins;
     }
 
