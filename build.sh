@@ -6,16 +6,16 @@ fi
 if [ -e target/api.php ]; then
     rm target/api.php
 fi
-echo "<?php" > target/api.php
-tee -a target/api.php >/dev/null <<'EOF'
+tee target/api.php >/dev/null <<'EOF'
+<?php
 /**
  * PHP-CRUD-API                 License: MIT
  * Maurits van der Schee: maurits@vdschee.nl
  * https://github.com/mevdschee/php-crud-api
  **/
 
+namespace Com\Tqdev\CrudApi;
 EOF
-echo 'namespace Com\Tqdev\CrudApi;' >> target/api.php
 find . -path ./tests -prune -o -path ./target -prune -o -iname '*.php' | grep '\.php$' | sort -r | xargs cat | grep -v "^<?php\|^namespace \|^use \|spl_autoload_register\|^\s*//" | cat -s >> target/api.php
 FILECOUNT=`find . -path ./tests -prune -o -path ./target -prune -o -iname '*.php' | grep '\.php$' | wc -l`
 ERRORS=`php -l target/api.php`
