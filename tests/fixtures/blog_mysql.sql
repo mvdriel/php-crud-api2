@@ -147,4 +147,14 @@ CREATE TABLE `barcodes` (
 INSERT INTO `barcodes` (`id`, `product_id`, `hex`, `bin`) VALUES
 (1,	1, '00ff01', UNHEX('00ff01'));
 
+DROP TABLE IF EXISTS `kunsthåndværk`;
+CREATE TABLE `kunsthåndværk` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `Umlauts ä_ö_ü-COUNT` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+INSERT INTO `kunsthåndværk` (`id`, `Umlauts ä_ö_ü-COUNT`) VALUES
+(1,	1);
+
 -- 2016-11-05 13:11:47

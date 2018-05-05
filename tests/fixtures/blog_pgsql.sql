@@ -29,6 +29,7 @@ DROP TABLE IF EXISTS events CASCADE;
 DROP VIEW IF EXISTS tag_usage;
 DROP TABLE IF EXISTS products CASCADE;
 DROP TABLE IF EXISTS barcodes CASCADE;
+DROP TABLE IF EXISTS "kunsthåndværk" CASCADE;
 
 --
 -- Enables the Postgis extension
@@ -155,6 +156,15 @@ CREATE TABLE barcodes (
 );
 
 --
+-- Name: kunsthåndværk; Type: TABLE; Schema: public; Owner: postgres; Tablespace:
+--
+
+CREATE TABLE "kunsthåndværk" (
+  id serial NOT NULL,
+  "Umlauts ä_ö_ü-COUNT" integer NOT NULL
+);
+
+--
 -- Data for Name: categories; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -234,6 +244,13 @@ INSERT INTO "products" ("name", "price", "properties", "created_at") VALUES
 
 INSERT INTO "barcodes" ("product_id", "hex", "bin") VALUES
 (1,	'00ff01', E'\\x00ff01');
+
+--
+-- Data for Name: kunsthåndværk; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO "kunsthåndværk" ("Umlauts ä_ö_ü-COUNT") VALUES
+(1);
 
 --
 -- Name: categories_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace:
@@ -321,6 +338,12 @@ ALTER TABLE ONLY products
 ALTER TABLE ONLY barcodes
     ADD CONSTRAINT barcodes_pkey PRIMARY KEY (id);
 
+--
+-- Name: kunsthåndværk_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace:
+--
+
+ALTER TABLE ONLY "kunsthåndværk"
+    ADD CONSTRAINT "kunsthåndværk_pkey" PRIMARY KEY (id);
 
 --
 -- Name: comments_post_id_idx; Type: INDEX; Schema: public; Owner: postgres; Tablespace:

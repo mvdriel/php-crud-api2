@@ -1,5 +1,4 @@
 POST /data/posts
-Content-Type: application/json
 
 ["truncat
 ===

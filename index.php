@@ -13,7 +13,7 @@ $config = new Config([
     'password' => 'php-crud-api',
 //    'debug' => true,
 ]);
-$request = new Request('GET', '/posts/1');
+$request = new Request('GET', '/data/posts/1');
 $request->addHeader('Origin');
 $api = new Api($config);
 $response = $api->handle($request);
