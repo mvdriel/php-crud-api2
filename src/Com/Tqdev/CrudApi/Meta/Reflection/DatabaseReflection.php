@@ -3,7 +3,7 @@ namespace Com\Tqdev\CrudApi\Meta\Reflection;
 
 use Com\Tqdev\CrudApi\Database\GenericMeta;
 
-class DatabaseReflection
+class DatabaseReflection implements \JsonSerializable
 {
 
     private $meta;
@@ -32,5 +32,10 @@ class DatabaseReflection
     public function getTableNames(): array
     {
         return array_keys($this->tables);
+    }
+
+    public function jsonSerialize()
+    {
+        return $this->tables;
     }
 }

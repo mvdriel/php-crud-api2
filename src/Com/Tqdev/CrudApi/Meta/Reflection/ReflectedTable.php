@@ -3,7 +3,7 @@ namespace Com\Tqdev\CrudApi\Meta\Reflection;
 
 use Com\Tqdev\CrudApi\Database\GenericMeta;
 
-class ReflectedTable
+class ReflectedTable implements \JsonSerializable
 {
 
     private $name;
@@ -24,9 +24,13 @@ class ReflectedTable
             $columnName = $columnNames[0];
             if (isset($this->columns[$columnName])) {
                 $this->pk = $this->columns[$columnName];
+                $this->pk->setPk(true);
             }
         }
         $this->fks = $meta->getTableForeignKeys($this->name);
+        foreach ($this->fks as $columnName => $table) {
+            $this->columns[$columnName]->setFk($table);
+        }
     }
 
     public function exists(String $columnName): bool
@@ -63,5 +67,10 @@ class ReflectedTable
             }
         }
         return $columns;
+    }
+
+    public function jsonSerialize()
+    {
+        return $this->columns;
     }
 }

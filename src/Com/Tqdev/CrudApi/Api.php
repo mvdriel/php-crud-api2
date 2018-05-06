@@ -4,6 +4,7 @@ namespace Com\Tqdev\CrudApi;
 use Com\Tqdev\CrudApi\Api\CrudApiService;
 use Com\Tqdev\CrudApi\Api\ErrorCode;
 use Com\Tqdev\CrudApi\Controller\CrudApiController;
+use Com\Tqdev\CrudApi\Controller\CrudMetaController;
 use Com\Tqdev\CrudApi\Controller\Responder;
 use Com\Tqdev\CrudApi\Database\GenericDB;
 use Com\Tqdev\CrudApi\Meta\CrudMetaService;
@@ -32,6 +33,7 @@ class Api
         new CorsMiddleware($router, $responder, $config->getAllowedOrigins());
         $api = new CrudApiService($db, $meta);
         new CrudApiController($router, $responder, $api);
+        new CrudMetaController($router, $responder, $meta, $api);
         $this->router = $router;
         $this->responder = $responder;
         $this->debug = $config->getDebug();
