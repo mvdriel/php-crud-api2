@@ -5,6 +5,7 @@ class Request
 {
     private $method;
     private $path;
+    private $pathParts;
     private $params;
     private $body;
     private $headers;
@@ -39,7 +40,8 @@ class Request
                 $path = '/';
             }
         }
-        $this->path = explode('/', $path);
+        $this->path = $path;
+        $this->pathParts = explode('/', $path);
     }
 
     private function parseParams(String $query = null)
@@ -68,15 +70,17 @@ class Request
         return $this->method;
     }
 
-    public function getPath(int $part = 0): String
+    public function getPath(): String
     {
-        if ($part == 0) {
-            return implode('/', $this->path);
-        }
-        if (count($this->path) <= $part) {
+        return $this->path;
+    }
+
+    public function getPathPart(int $part): String
+    {
+        if ($part < 0 && $part >= count($this->pathParts)) {
             return '';
         }
-        return $this->path[$part];
+        return $this->pathParts[$part];
     }
 
     public function getParams(): array
