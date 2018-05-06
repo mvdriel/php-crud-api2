@@ -23,7 +23,7 @@ class Response
     private function parseBody($body)
     {
         if ($body) {
-            $data = json_encode($body);
+            $data = json_encode($body, JSON_UNESCAPED_UNICODE);
             $this->addHeader('Content-Type', 'application/json');
             $this->addHeader('Content-Length', strlen($data));
             $this->body = $data;

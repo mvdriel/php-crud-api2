@@ -2,6 +2,6 @@ GET /data/kunsthåndværk
 ===
 200
 Content-Type: application/json
-Content-Length: 61
+Content-Length: 49
 
-{"records":[{"id":1,"Umlauts \u00e4_\u00f6_\u00fc-COUNT":1}]}
+{"records":[{"id":1,"Umlauts ä_ö_ü-COUNT":1}]}
