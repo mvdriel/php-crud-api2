@@ -75,7 +75,7 @@ class Request
         return $this->path;
     }
 
-    public function getPathPart(int $part): String
+    public function getPathSegment(int $part): String
     {
         if ($part < 0 && $part >= count($this->pathParts)) {
             return '';

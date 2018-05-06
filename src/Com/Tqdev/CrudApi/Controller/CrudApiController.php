@@ -25,7 +25,7 @@ class CrudApiController
 
     public function _list(Request $request): Response
     {
-        $table = $request->getPathPart(2);
+        $table = $request->getPathSegment(2);
         $params = $request->getParams();
         if (!$this->service->exists($table)) {
             return $this->responder->error(ErrorCode::TABLE_NOT_FOUND, $table);
@@ -35,8 +35,8 @@ class CrudApiController
 
     public function read(Request $request): Response
     {
-        $table = $request->getPathPart(2);
-        $id = $request->getPathPart(3);
+        $table = $request->getPathSegment(2);
+        $id = $request->getPathSegment(3);
         $params = $request->getParams();
         if (!$this->service->exists($table)) {
             return $this->responder->error(ErrorCode::TABLE_NOT_FOUND, $table);
@@ -59,7 +59,7 @@ class CrudApiController
 
     public function create(Request $request): Response
     {
-        $table = $request->getPathPart(2);
+        $table = $request->getPathSegment(2);
         $record = $request->getBody();
         if ($record === null) {
             return $this->responder->error(ErrorCode::HTTP_MESSAGE_NOT_READABLE, '');
@@ -81,8 +81,8 @@ class CrudApiController
 
     public function update(Request $request): Response
     {
-        $table = $request->getPathPart(2);
-        $id = $request->getPathPart(3);
+        $table = $request->getPathSegment(2);
+        $id = $request->getPathSegment(3);
         $record = $request->getBody();
         if ($record === null) {
             return $this->responder->error(ErrorCode::HTTP_MESSAGE_NOT_READABLE, '');
@@ -111,8 +111,8 @@ class CrudApiController
 
     public function delete(Request $request): Response
     {
-        $table = $request->getPathPart(2);
-        $id = $request->getPathPart(3);
+        $table = $request->getPathSegment(2);
+        $id = $request->getPathSegment(3);
         $params = $request->getParams();
         if (!$this->service->exists($table)) {
             return $this->responder->error(ErrorCode::TABLE_NOT_FOUND, $table);
