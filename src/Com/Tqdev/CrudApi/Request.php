@@ -5,7 +5,7 @@ class Request
 {
     private $method;
     private $path;
-    private $pathParts;
+    private $pathSegments;
     private $params;
     private $body;
     private $headers;
@@ -41,7 +41,7 @@ class Request
             }
         }
         $this->path = $path;
-        $this->pathParts = explode('/', $path);
+        $this->pathSegments = explode('/', $path);
     }
 
     private function parseParams(String $query = null)
@@ -77,10 +77,10 @@ class Request
 
     public function getPathSegment(int $part): String
     {
-        if ($part < 0 && $part >= count($this->pathParts)) {
+        if ($part < 0 && $part >= count($this->pathSegments)) {
             return '';
         }
-        return $this->pathParts[$part];
+        return $this->pathSegments[$part];
     }
 
     public function getParams(): array
