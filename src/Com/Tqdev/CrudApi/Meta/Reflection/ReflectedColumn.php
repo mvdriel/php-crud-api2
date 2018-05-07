@@ -75,7 +75,7 @@ class ReflectedColumn implements \JsonSerializable
 
     public function isBinary(): bool
     {
-        return in_array($jdbcType, ['blob', 'varbinary', 'binary']);
+        return in_array($this->jdbcType, ['blob', 'varbinary', 'binary']);
     }
 
     public function isBoolean(): bool
