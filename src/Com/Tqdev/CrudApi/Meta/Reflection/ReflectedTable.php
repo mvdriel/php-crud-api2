@@ -16,7 +16,7 @@ class ReflectedTable implements \JsonSerializable
         $this->name = $tableResult['TABLE_NAME'];
         $results = $meta->getTableColumns($this->name);
         foreach ($results as $result) {
-            $column = new ReflectedColumn($result);
+            $column = new ReflectedColumn($meta, $result);
             $this->columns[$column->getName()] = $column;
         }
         $columnNames = $meta->getTablePrimaryKeys($this->name);

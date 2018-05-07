@@ -6,12 +6,14 @@ class GenericMeta
     private $pdo;
     private $driver;
     private $database;
+    private $typeConverter;
 
     public function __construct(\PDO $pdo, String $driver, String $database = null)
     {
         $this->pdo = $pdo;
         $this->driver = $driver;
         $this->database = $database;
+        $this->typeConverter = new TypeConverter($driver);
     }
 
     private function getTablesSQL(): String
@@ -82,5 +84,10 @@ class GenericMeta
             $foreignKeys[$result['COLUMN_NAME']] = $result['REFERENCED_TABLE_NAME'];
         }
         return $foreignKeys;
+    }
+
+    public function getTypeConverter(): TypeConverter
+    {
+        return $this->typeConverter;
     }
 }

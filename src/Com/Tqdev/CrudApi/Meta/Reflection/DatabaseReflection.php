@@ -12,9 +12,12 @@ class DatabaseReflection implements \JsonSerializable
     public function __construct(GenericMeta $meta)
     {
         $this->meta = $meta;
-        $results = $meta->getTables();
-        foreach ($results as $result) {
-            $table = new ReflectedTable($meta, $result);
+        $tableNames = $meta->getTables();
+        foreach ($tableNames as $tableName) {
+            if ($tableName['TABLE_NAME'] == 'spatial_ref_sys') {
+                continue;
+            }
+            $table = new ReflectedTable($meta, $tableName);
             $this->tables[$table->getName()] = $table;
         }
     }

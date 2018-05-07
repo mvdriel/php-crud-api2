@@ -59,7 +59,7 @@ class CrudApiService
         return $this->db->createSingle($table, $columnValues);
     }
 
-    public function read(String $tableName, String $id, array $params) /*: ?array*/
+    public function read(String $tableName, String $id, array $params) /*: ?object*/
     {
         $table = $this->tables->get($tableName);
         $this->includer->addMandatoryColumns($table, $this->tables, $params);

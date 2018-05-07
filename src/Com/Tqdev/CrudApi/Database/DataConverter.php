@@ -7,12 +7,10 @@ use Com\Tqdev\CrudApi\Meta\Reflection\ReflectedTable;
 class DataConverter
 {
     private $driver;
-    private $types;
 
     public function __construct(String $driver)
     {
         $this->driver = $driver;
-        $this->types = new TypeInfo($driver);
     }
 
     private function convertRecordValue($conversion, $value)
@@ -26,7 +24,7 @@ class DataConverter
 
     private function getRecordValueConversion(ReflectedColumn $column): String
     {
-        if ($this->driver == 'mysql' && $this->types->isBoolean($column)) {
+        if ($this->driver == 'mysql' && $column->isBoolean()) {
             return 'boolean';
         }
         return 'none';
@@ -60,7 +58,7 @@ class DataConverter
 
     private function getInputValueConversion(ReflectedColumn $column): String
     {
-        if ($this->types->isBinary($column)) {
+        if ($column->isBinary()) {
             return 'base64url_to_base64';
         }
         return 'none';

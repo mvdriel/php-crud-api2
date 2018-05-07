@@ -6,17 +6,15 @@ use Com\Tqdev\CrudApi\Meta\Reflection\ReflectedColumn;
 class ColumnConverter
 {
     private $driver;
-    private $types;
 
     public function __construct(String $driver)
     {
         $this->driver = $driver;
-        $this->types = new TypeInfo($driver);
     }
 
     public function convertColumnValue(ReflectedColumn $column): String
     {
-        if ($this->types->isBinary($column)) {
+        if ($column->isBinary()) {
             switch ($this->driver) {
                 case 'mysql':
                     return "FROM_BASE64(?)";
@@ -32,7 +30,7 @@ class ColumnConverter
 
     public function convertColumnName(ReflectedColumn $column, $value): String
     {
-        if ($this->types->isBinary($column)) {
+        if ($column->isBinary()) {
             switch ($this->driver) {
                 case 'mysql':
                     return "TO_BASE64($value) as $value";
