@@ -1,6 +1,8 @@
 <?php
 namespace Com\Tqdev\CrudApi\Meta\Reflection;
 
+use Com\Tqdev\CrudApi\Database\GenericMeta;
+
 class ReflectedColumn implements \JsonSerializable
 {
 
