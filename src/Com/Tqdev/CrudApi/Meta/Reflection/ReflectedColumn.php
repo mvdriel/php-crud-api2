@@ -5,6 +5,9 @@ use Com\Tqdev\CrudApi\Database\GenericMeta;
 
 class ReflectedColumn implements \JsonSerializable
 {
+    const DEFAULT_LENGTH = 255;
+    const DEFAULT_PRECISION = 19;
+    const DEFAULT_SCALE = 4;
 
     private $name;
     private $nullable;
@@ -18,12 +21,11 @@ class ReflectedColumn implements \JsonSerializable
 
     public function __construct(GenericMeta $meta, array $columnResult)
     {
-        $typeConverter = $meta->getTypeConverter();
         $this->name = $columnResult['COLUMN_NAME'];
         $this->nullable = in_array(strtoupper($columnResult['IS_NULLABLE']), ['TRUE', 'YES', 'T', 'Y', '1']);
         $this->type = $columnResult['DATA_TYPE'];
-        $this->jdbcType = $typeConverter->toJdbc($this->type);
         $this->length = $columnResult['CHARACTER_MAXIMUM_LENGTH'];
+        $this->jdbcType = $meta->getTypeConverter()->toJdbc($this->type, $this->length + 0);
         $this->precision = $columnResult['NUMERIC_PRECISION'];
         $this->scale = $columnResult['NUMERIC_SCALE'];
         $this->pk = false;
@@ -47,42 +49,42 @@ class ReflectedColumn implements \JsonSerializable
 
     public function getLength(): int
     {
-        return $this->length;
+        return $this->length ?: DEFAULT_LENGTH;
     }
 
     public function getPrecision(): int
     {
-        return $this->precision;
+        return $this->precision ?: DEFAULT_PRECISION;
     }
 
     public function getScale(): int
     {
-        return $this->scale;
+        return $this->scale ?: DEFAULT_SCALE;
     }
 
     public function hasLength(): bool
     {
-        return in_array($this->jdbcType, ['varchar', 'char', 'longvarchar', 'varbinary', 'binary']);
+        return in_array($this->jdbcType, ['varchar', 'varbinary']);
     }
 
     public function hasPrecision(): bool
     {
-        return $this->jdbcType == 'numeric';
+        return $this->jdbcType == 'decimal';
     }
 
     public function hasScale(): bool
     {
-        return $this->jdbcType == 'numeric';
+        return $this->jdbcType == 'decimal';
     }
 
     public function isBinary(): bool
     {
-        return in_array($this->jdbcType, ['blob', 'varbinary', 'binary']);
+        return in_array($this->jdbcType, ['blob', 'varbinary']);
     }
 
     public function isBoolean(): bool
     {
-        return $this->jdbcType == 'bit';
+        return $this->jdbcType == 'boolean';
     }
 
     public function isGeometry(): bool

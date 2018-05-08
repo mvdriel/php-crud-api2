@@ -196,3 +196,38 @@ This may lead to the following JSON data:
 
 You see that the "belongsTo" relationships are detected and the foreign key value is replaced by the referenced object.
 In case of "hasMany" and "hasAndBelongsToMany" the table name is used a new property on the object.
+
+### Types
+
+These are the supported types with their default length/precision/scale:
+
+character types
+- varchar(255)
+- clob
+
+boolean types:
+- boolean
+
+integer types:
+- integer
+- bigint
+
+floating point types:
+- float
+- double
+
+decimal types:
+- decimal(19,4)
+
+date/time types:
+- date
+- time
+- timestamp
+
+binary types:
+- varbinary(255)
+- blob
+
+other types:
+- geometry /* non-jdbc type, extension with limited support */
+
