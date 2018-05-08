@@ -39,6 +39,6 @@ class DatabaseReflection implements \JsonSerializable
 
     public function jsonSerialize()
     {
-        return $this->tables;
+        return ['tables' => array_values($this->tables)];
     }
 }

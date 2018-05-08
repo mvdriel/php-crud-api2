@@ -113,6 +113,7 @@ class ReflectedColumn implements \JsonSerializable
     public function jsonSerialize()
     {
         $json = array();
+        $json['name'] = $this->name;
         $json['type'] = $this->jdbcType;
         if ($this->pk) {
             $json['pk'] = true;

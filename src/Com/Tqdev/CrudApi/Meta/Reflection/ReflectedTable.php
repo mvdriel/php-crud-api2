@@ -71,6 +71,9 @@ class ReflectedTable implements \JsonSerializable
 
     public function jsonSerialize()
     {
-        return $this->columns;
+        return [
+            'name' => $this->name,
+            'columns' => array_values($this->columns),
+        ];
     }
 }
