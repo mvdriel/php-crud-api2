@@ -6,12 +6,10 @@ use Com\Tqdev\CrudApi\Database\GenericMeta;
 class DatabaseReflection implements \JsonSerializable
 {
 
-    private $meta;
     private $tables;
 
     public function __construct(GenericMeta $meta)
     {
-        $this->meta = $meta;
         $tableNames = $meta->getTables();
         foreach ($tableNames as $tableName) {
             if ($tableName['TABLE_NAME'] == 'spatial_ref_sys') {

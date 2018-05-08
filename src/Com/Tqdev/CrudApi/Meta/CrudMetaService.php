@@ -13,7 +13,13 @@ class CrudMetaService
     public function __construct(GenericDB $db)
     {
         $this->db = $db;
-        $this->tables = new DatabaseReflection($db->meta());
+        $filename = 'reflection_cache.json';
+        if (file_exists($filename)) {
+            $this->tables = unserialize(file_get_contents($filename));
+        } else {
+            $this->tables = new DatabaseReflection($db->meta());
+            file_put_contents($filename, serialize($this->tables));
+        }
     }
 
     public function getDatabaseReflection(): DatabaseReflection
