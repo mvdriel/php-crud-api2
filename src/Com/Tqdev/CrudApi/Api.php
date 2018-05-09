@@ -3,6 +3,7 @@ namespace Com\Tqdev\CrudApi;
 
 use Com\Tqdev\CrudApi\Api\CrudApiService;
 use Com\Tqdev\CrudApi\Api\ErrorCode;
+use Com\Tqdev\CrudApi\Cache\TempFileCache;
 use Com\Tqdev\CrudApi\Controller\CrudApiController;
 use Com\Tqdev\CrudApi\Controller\CrudMetaController;
 use Com\Tqdev\CrudApi\Controller\Responder;
@@ -27,7 +28,8 @@ class Api
             $config->getUsername(),
             $config->getPassword()
         );
-        $meta = new CrudMetaService($db);
+        $cache = new TempFileCache($config->getCachePath(), false);
+        $meta = new CrudMetaService($db, $cache, $config->getCacheTime());
         $responder = new Responder();
         $router = new GlobRouter($responder);
         new CorsMiddleware($router, $responder, $config->getAllowedOrigins());

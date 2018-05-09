@@ -12,6 +12,8 @@ class Config
         'password' => null,
         'allowedOrigins' => '*',
         'debug' => false,
+        'cachePath' => '',
+        'cacheTime' => 10,
     ];
 
     private function getDefaultDriver(array $values): String
@@ -98,5 +100,15 @@ class Config
     public function getDebug(): String
     {
         return $this->values['debug'];
+    }
+
+    public function getCachePath(): String
+    {
+        return $this->values['cachePath'];
+    }
+
+    public function getCacheTime(): int
+    {
+        return $this->values['cacheTime'];
     }
 }
