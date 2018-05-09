@@ -72,12 +72,8 @@ class TempFileCache implements Cache
         return unserialize($string);
     }
 
-    private function _clear(String $path, array $segments): int
+    private function _clear(String $path, array $segments): void
     {
-        if (!file_exists($path) || !is_dir($path)) {
-            return 0;
-        }
-        $deleted = 0;
         $entries = scandir($path);
         foreach ($entries as $entry) {
             if ($entry === '.' || $entry === '..') {
@@ -89,7 +85,6 @@ class TempFileCache implements Cache
                     continue;
                 }
                 if (is_file($filename)) {
-                    $deleted++;
                     unlink($filename);
                 }
             } else {
@@ -97,16 +92,19 @@ class TempFileCache implements Cache
                     continue;
                 }
                 if (is_dir($filename)) {
-                    $deleted += $this->_clear($filename, array_slice($segments, 1));
+                    $this->_clear($filename, array_slice($segments, 1));
                     rmdir($filename);
                 }
             }
         }
-        return $deleted;
     }
 
-    public function clear(): int
+    public function clear(): bool
     {
-        return $this->_clear($this->path, array_filter($this->segments));
+        if (!file_exists($this->path) || !is_dir($this->path)) {
+            return false;
+        }
+        $this->_clear($this->path, array_filter($this->segments));
+        return true;
     }
 }
