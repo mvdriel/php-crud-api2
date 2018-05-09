@@ -21,7 +21,6 @@ class TypeConverter
 
     private $toJdbc = [
         'simplified' => [
-            'bit' => 'varbinary',
             'char' => 'varchar',
             'longvarchar' => 'clob',
             'nchar' => 'varchar',
@@ -56,7 +55,6 @@ class TypeConverter
             'character varying' => 'varchar',
             'timestamp without time zone' => 'timestamp',
             'bytea' => 'blob',
-            'boolean' => 'bit',
             'jsonb' => 'clob',
         ],
         // source: https://docs.microsoft.com/en-us/sql/connect/jdbc/using-basic-data-types?view=sql-server-2017

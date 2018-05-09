@@ -12,7 +12,6 @@ class ReflectedColumn implements \JsonSerializable
     private $name;
     private $nullable;
     private $type;
-    private $jdbcType;
     private $length;
     private $precision;
     private $scale;
@@ -23,9 +22,8 @@ class ReflectedColumn implements \JsonSerializable
     {
         $this->name = $columnResult['COLUMN_NAME'];
         $this->nullable = in_array(strtoupper($columnResult['IS_NULLABLE']), ['TRUE', 'YES', 'T', 'Y', '1']);
-        $this->type = $columnResult['DATA_TYPE'];
         $this->length = $columnResult['CHARACTER_MAXIMUM_LENGTH'];
-        $this->jdbcType = $meta->getTypeConverter()->toJdbc($this->type, $this->length + 0);
+        $this->type = $meta->getTypeConverter()->toJdbc($columnResult['DATA_TYPE'], $this->length + 0);
         $this->precision = $columnResult['NUMERIC_PRECISION'];
         $this->scale = $columnResult['NUMERIC_SCALE'];
         $this->pk = false;
@@ -64,32 +62,32 @@ class ReflectedColumn implements \JsonSerializable
 
     public function hasLength(): bool
     {
-        return in_array($this->jdbcType, ['varchar', 'varbinary']);
+        return in_array($this->type, ['varchar', 'varbinary']);
     }
 
     public function hasPrecision(): bool
     {
-        return $this->jdbcType == 'decimal';
+        return $this->type == 'decimal';
     }
 
     public function hasScale(): bool
     {
-        return $this->jdbcType == 'decimal';
+        return $this->type == 'decimal';
     }
 
     public function isBinary(): bool
     {
-        return in_array($this->jdbcType, ['blob', 'varbinary']);
+        return in_array($this->type, ['blob', 'varbinary']);
     }
 
     public function isBoolean(): bool
     {
-        return $this->jdbcType == 'boolean';
+        return $this->type == 'boolean';
     }
 
     public function isGeometry(): bool
     {
-        return $this->jdbcType == 'geometry';
+        return $this->type == 'geometry';
     }
 
     public function setPk($value): void
@@ -116,7 +114,7 @@ class ReflectedColumn implements \JsonSerializable
     {
         $json = array();
         $json['name'] = $this->name;
-        $json['type'] = $this->jdbcType;
+        $json['type'] = $this->type;
         if ($this->pk) {
             $json['pk'] = true;
         }

@@ -3,6 +3,7 @@ namespace Com\Tqdev\CrudApi;
 
 use Com\Tqdev\CrudApi\Api\CrudApiService;
 use Com\Tqdev\CrudApi\Api\ErrorCode;
+use Com\Tqdev\CrudApi\Cache\NoCache;
 use Com\Tqdev\CrudApi\Cache\TempFileCache;
 use Com\Tqdev\CrudApi\Controller\CrudApiController;
 use Com\Tqdev\CrudApi\Controller\CrudMetaController;
@@ -28,7 +29,13 @@ class Api
             $config->getUsername(),
             $config->getPassword()
         );
-        $cache = new TempFileCache($config->getCachePath(), false);
+        switch ($config->getCacheType()) {
+            case 'TempFile':
+                $cache = new TempFileCache($config->getCachePath(), false);
+                break;
+            default:
+                $cache = new NoCache();
+        }
         $meta = new CrudMetaService($db, $cache, $config->getCacheTime());
         $responder = new Responder();
         $router = new GlobRouter($responder);

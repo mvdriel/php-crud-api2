@@ -12,6 +12,7 @@ class Config
         'password' => null,
         'allowedOrigins' => '*',
         'debug' => false,
+        'cacheType' => 'TempFile',
         'cachePath' => '',
         'cacheTime' => 10,
     ];
@@ -100,6 +101,11 @@ class Config
     public function getDebug(): String
     {
         return $this->values['debug'];
+    }
+
+    public function getCacheType(): String
+    {
+        return $this->values['cacheType'];
     }
 
     public function getCachePath(): String
