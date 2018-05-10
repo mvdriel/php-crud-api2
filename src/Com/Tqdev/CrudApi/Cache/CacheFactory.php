@@ -11,6 +11,12 @@ class CacheFactory
             case 'TempFile':
                 $cache = new TempFileCache($config->getCachePath());
                 break;
+            case 'Memcache':
+                $cache = new MemcacheCache($config->getCachePath());
+                break;
+            case 'Memcached':
+                $cache = new MemcachedCache($config->getCachePath());
+                break;
             default:
                 $cache = new NoCache();
         }

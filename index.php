@@ -12,7 +12,7 @@ $config = new Config([
     'username' => 'php-crud-api',
     'password' => 'php-crud-api',
     'cachePath' => 'tmp',
-//    'debug' => true,
+    //    'debug' => true,
 ]);
 //$request = new Request('GET', '/meta/columns');
 $request = new Request();
