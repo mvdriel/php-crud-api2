@@ -3,9 +3,9 @@ namespace Com\Tqdev\CrudApi\Api;
 
 use Com\Tqdev\CrudApi\Api\Record\ListResponse;
 use Com\Tqdev\CrudApi\Database\GenericDB;
-use Com\Tqdev\CrudApi\Meta\CrudMetaService;
+use Com\Tqdev\CrudApi\Meta\MetaService;
 
-class CrudApiService
+class ApiService
 {
 
     private $db;
@@ -16,7 +16,7 @@ class CrudApiService
     private $ordering;
     private $pagination;
 
-    public function __construct(GenericDB $db, CrudMetaService $meta)
+    public function __construct(GenericDB $db, MetaService $meta)
     {
         $this->db = $db;
         $this->tables = $meta->getDatabaseReflection();

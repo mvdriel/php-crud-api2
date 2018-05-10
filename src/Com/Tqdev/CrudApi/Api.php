@@ -1,15 +1,16 @@
 <?php
 namespace Com\Tqdev\CrudApi;
 
-use Com\Tqdev\CrudApi\Api\CrudApiService;
+use Com\Tqdev\CrudApi\Api\ApiService;
 use Com\Tqdev\CrudApi\Api\ErrorCode;
 use Com\Tqdev\CrudApi\Cache\NoCache;
 use Com\Tqdev\CrudApi\Cache\TempFileCache;
-use Com\Tqdev\CrudApi\Controller\CrudApiController;
-use Com\Tqdev\CrudApi\Controller\CrudMetaController;
+use Com\Tqdev\CrudApi\Controller\CacheController;
+use Com\Tqdev\CrudApi\Controller\DataController;
+use Com\Tqdev\CrudApi\Controller\MetaController;
 use Com\Tqdev\CrudApi\Controller\Responder;
 use Com\Tqdev\CrudApi\Database\GenericDB;
-use Com\Tqdev\CrudApi\Meta\CrudMetaService;
+use Com\Tqdev\CrudApi\Meta\MetaService;
 use Com\Tqdev\CrudApi\Router\CorsMiddleware;
 use Com\Tqdev\CrudApi\Router\GlobRouter;
 
@@ -36,13 +37,14 @@ class Api
             default:
                 $cache = new NoCache();
         }
-        $meta = new CrudMetaService($db, $cache, $config->getCacheTime());
+        $meta = new MetaService($db, $cache, $config->getCacheTime());
         $responder = new Responder();
         $router = new GlobRouter($responder);
         new CorsMiddleware($router, $responder, $config->getAllowedOrigins());
-        $api = new CrudApiService($db, $meta);
-        new CrudApiController($router, $responder, $api);
-        new CrudMetaController($router, $responder, $meta, $api);
+        $api = new ApiService($db, $meta);
+        new DataController($router, $responder, $api);
+        new MetaController($router, $responder, $meta);
+        new CacheController($router, $responder, $cache);
         $this->router = $router;
         $this->responder = $responder;
         $this->debug = $config->getDebug();

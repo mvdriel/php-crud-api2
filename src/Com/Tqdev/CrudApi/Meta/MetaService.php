@@ -5,7 +5,7 @@ use Com\Tqdev\CrudApi\Cache\Cache;
 use Com\Tqdev\CrudApi\Database\GenericDB;
 use Com\Tqdev\CrudApi\Meta\Reflection\DatabaseReflection;
 
-class CrudMetaService
+class MetaService
 {
     private $db;
     private $cache;

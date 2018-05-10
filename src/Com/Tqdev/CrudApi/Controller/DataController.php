@@ -1,18 +1,18 @@
 <?php
 namespace Com\Tqdev\CrudApi\Controller;
 
-use Com\Tqdev\CrudApi\Api\CrudApiService;
+use Com\Tqdev\CrudApi\Api\ApiService;
 use Com\Tqdev\CrudApi\Api\ErrorCode;
 use Com\Tqdev\CrudApi\Request;
 use Com\Tqdev\CrudApi\Response;
 use Com\Tqdev\CrudApi\Router\Router;
 
-class CrudApiController
+class DataController
 {
     private $service;
     private $responder;
 
-    public function __construct(Router $router, Responder $responder, CrudApiService $service)
+    public function __construct(Router $router, Responder $responder, ApiService $service)
     {
         $router->register('GET', '/data/*', array($this, '_list'));
         $router->register('POST', '/data/*', array($this, 'create'));

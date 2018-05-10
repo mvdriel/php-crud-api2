@@ -1,19 +1,17 @@
 <?php
 namespace Com\Tqdev\CrudApi\Controller;
 
-use Com\Tqdev\CrudApi\Api\CrudApiService;
-use Com\Tqdev\CrudApi\Meta\CrudMetaService;
+use Com\Tqdev\CrudApi\Meta\MetaService;
 use Com\Tqdev\CrudApi\Request;
 use Com\Tqdev\CrudApi\Response;
 use Com\Tqdev\CrudApi\Router\Router;
 
-class CrudMetaController
+class MetaController
 {
     private $metaService;
-    private $apiService;
     private $responder;
 
-    public function __construct(Router $router, Responder $responder, CrudMetaService $metaService, CrudApiService $apiService)
+    public function __construct(Router $router, Responder $responder, MetaService $metaService)
     {
         $router->register('GET', '/meta/columns', array($this, 'columns'));
         $router->register('GET', '/meta/openapi', array($this, 'openapi'));
