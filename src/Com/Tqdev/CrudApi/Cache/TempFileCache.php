@@ -4,7 +4,6 @@ namespace Com\Tqdev\CrudApi\Cache;
 class TempFileCache implements Cache
 {
     private $path;
-    private $md5;
     private $segments;
 
     public function __construct(String $config)
