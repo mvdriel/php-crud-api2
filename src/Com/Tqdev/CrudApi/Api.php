@@ -32,7 +32,7 @@ class Api
         );
         switch ($config->getCacheType()) {
             case 'TempFile':
-                $cache = new TempFileCache($config->getCachePath(), false);
+                $cache = new TempFileCache($config->getCachePath());
                 break;
             default:
                 $cache = new NoCache();

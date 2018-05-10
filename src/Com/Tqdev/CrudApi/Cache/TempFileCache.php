@@ -7,9 +7,8 @@ class TempFileCache implements Cache
     private $md5;
     private $segments;
 
-    public function __construct(String $config, bool $md5 = true)
+    public function __construct(String $config)
     {
-        $this->md5 = $md5;
         $this->segments = [];
         $s = PATH_SEPARATOR;
         if ($config == '') {
@@ -26,16 +25,14 @@ class TempFileCache implements Cache
     private function getFileName(String $key): String
     {
         $s = DIRECTORY_SEPARATOR;
-        if ($this->md5) {
-            $key = md5($key);
-        }
+        $md5 = md5($key);
         $filename = rtrim($this->path, $s) . $s;
         $i = 0;
         foreach ($this->segments as $segment) {
-            $filename .= substr($key, $i, $segment) . $s;
+            $filename .= substr($md5, $i, $segment) . $s;
             $i += $segment;
         }
-        $filename .= $key . '.cache';
+        $filename .= $md5 . '.cache';
         return $filename;
     }
 
