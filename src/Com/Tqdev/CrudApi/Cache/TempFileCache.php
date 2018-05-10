@@ -3,19 +3,24 @@ namespace Com\Tqdev\CrudApi\Cache;
 
 class TempFileCache implements Cache
 {
+    const PREFIX = 'phpcrudapi-';
+    const SUFFIX = '.cache';
+
     private $path;
     private $segments;
 
     public function __construct(String $config)
     {
         $this->segments = [];
-        $s = PATH_SEPARATOR;
+        $s = DIRECTORY_SEPARATOR;
+        $ps = PATH_SEPARATOR;
         if ($config == '') {
-            $this->path = sys_get_temp_dir();
-        } elseif (strpos($config, $s) === false) {
+            $id = substr(md5(__FILE__), 0, 8);
+            $this->path = sys_get_temp_dir() . $s . self::PREFIX . $id . self::SUFFIX;
+        } elseif (strpos($config, $ps) === false) {
             $this->path = $config;
         } else {
-            list($path, $segments) = explode($s, $config);
+            list($path, $segments) = explode($ps, $config);
             $this->path = $path;
             $this->segments = explode(',', $segments);
         }
@@ -31,7 +36,7 @@ class TempFileCache implements Cache
             $filename .= substr($md5, $i, $segment) . $s;
             $i += $segment;
         }
-        $filename .= $md5 . '.cache';
+        $filename .= substr($md5, $i);
         return $filename;
     }
 
@@ -68,7 +73,7 @@ class TempFileCache implements Cache
         return unserialize($string);
     }
 
-    private function _clear(String $path, array $segments): void
+    private function _clear(String $path, array $segments, int $len): void
     {
         $entries = scandir($path);
         foreach ($entries as $entry) {
@@ -77,7 +82,7 @@ class TempFileCache implements Cache
             }
             $filename = $path . DIRECTORY_SEPARATOR . $entry;
             if (count($segments) == 0) {
-                if (substr($entry, -6) != '.cache') {
+                if (strlen($entry) != $len) {
                     continue;
                 }
                 if (is_file($filename)) {
@@ -88,7 +93,7 @@ class TempFileCache implements Cache
                     continue;
                 }
                 if (is_dir($filename)) {
-                    $this->_clear($filename, array_slice($segments, 1));
+                    $this->_clear($filename, array_slice($segments, 1), $len - $segments[0]);
                     rmdir($filename);
                 }
             }
@@ -100,7 +105,7 @@ class TempFileCache implements Cache
         if (!file_exists($this->path) || !is_dir($this->path)) {
             return false;
         }
-        $this->_clear($this->path, array_filter($this->segments));
+        $this->_clear($this->path, array_filter($this->segments), strlen(md5('')));
         return true;
     }
 }

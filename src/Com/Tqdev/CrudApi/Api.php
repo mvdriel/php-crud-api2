@@ -3,8 +3,7 @@ namespace Com\Tqdev\CrudApi;
 
 use Com\Tqdev\CrudApi\Api\ApiService;
 use Com\Tqdev\CrudApi\Api\ErrorCode;
-use Com\Tqdev\CrudApi\Cache\NoCache;
-use Com\Tqdev\CrudApi\Cache\TempFileCache;
+use Com\Tqdev\CrudApi\Cache\CacheFactory;
 use Com\Tqdev\CrudApi\Controller\CacheController;
 use Com\Tqdev\CrudApi\Controller\DataController;
 use Com\Tqdev\CrudApi\Controller\MetaController;
@@ -30,13 +29,7 @@ class Api
             $config->getUsername(),
             $config->getPassword()
         );
-        switch ($config->getCacheType()) {
-            case 'TempFile':
-                $cache = new TempFileCache($config->getCachePath());
-                break;
-            default:
-                $cache = new NoCache();
-        }
+        $cache = CacheFactory::create($config);
         $meta = new MetaService($db, $cache, $config->getCacheTime());
         $responder = new Responder();
         $router = new GlobRouter($responder);
