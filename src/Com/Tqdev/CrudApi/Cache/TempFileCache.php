@@ -24,6 +24,7 @@ class TempFileCache implements Cache
             $this->path = $path;
             $this->segments = explode(',', $segments);
         }
+        $this->clean($this->path, array_filter($this->segments), strlen(md5('')), false);
     }
 
     private function getFileName(String $key): String
@@ -53,27 +54,33 @@ class TempFileCache implements Cache
         return file_put_contents($filename, $string, LOCK_EX) !== false;
     }
 
-    public function get(String $key, bool $stale = false)
+    private function getString($filename)
     {
-        $filename = $this->getFileName($key);
-        if (!file_exists($filename)) {
-            return null;
-        }
         $data = file_get_contents($filename);
         if ($data === false) {
             return null;
         }
         list($ttl, $string) = explode('|', $data, 2);
         if ($ttl > 0 && time() - filemtime($filename) > $ttl) {
-            if ($stale) {
-                touch($filename);
-            }
+            return null;
+        }
+        return $string;
+    }
+
+    public function get(String $key)
+    {
+        $filename = $this->getFileName($key);
+        if (!file_exists($filename)) {
+            return null;
+        }
+        $string = $this->getString($filename);
+        if ($string == null) {
             return null;
         }
         return unserialize($string);
     }
 
-    private function _clear(String $path, array $segments, int $len): void
+    private function clean(String $path, array $segments, int $len, bool $all): void
     {
         $entries = scandir($path);
         foreach ($entries as $entry) {
@@ -86,14 +93,16 @@ class TempFileCache implements Cache
                     continue;
                 }
                 if (is_file($filename)) {
-                    unlink($filename);
+                    if ($all || $this->getString($filename) == null) {
+                        unlink($filename);
+                    }
                 }
             } else {
                 if (strlen($entry) != $segments[0]) {
                     continue;
                 }
                 if (is_dir($filename)) {
-                    $this->_clear($filename, array_slice($segments, 1), $len - $segments[0]);
+                    $this->clean($filename, array_slice($segments, 1), $len - $segments[0], $all);
                     rmdir($filename);
                 }
             }
@@ -105,7 +114,7 @@ class TempFileCache implements Cache
         if (!file_exists($this->path) || !is_dir($this->path)) {
             return false;
         }
-        $this->_clear($this->path, array_filter($this->segments), strlen(md5('')));
+        $this->clean($this->path, array_filter($this->segments), strlen(md5('')), true);
         return true;
     }
 }
