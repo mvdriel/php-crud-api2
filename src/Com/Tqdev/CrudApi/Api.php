@@ -1,7 +1,7 @@
 <?php
 namespace Com\Tqdev\CrudApi;
 
-use Com\Tqdev\CrudApi\Api\CrudService;
+use Com\Tqdev\CrudApi\Api\DataService;
 use Com\Tqdev\CrudApi\Api\ErrorCode;
 use Com\Tqdev\CrudApi\Cache\CacheFactory;
 use Com\Tqdev\CrudApi\Controller\CacheController;
@@ -34,8 +34,8 @@ class Api
         $responder = new Responder();
         $router = new GlobRouter($responder);
         new CorsMiddleware($router, $responder, $config->getAllowedOrigins());
-        $crud = new CrudService($db, $meta);
-        new DataController($router, $responder, $crud);
+        $data = new DataService($db, $meta);
+        new DataController($router, $responder, $data);
         new MetaController($router, $responder, $meta);
         new CacheController($router, $responder, $cache);
         $this->router = $router;

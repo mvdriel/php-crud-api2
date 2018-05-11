@@ -5,7 +5,7 @@ use Com\Tqdev\CrudApi\Api\Record\ListResponse;
 use Com\Tqdev\CrudApi\Database\GenericDB;
 use Com\Tqdev\CrudApi\Meta\MetaService;
 
-class CrudService
+class DataService
 {
 
     private $db;
