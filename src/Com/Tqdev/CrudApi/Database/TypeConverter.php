@@ -52,12 +52,37 @@ class TypeConverter
             'datetime' => 'timestamp',
         ],
         'pgsql' => [
-            'character varying' => 'varchar',
-            'timestamp without time zone' => 'timestamp',
+            'bigserial' => 'bigint',
+            'bit varying' => 'bit',
+            'box' => 'geometry',
             'bytea' => 'blob',
-            'jsonb' => 'clob',
-            'text' => 'clob',
+            'character varying' => 'varchar',
+            'character' => 'char',
+            'cidr' => 'varchar',
+            'circle' => 'geometry',
             'double precision' => 'double',
+            'inet' => 'integer',
+            //'interval [ fields ]'
+            'jsonb' => 'clob',
+            'line' => 'geometry',
+            'lseg' => 'geometry',
+            'macaddr' => 'varchar',
+            'money' => 'decimal',
+            'path' => 'geometry',
+            'point' => 'geometry',
+            'polygon' => 'geometry',
+            'real' => 'float',
+            'serial' => 'integer',
+            'text' => 'clob',
+            'time without time zone' => 'time',
+            'time with time zone' => 'time_with_timezone',
+            'timestamp without time zone' => 'timestamp',
+            'timestamp with time zone' => 'timestamp_with_timezone',
+            //'tsquery'=
+            //'tsvector'
+            //'txid_snapshot'
+            'uuid' => 'varchar',
+            'xml' => 'clob',
         ],
         // source: https://docs.microsoft.com/en-us/sql/connect/jdbc/using-basic-data-types?view=sql-server-2017
         'mssql' => [
