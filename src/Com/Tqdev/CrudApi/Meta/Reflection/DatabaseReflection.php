@@ -12,7 +12,7 @@ class DatabaseReflection implements \JsonSerializable
     {
         $tableNames = $meta->getTables();
         foreach ($tableNames as $tableName) {
-            if ($tableName['TABLE_NAME'] == 'spatial_ref_sys') {
+            if (in_array($tableName['TABLE_NAME'], $meta->getIgnoredTables())) {
                 continue;
             }
             $table = new ReflectedTable($meta, $tableName);
