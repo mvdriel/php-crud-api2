@@ -8,25 +8,25 @@ use Com\Tqdev\CrudApi\Router\Router;
 
 class MetaController
 {
-    private $metaService;
+    private $service;
     private $responder;
 
-    public function __construct(Router $router, Responder $responder, MetaService $metaService)
+    public function __construct(Router $router, Responder $responder, MetaService $service)
     {
         $router->register('GET', '/meta/columns', array($this, 'columns'));
         $router->register('GET', '/meta/openapi', array($this, 'openapi'));
-        $this->metaService = $metaService;
+        $this->service = $service;
         $this->responder = $responder;
     }
 
     public function columns(Request $request): Response
     {
-        return $this->responder->success($this->metaService->getDatabaseReflection());
+        return $this->responder->success($this->service->getDatabaseReflection());
     }
 
     public function openapi(Request $request): Response
     {
-        return $this->responder->success($this->metaService->getOpenApiDefinition());
+        return $this->responder->success($this->service->getOpenApiDefinition());
     }
 
 }
