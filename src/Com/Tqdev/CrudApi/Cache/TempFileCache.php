@@ -24,7 +24,9 @@ class TempFileCache implements Cache
             $this->path = $path;
             $this->segments = explode(',', $segments);
         }
-        $this->clean($this->path, array_filter($this->segments), strlen(md5('')), false);
+        if (file_exists($this->path) && is_dir($this->path)) {
+            $this->clean($this->path, array_filter($this->segments), strlen(md5('')), false);
+        }
     }
 
     private function getFileName(String $key): String
