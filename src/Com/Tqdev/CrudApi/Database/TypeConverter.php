@@ -81,7 +81,7 @@ class TypeConverter
             //'tsquery'=
             //'tsvector'
             //'txid_snapshot'
-            'uuid' => 'varchar',
+            'uuid' => 'char',
             'xml' => 'clob',
         ],
         // source: https://docs.microsoft.com/en-us/sql/connect/jdbc/using-basic-data-types?view=sql-server-2017
