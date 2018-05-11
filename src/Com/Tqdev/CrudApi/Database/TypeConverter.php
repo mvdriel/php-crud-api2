@@ -56,12 +56,8 @@ class TypeConverter
             'timestamp without time zone' => 'timestamp',
             'bytea' => 'blob',
             'jsonb' => 'clob',
-            'name' => 'varchar',
             'text' => 'clob',
             'double precision' => 'double',
-            'text[]' => 'clob',
-            'double precision[]' => 'double',
-            'boolean[]' => 'boolean',
         ],
         // source: https://docs.microsoft.com/en-us/sql/connect/jdbc/using-basic-data-types?view=sql-server-2017
         'mssql' => [
