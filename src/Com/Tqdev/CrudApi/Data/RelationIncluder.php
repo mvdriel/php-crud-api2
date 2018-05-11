@@ -1,8 +1,8 @@
 <?php
-namespace Com\Tqdev\CrudApi\Api;
+namespace Com\Tqdev\CrudApi\Data;
 
-use Com\Tqdev\CrudApi\Api\Condition\ColumnCondition;
-use Com\Tqdev\CrudApi\Api\Condition\OrCondition;
+use Com\Tqdev\CrudApi\Data\Condition\ColumnCondition;
+use Com\Tqdev\CrudApi\Data\Condition\OrCondition;
 use Com\Tqdev\CrudApi\Database\GenericDB;
 use Com\Tqdev\CrudApi\Meta\Reflection\DatabaseReflection;
 use Com\Tqdev\CrudApi\Meta\Reflection\ReflectedTable;

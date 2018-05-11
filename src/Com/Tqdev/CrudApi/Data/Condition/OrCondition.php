@@ -1,7 +1,7 @@
 <?php
-namespace Com\Tqdev\CrudApi\Api\Condition;
+namespace Com\Tqdev\CrudApi\Data\Condition;
 
-class AndCondition extends Condition
+class OrCondition extends Condition
 {
     private $conditions;
 
@@ -10,7 +10,7 @@ class AndCondition extends Condition
         $this->conditions = [$condition1, $condition2];
     }
 
-    public function _and(Condition $condition): Condition
+    public function _or(Condition $condition): Condition
     {
         if ($condition instanceof NoCondition) {
             return $this;
@@ -28,7 +28,7 @@ class AndCondition extends Condition
     {
         $condition = new NoCondition();
         foreach ($conditions as $c) {
-            $condition = $condition->_and($c);
+            $condition = $condition->_or($c);
         }
         return $condition;
     }

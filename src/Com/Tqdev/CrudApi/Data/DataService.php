@@ -1,7 +1,7 @@
 <?php
-namespace Com\Tqdev\CrudApi\Api;
+namespace Com\Tqdev\CrudApi\Data;
 
-use Com\Tqdev\CrudApi\Api\Record\ListResponse;
+use Com\Tqdev\CrudApi\Data\Record\ListResponse;
 use Com\Tqdev\CrudApi\Database\GenericDB;
 use Com\Tqdev\CrudApi\Meta\MetaService;
 

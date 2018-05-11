@@ -1,5 +1,5 @@
 <?php
-namespace Com\Tqdev\CrudApi\Api\Record;
+namespace Com\Tqdev\CrudApi\Data\Record;
 
 class ListResponse implements \JsonSerializable
 {

@@ -1,8 +1,8 @@
 <?php
 namespace Com\Tqdev\CrudApi\Controller;
 
-use Com\Tqdev\CrudApi\Api\ErrorCode;
-use Com\Tqdev\CrudApi\Api\Record\ErrorDocument;
+use Com\Tqdev\CrudApi\Data\ErrorCode;
+use Com\Tqdev\CrudApi\Data\Record\ErrorDocument;
 use Com\Tqdev\CrudApi\Response;
 
 class Responder

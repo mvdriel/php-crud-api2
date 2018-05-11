@@ -1,5 +1,5 @@
 <?php
-namespace Com\Tqdev\CrudApi\Api;
+namespace Com\Tqdev\CrudApi\Data;
 
 use Com\Tqdev\CrudApi\Meta\Reflection\ReflectedTable;
 

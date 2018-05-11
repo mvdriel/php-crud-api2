@@ -1,5 +1,5 @@
 <?php
-namespace Com\Tqdev\CrudApi\Api;
+namespace Com\Tqdev\CrudApi\Data;
 
 class PaginationInfo
 {

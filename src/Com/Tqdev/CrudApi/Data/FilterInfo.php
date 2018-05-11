@@ -1,9 +1,9 @@
 <?php
-namespace Com\Tqdev\CrudApi\Api;
+namespace Com\Tqdev\CrudApi\Data;
 
-use Com\Tqdev\CrudApi\Api\Condition\AndCondition;
-use Com\Tqdev\CrudApi\Api\Condition\Condition;
-use Com\Tqdev\CrudApi\Api\Condition\OrCondition;
+use Com\Tqdev\CrudApi\Data\Condition\AndCondition;
+use Com\Tqdev\CrudApi\Data\Condition\Condition;
+use Com\Tqdev\CrudApi\Data\Condition\OrCondition;
 use Com\Tqdev\CrudApi\Meta\Reflection\ReflectedTable;
 
 class FilterInfo

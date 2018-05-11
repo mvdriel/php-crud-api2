@@ -1,13 +1,13 @@
 <?php
 namespace Com\Tqdev\CrudApi\Database;
 
-use Com\Tqdev\CrudApi\Api\Condition\AndCondition;
-use Com\Tqdev\CrudApi\Api\Condition\ColumnCondition;
-use Com\Tqdev\CrudApi\Api\Condition\Condition;
-use Com\Tqdev\CrudApi\Api\Condition\NoCondition;
-use Com\Tqdev\CrudApi\Api\Condition\NotCondition;
-use Com\Tqdev\CrudApi\Api\Condition\OrCondition;
-use Com\Tqdev\CrudApi\Api\Condition\SpatialCondition;
+use Com\Tqdev\CrudApi\Data\Condition\AndCondition;
+use Com\Tqdev\CrudApi\Data\Condition\ColumnCondition;
+use Com\Tqdev\CrudApi\Data\Condition\Condition;
+use Com\Tqdev\CrudApi\Data\Condition\NoCondition;
+use Com\Tqdev\CrudApi\Data\Condition\NotCondition;
+use Com\Tqdev\CrudApi\Data\Condition\OrCondition;
+use Com\Tqdev\CrudApi\Data\Condition\SpatialCondition;
 use Com\Tqdev\CrudApi\Meta\Reflection\ReflectedColumn;
 
 class ConditionsBuilder

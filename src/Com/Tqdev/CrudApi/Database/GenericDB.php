@@ -1,8 +1,8 @@
 <?php
 namespace Com\Tqdev\CrudApi\Database;
 
-use Com\Tqdev\CrudApi\Api\Condition\ColumnCondition;
-use Com\Tqdev\CrudApi\Api\Condition\Condition;
+use Com\Tqdev\CrudApi\Data\Condition\ColumnCondition;
+use Com\Tqdev\CrudApi\Data\Condition\Condition;
 use Com\Tqdev\CrudApi\Meta\Reflection\ReflectedTable;
 
 class GenericDB

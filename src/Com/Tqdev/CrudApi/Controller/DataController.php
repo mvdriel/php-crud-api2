@@ -1,8 +1,8 @@
 <?php
 namespace Com\Tqdev\CrudApi\Controller;
 
-use Com\Tqdev\CrudApi\Api\DataService;
-use Com\Tqdev\CrudApi\Api\ErrorCode;
+use Com\Tqdev\CrudApi\Data\DataService;
+use Com\Tqdev\CrudApi\Data\ErrorCode;
 use Com\Tqdev\CrudApi\Request;
 use Com\Tqdev\CrudApi\Response;
 use Com\Tqdev\CrudApi\Router\Router;

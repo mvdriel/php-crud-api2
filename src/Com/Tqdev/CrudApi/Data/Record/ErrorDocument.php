@@ -1,7 +1,7 @@
 <?php
-namespace Com\Tqdev\CrudApi\Api\Record;
+namespace Com\Tqdev\CrudApi\Data\Record;
 
-use Com\Tqdev\CrudApi\Api\ErrorCode;
+use Com\Tqdev\CrudApi\Data\ErrorCode;
 
 class ErrorDocument
 {

@@ -1,5 +1,5 @@
 <?php
-namespace Com\Tqdev\CrudApi\Api\Condition;
+namespace Com\Tqdev\CrudApi\Data\Condition;
 
 use Com\Tqdev\CrudApi\Meta\Reflection\ReflectedTable;
 
