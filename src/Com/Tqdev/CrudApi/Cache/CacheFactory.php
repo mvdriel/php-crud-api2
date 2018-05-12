@@ -5,12 +5,11 @@ use Com\Tqdev\CrudApi\Config;
 
 class CacheFactory
 {
-    const PREFIX = 'phpcrudapi-';
+    const PREFIX = 'phpcrudapi-%s-';
 
     private static function getPrefix(): String
     {
-        $id = substr(md5(__FILE__), 0, 8);
-        return self::PREFIX . $id . '-';
+        return sprintf(self::PREFIX, substr(md5(__FILE__), 0, 8));
     }
 
     public static function create(Config $config): Cache
