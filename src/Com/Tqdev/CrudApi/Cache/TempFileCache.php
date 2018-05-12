@@ -3,20 +3,19 @@ namespace Com\Tqdev\CrudApi\Cache;
 
 class TempFileCache implements Cache
 {
-    const PREFIX = 'phpcrudapi-';
-    const SUFFIX = '.cache';
+    const SUFFIX = 'cache';
 
     private $path;
     private $segments;
 
-    public function __construct(String $config)
+    public function __construct(String $prefix, String $config)
     {
         $this->segments = [];
         $s = DIRECTORY_SEPARATOR;
         $ps = PATH_SEPARATOR;
         if ($config == '') {
             $id = substr(md5(__FILE__), 0, 8);
-            $this->path = sys_get_temp_dir() . $s . self::PREFIX . $id . self::SUFFIX;
+            $this->path = sys_get_temp_dir() . $s . $prefix . self::SUFFIX;
         } elseif (strpos($config, $ps) === false) {
             $this->path = $config;
         } else {

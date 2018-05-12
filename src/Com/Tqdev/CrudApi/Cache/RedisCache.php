@@ -3,13 +3,12 @@ namespace Com\Tqdev\CrudApi\Cache;
 
 class RedisCache implements Cache
 {
-    const PREFIX = 'phpcrudapi-';
-
     protected $prefix;
     protected $redis;
 
-    public function __construct(String $config)
+    public function __construct(String $prefix, String $config)
     {
+        $this->prefix = $prefix;
         if ($config == '') {
             $config = '127.0.0.1';
         }
@@ -17,8 +16,6 @@ class RedisCache implements Cache
         if (isset($params[3])) {
             $params[3] = null;
         }
-        $id = substr(md5(__FILE__), 0, 8);
-        $this->prefix = self::PREFIX . $id . '-';
         $this->redis = new \Redis();
         call_user_func_array(array($this->redis, 'pconnect'), $params);
         $this->redis->setOption(\Redis::OPT_SERIALIZER, \Redis::SERIALIZER_IGBINARY);
