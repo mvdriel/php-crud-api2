@@ -7,7 +7,6 @@ use Com\Tqdev\CrudApi\Response;
 
 class Responder
 {
-
     public function error(int $error, String $argument): Response
     {
         $errorCode = new ErrorCode($error);
