@@ -16,6 +16,7 @@ class ErrorCode
     const ARGUMENT_COUNT_MISMATCH = 1002;
     const RECORD_NOT_FOUND = 1003;
     const ORIGIN_FORBIDDEN = 1004;
+    const COLUMN_NOT_FOUND = 1005;
     const HTTP_MESSAGE_NOT_READABLE = 1008;
     const DUPLICATE_KEY_EXCEPTION = 1009;
     const DATA_INTEGRITY_VIOLATION = 1010;
@@ -27,6 +28,7 @@ class ErrorCode
         1002 => ["Argument count mismatch in '%s'", Response::NOT_ACCEPTABLE],
         1003 => ["Record '%s' not found", Response::NOT_FOUND],
         1004 => ["Origin '%s' is forbidden", Response::FORBIDDEN],
+        1005 => ["Column '%s' not found", Response::NOT_FOUND],
         1008 => ["Cannot read HTTP message", Response::NOT_ACCEPTABLE],
         1009 => ["Duplicate key exception", Response::NOT_ACCEPTABLE],
         1010 => ["Data integrity violation", Response::NOT_ACCEPTABLE],
