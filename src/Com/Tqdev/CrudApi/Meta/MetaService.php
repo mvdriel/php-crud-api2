@@ -23,17 +23,17 @@ class MetaService
         }
     }
 
-    public function exists(String $table): bool
+    public function hasTable(String $table): bool
     {
         return $this->tables->exists($table);
     }
 
-    public function read(String $table): ReflectedTable
+    public function getTable(String $table): ReflectedTable
     {
         return $this->tables->get($table);
     }
 
-    public function _list(): ReflectedDatabase
+    public function getDatabase(): ReflectedDatabase
     {
         return $this->tables;
     }
