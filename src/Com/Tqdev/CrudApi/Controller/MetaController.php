@@ -22,7 +22,7 @@ class MetaController
 
     public function _list(Request $request): Response
     {
-        $tables = $this->service->getDatabase();
+        $tables = $this->service->_list();
         return $this->responder->success($tables);
     }
 
@@ -32,7 +32,7 @@ class MetaController
         if (!$this->service->exists($table)) {
             return $this->responder->error(ErrorCode::TABLE_NOT_FOUND, $table);
         }
-        $columns = $this->service->get($table);
+        $columns = $this->service->read($table);
         return $this->responder->success($columns);
     }
 

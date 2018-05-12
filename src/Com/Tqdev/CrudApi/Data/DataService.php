@@ -19,7 +19,7 @@ class DataService
     public function __construct(GenericDB $db, MetaService $meta)
     {
         $this->db = $db;
-        $this->tables = $meta->getDatabase();
+        $this->tables = $meta->_list();
         $this->columns = new ColumnSelector();
         $this->includer = new RelationIncluder($this->columns);
         $this->filters = new FilterInfo();

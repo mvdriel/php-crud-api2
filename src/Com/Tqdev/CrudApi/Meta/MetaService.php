@@ -28,12 +28,12 @@ class MetaService
         return $this->tables->exists($table);
     }
 
-    public function get(String $table): ReflectedTable
+    public function read(String $table): ReflectedTable
     {
         return $this->tables->get($table);
     }
 
-    public function getDatabase(): ReflectedDatabase
+    public function _list(): ReflectedDatabase
     {
         return $this->tables;
     }
