@@ -5,7 +5,6 @@ use Com\Tqdev\CrudApi\Database\GenericMeta;
 
 class ReflectedTable implements \JsonSerializable
 {
-
     private $name;
     private $columns;
     private $pk;

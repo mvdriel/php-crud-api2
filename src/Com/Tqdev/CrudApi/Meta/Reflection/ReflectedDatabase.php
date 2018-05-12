@@ -5,11 +5,12 @@ use Com\Tqdev\CrudApi\Database\GenericMeta;
 
 class ReflectedDatabase implements \JsonSerializable
 {
-
+    private $name;
     private $tables;
 
     public function __construct(GenericMeta $meta)
     {
+        $this->name = $meta->getDatabaseName();
         $tableNames = $meta->getTables();
         foreach ($tableNames as $tableName) {
             if (in_array($tableName['TABLE_NAME'], $meta->getIgnoredTables())) {
@@ -37,6 +38,9 @@ class ReflectedDatabase implements \JsonSerializable
 
     public function jsonSerialize()
     {
-        return ['tables' => array_values($this->tables)];
+        return [
+            'name' => $this->name,
+            'tables' => array_values($this->tables),
+        ];
     }
 }

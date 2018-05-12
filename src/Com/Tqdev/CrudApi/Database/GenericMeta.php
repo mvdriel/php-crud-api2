@@ -8,7 +8,7 @@ class GenericMeta
     private $database;
     private $typeConverter;
 
-    public function __construct(\PDO $pdo, String $driver, String $database = null)
+    public function __construct(\PDO $pdo, String $driver, String $database)
     {
         $this->pdo = $pdo;
         $this->driver = $driver;
@@ -54,6 +54,11 @@ class GenericMeta
             case 'mysql':return 'SELECT "COLUMN_NAME", "REFERENCED_TABLE_NAME" FROM "INFORMATION_SCHEMA"."KEY_COLUMN_USAGE" WHERE "REFERENCED_TABLE_NAME" IS NOT NULL AND "TABLE_NAME" = ? AND "TABLE_SCHEMA" = ?';
             case 'pgsql':return 'SELECT a.attname AS "COLUMN_NAME", c.confrelid::regclass::text AS "REFERENCED_TABLE_NAME" FROM pg_attribute a JOIN pg_constraint c ON (c.conrelid, c.conkey[1]) = (a.attrelid, a.attnum) JOIN pg_class pgc ON pgc.oid = a.attrelid WHERE pgc.relname = ? AND \'\' <> ? AND c.contype  = \'f\'';
         }
+    }
+
+    public function getDatabaseName(): String
+    {
+        return $this->database;
     }
 
     public function getTables(): array
