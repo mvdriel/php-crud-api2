@@ -7,7 +7,6 @@ use Com\Tqdev\CrudApi\Meta\MetaService;
 
 class DataService
 {
-
     private $db;
     private $tables;
     private $columns;
