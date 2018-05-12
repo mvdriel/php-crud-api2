@@ -11,7 +11,8 @@ $config = new Config([
     'database' => 'php-crud-api',
     'username' => 'php-crud-api',
     'password' => 'php-crud-api',
-    'cachePath' => 'tmp',
+    'cacheType' => 'Redis',
+    //'cachePath' => 'tmp',
     //    'debug' => true,
 ]);
 //$request = new Request('GET', '/meta/columns');

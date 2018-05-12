@@ -197,6 +197,23 @@ This may lead to the following JSON data:
 You see that the "belongsTo" relationships are detected and the foreign key value is replaced by the referenced object.
 In case of "hasMany" and "hasAndBelongsToMany" the table name is used a new property on the object.
 
+### Cache
+
+There are 4 cache engines that can be configured by the "cacheType" config parameter:
+
+- TempFile (default)
+- Redis
+- Memcache
+- Memcached
+
+You can install the dependencies for the last three engines by running:
+
+    sudo apt install php-redis redis
+    sudo apt install php-memcache memcached
+    sudo apt install php-memcached memcached
+
+The default engine has no dependencies and will use temporary files in the system "temp" path.
+
 ### Types
 
 These are the supported types with their default length/precision/scale:

@@ -11,6 +11,9 @@ class CacheFactory
             case 'TempFile':
                 $cache = new TempFileCache($config->getCachePath());
                 break;
+            case 'Redis':
+                $cache = new RedisCache($config->getCachePath());
+                break;
             case 'Memcache':
                 $cache = new MemcacheCache($config->getCachePath());
                 break;
