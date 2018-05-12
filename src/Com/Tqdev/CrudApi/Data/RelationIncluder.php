@@ -1,10 +1,10 @@
 <?php
 namespace Com\Tqdev\CrudApi\Data;
 
+use Com\Tqdev\CrudApi\Database\GenericDB;
 use Com\Tqdev\CrudApi\Data\Condition\ColumnCondition;
 use Com\Tqdev\CrudApi\Data\Condition\OrCondition;
-use Com\Tqdev\CrudApi\Database\GenericDB;
-use Com\Tqdev\CrudApi\Meta\Reflection\DatabaseReflection;
+use Com\Tqdev\CrudApi\Meta\Reflection\ReflectedDatabase;
 use Com\Tqdev\CrudApi\Meta\Reflection\ReflectedTable;
 
 class RelationIncluder
@@ -17,7 +17,7 @@ class RelationIncluder
         $this->columns = $columns;
     }
 
-    public function addMandatoryColumns(ReflectedTable $table, DatabaseReflection $tables, array &$params): void
+    public function addMandatoryColumns(ReflectedTable $table, ReflectedDatabase $tables, array &$params): void
     {
         if (!isset($params['include']) || !isset($params['columns'])) {
             return;
@@ -50,7 +50,7 @@ class RelationIncluder
         }
     }
 
-    private function getIncludesAsPathTree(DatabaseReflection $tables, array $params): PathTree
+    private function getIncludesAsPathTree(ReflectedDatabase $tables, array $params): PathTree
     {
         $includes = new PathTree();
         if (isset($params['include'])) {
@@ -68,14 +68,14 @@ class RelationIncluder
         return $includes;
     }
 
-    public function addIncludes(ReflectedTable $table, array &$records, DatabaseReflection $tables, array $params,
+    public function addIncludes(ReflectedTable $table, array &$records, ReflectedDatabase $tables, array $params,
         GenericDB $db): void{
 
         $includes = $this->getIncludesAsPathTree($tables, $params);
         $this->addIncludesForTables($table, $includes, $records, $tables, $params, $db);
     }
 
-    private function hasAndBelongsToMany(ReflectedTable $t1, ReflectedTable $t2, DatabaseReflection $tables) /*: ?ReflectedTable*/
+    private function hasAndBelongsToMany(ReflectedTable $t1, ReflectedTable $t2, ReflectedDatabase $tables) /*: ?ReflectedTable*/
     {
         foreach ($tables->getTableNames() as $tableName) {
             $t3 = $tables->get($tableName);
@@ -87,7 +87,7 @@ class RelationIncluder
     }
 
     private function addIncludesForTables(ReflectedTable $t1, PathTree $includes, array &$records,
-        DatabaseReflection $tables, array $params, GenericDB $db) {
+        ReflectedDatabase $tables, array $params, GenericDB $db) {
 
         foreach ($includes->getKeys() as $t2Name) {
 

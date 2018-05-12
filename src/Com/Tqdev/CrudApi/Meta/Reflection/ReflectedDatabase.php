@@ -3,7 +3,7 @@ namespace Com\Tqdev\CrudApi\Meta\Reflection;
 
 use Com\Tqdev\CrudApi\Database\GenericMeta;
 
-class DatabaseReflection implements \JsonSerializable
+class ReflectedDatabase implements \JsonSerializable
 {
 
     private $tables;

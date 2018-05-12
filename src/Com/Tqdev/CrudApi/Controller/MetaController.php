@@ -1,6 +1,7 @@
 <?php
 namespace Com\Tqdev\CrudApi\Controller;
 
+use Com\Tqdev\CrudApi\Data\ErrorCode;
 use Com\Tqdev\CrudApi\Meta\MetaService;
 use Com\Tqdev\CrudApi\Request;
 use Com\Tqdev\CrudApi\Response;
@@ -13,20 +14,26 @@ class MetaController
 
     public function __construct(Router $router, Responder $responder, MetaService $service)
     {
-        $router->register('GET', '/meta/columns', array($this, 'columns'));
-        $router->register('GET', '/meta/openapi', array($this, 'openapi'));
+        $router->register('GET', '/meta', array($this, '_list'));
+        $router->register('GET', '/meta/*', array($this, 'read'));
         $this->service = $service;
         $this->responder = $responder;
     }
 
-    public function columns(Request $request): Response
+    public function _list(Request $request): Response
     {
-        return $this->responder->success($this->service->getDatabaseReflection());
+        $tables = $this->service->getDatabase();
+        return $this->responder->success($tables);
     }
 
-    public function openapi(Request $request): Response
+    public function read(Request $request): Response
     {
-        return $this->responder->success($this->service->getOpenApiDefinition());
+        $table = $request->getPathSegment(2);
+        if (!$this->service->exists($table)) {
+            return $this->responder->error(ErrorCode::TABLE_NOT_FOUND, $table);
+        }
+        $columns = $this->service->get($table);
+        return $this->responder->success($columns);
     }
 
 }

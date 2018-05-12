@@ -3,7 +3,8 @@ namespace Com\Tqdev\CrudApi\Meta;
 
 use Com\Tqdev\CrudApi\Cache\Cache;
 use Com\Tqdev\CrudApi\Database\GenericDB;
-use Com\Tqdev\CrudApi\Meta\Reflection\DatabaseReflection;
+use Com\Tqdev\CrudApi\Meta\Reflection\ReflectedDatabase;
+use Com\Tqdev\CrudApi\Meta\Reflection\ReflectedTable;
 
 class MetaService
 {
@@ -15,14 +16,24 @@ class MetaService
     {
         $this->db = $db;
         $this->cache = $cache;
-        $this->tables = $this->cache->get('DatabaseReflection');
+        $this->tables = $this->cache->get('ReflectedDatabase');
         if ($this->tables === null) {
-            $this->tables = new DatabaseReflection($db->meta());
-            $this->cache->set('DatabaseReflection', $this->tables, $ttl);
+            $this->tables = new ReflectedDatabase($db->meta());
+            $this->cache->set('ReflectedDatabase', $this->tables, $ttl);
         }
     }
 
-    public function getDatabaseReflection(): DatabaseReflection
+    public function exists(String $table): bool
+    {
+        return $this->tables->exists($table);
+    }
+
+    public function get(String $table): ReflectedTable
+    {
+        return $this->tables->get($table);
+    }
+
+    public function getDatabase(): ReflectedDatabase
     {
         return $this->tables;
     }

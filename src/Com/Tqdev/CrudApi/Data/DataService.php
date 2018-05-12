@@ -1,8 +1,8 @@
 <?php
 namespace Com\Tqdev\CrudApi\Data;
 
-use Com\Tqdev\CrudApi\Data\Record\ListResponse;
 use Com\Tqdev\CrudApi\Database\GenericDB;
+use Com\Tqdev\CrudApi\Data\Record\ListResponse;
 use Com\Tqdev\CrudApi\Meta\MetaService;
 
 class DataService
@@ -19,7 +19,7 @@ class DataService
     public function __construct(GenericDB $db, MetaService $meta)
     {
         $this->db = $db;
-        $this->tables = $meta->getDatabaseReflection();
+        $this->tables = $meta->getDatabase();
         $this->columns = new ColumnSelector();
         $this->includer = new RelationIncluder($this->columns);
         $this->filters = new FilterInfo();

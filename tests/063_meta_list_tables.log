@@ -1,4 +1,4 @@
-GET /meta/columns
+GET /meta
 ===
 200
 Content-Type: application/json
