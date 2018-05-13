@@ -7,7 +7,7 @@ class NoCache implements Cache
     {
     }
 
-    public function set(String $key, $value, int $ttl = 0): bool
+    public function set(String $key, String $value, int $ttl = 0): bool
     {
         return true;
     }

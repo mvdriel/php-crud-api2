@@ -42,7 +42,7 @@ class TempFileCache implements Cache
         return $filename;
     }
 
-    public function set(String $key, $value, int $ttl = 0): bool
+    public function set(String $key, String $value, int $ttl = 0): bool
     {
         $filename = $this->getFileName($key);
         $dirname = dirname($filename);
@@ -51,7 +51,7 @@ class TempFileCache implements Cache
                 return false;
             }
         }
-        $string = $ttl . '|' . serialize($value);
+        $string = $ttl . '|' . $value;
         return file_put_contents($filename, $string, LOCK_EX) !== false;
     }
 
@@ -78,7 +78,7 @@ class TempFileCache implements Cache
         if ($string == null) {
             return null;
         }
-        return unserialize($string);
+        return $string;
     }
 
     private function clean(String $path, array $segments, int $len, bool $all): void

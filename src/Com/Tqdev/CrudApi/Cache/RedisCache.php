@@ -18,15 +18,14 @@ class RedisCache implements Cache
         }
         $this->redis = new \Redis();
         call_user_func_array(array($this->redis, 'pconnect'), $params);
-        $this->redis->setOption(\Redis::OPT_SERIALIZER, \Redis::SERIALIZER_IGBINARY);
     }
 
-    public function set(String $key, $value, int $ttl = 0): bool
+    public function set(String $key, String $value, int $ttl = 0): bool
     {
         return $this->redis->set($this->prefix . $key, $value, $ttl);
     }
 
-    public function get(String $key) /*: ?object*/
+    public function get(String $key)
     {
         return $this->redis->get($this->prefix . $key) ?: null;
     }

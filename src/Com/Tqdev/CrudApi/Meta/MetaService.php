@@ -16,10 +16,12 @@ class MetaService
     {
         $this->db = $db;
         $this->cache = $cache;
-        $this->tables = $this->cache->get('ReflectedDatabase');
-        if ($this->tables === null) {
+        $json = $this->cache->get('ReflectedDatabase');
+        if ($json != null) {
+            $this->tables = ReflectedDatabase::fromJson(json_decode($json));
+        } else {
             $this->tables = ReflectedDatabase::fromMeta($db->meta());
-            $this->cache->set('ReflectedDatabase', $this->tables, $ttl);
+            $this->cache->set('ReflectedDatabase', json_encode($this->tables), $ttl);
         }
     }
 

@@ -27,12 +27,12 @@ class MemcachedCache implements Cache
         return new \Memcached();
     }
 
-    public function set(String $key, $value, int $ttl = 0): bool
+    public function set(String $key, String $value, int $ttl = 0): bool
     {
         return $this->memcache->set($this->prefix . $key, $value, $ttl);
     }
 
-    public function get(String $key) /*: ?object*/
+    public function get(String $key)
     {
         return $this->memcache->get($this->prefix . $key) ?: null;
     }
