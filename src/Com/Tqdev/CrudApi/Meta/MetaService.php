@@ -18,7 +18,7 @@ class MetaService
         $this->cache = $cache;
         $this->tables = $this->cache->get('ReflectedDatabase');
         if ($this->tables === null) {
-            $this->tables = new ReflectedDatabase($db->meta());
+            $this->tables = ReflectedDatabase::fromMeta($db->meta());
             $this->cache->set('ReflectedDatabase', $this->tables, $ttl);
         }
     }

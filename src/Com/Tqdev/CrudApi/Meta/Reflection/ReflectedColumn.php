@@ -2,9 +2,8 @@
 namespace Com\Tqdev\CrudApi\Meta\Reflection;
 
 use Com\Tqdev\CrudApi\Database\GenericMeta;
-use Com\Tqdev\CrudApi\Meta\Definition\ColumnDefinition;
 
-class ReflectedColumn
+class ReflectedColumn implements \JsonSerializable
 {
     const DEFAULT_LENGTH = 255;
     const DEFAULT_PRECISION = 19;
@@ -19,18 +18,35 @@ class ReflectedColumn
     private $pk;
     private $fk;
 
-    public function __construct(GenericMeta $meta, array $columnResult)
+    public function __construct(String $name, String $type, int $length, int $precision, int $scale, bool $nullable, bool $pk, String $fk)
     {
-        $this->name = $columnResult['COLUMN_NAME'];
-        $length = $columnResult['CHARACTER_MAXIMUM_LENGTH'] + 0;
-        $this->type = $meta->getTypeConverter()->toJdbc($columnResult['DATA_TYPE'], $length);
+        $this->name = $name;
+        $this->type = $type;
         $this->length = $length;
-        $this->precision = $columnResult['NUMERIC_PRECISION'] + 0;
-        $this->scale = $columnResult['NUMERIC_SCALE'] + 0;
-        $this->nullable = in_array(strtoupper($columnResult['IS_NULLABLE']), ['TRUE', 'YES', 'T', 'Y', '1']);
-        $this->pk = false;
-        $this->fk = '';
+        $this->precision = $precision;
+        $this->scale = $scale;
+        $this->nullable = $nullable;
+        $this->pk = $pk;
+        $this->fk = $fk;
         $this->sanitize();
+    }
+
+    public static function fromMeta(GenericMeta $meta, array $columnResult): ReflectedColumn
+    {
+        $name = $columnResult['COLUMN_NAME'];
+        $length = $columnResult['CHARACTER_MAXIMUM_LENGTH'] + 0;
+        $type = $meta->getTypeConverter()->toJdbc($columnResult['DATA_TYPE'], $length);
+        $precision = $columnResult['NUMERIC_PRECISION'] + 0;
+        $scale = $columnResult['NUMERIC_SCALE'] + 0;
+        $nullable = in_array(strtoupper($columnResult['IS_NULLABLE']), ['TRUE', 'YES', 'T', 'Y', '1']);
+        $pk = false;
+        $fk = '';
+        return new ReflectedColumn($name, $type, $length, $precision, $scale, $nullable, $pk, $fk);
+    }
+
+    public static function fromJson(object $json): ReflectedColumn
+    {
+        return new ReflectedColumn($json->name, $json->type, $json->length, $json->precision, $json->scale, $json->nullable, $json->pk, $json->fk);
     }
 
     private function sanitize()
@@ -120,17 +136,17 @@ class ReflectedColumn
         return $this->fk;
     }
 
-    public function toDefinition()
+    public function jsonSerialize()
     {
-        return new ColumnDefinition(
-            $this->name,
-            $this->type,
-            $this->length,
-            $this->precision,
-            $this->scale,
-            $this->nullable,
-            $this->pk,
-            $this->fk
-        );
+        return array_filter([
+            'name' => $this->name,
+            'type' => $this->type,
+            'length' => $this->length,
+            'precision' => $this->precision,
+            'scale' => $this->scale,
+            'nullable' => $this->nullable,
+            'pk' => $this->pk,
+            'fk' => $this->fk,
+        ]);
     }
 }

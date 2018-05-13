@@ -24,7 +24,7 @@ class MetaController
     public function getDatabase(Request $request): Response
     {
         $database = $this->service->getDatabase();
-        return $this->responder->success($database->toDefinition());
+        return $this->responder->success($database);
     }
 
     public function getTable(Request $request): Response
@@ -34,7 +34,7 @@ class MetaController
             return $this->responder->error(ErrorCode::TABLE_NOT_FOUND, $tableName);
         }
         $table = $this->service->getTable($tableName);
-        return $this->responder->success($table->toDefinition());
+        return $this->responder->success($table);
     }
 
     public function getColumn(Request $request): Response
@@ -49,7 +49,7 @@ class MetaController
             return $this->responder->error(ErrorCode::COLUMN_NOT_FOUND, $columnName);
         }
         $column = $table->get($columnName);
-        return $this->responder->success($column->toDefinition());
+        return $this->responder->success($column);
     }
 
 }

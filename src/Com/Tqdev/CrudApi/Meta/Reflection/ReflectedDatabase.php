@@ -2,24 +2,38 @@
 namespace Com\Tqdev\CrudApi\Meta\Reflection;
 
 use Com\Tqdev\CrudApi\Database\GenericMeta;
-use Com\Tqdev\CrudApi\Meta\Definition\DatabaseDefinition;
 
-class ReflectedDatabase
+class ReflectedDatabase implements \JsonSerializable
 {
     private $name;
     private $tables;
 
-    public function __construct(GenericMeta $meta)
+    public function __construct(String $name, array $tables)
     {
-        $this->name = $meta->getDatabaseName();
-        $tableNames = $meta->getTables();
-        foreach ($tableNames as $tableName) {
+        $this->name = $name;
+        $this->tables = [];
+        foreach ($tables as $table) {
+            $this->tables[$table->getName()] = $table;
+        }
+    }
+
+    public static function fromMeta(GenericMeta $meta): ReflectedDatabase
+    {
+        $name = $meta->getDatabaseName();
+        $tables = [];
+        foreach ($meta->getTables() as $tableName) {
             if (in_array($tableName['TABLE_NAME'], $meta->getIgnoredTables())) {
                 continue;
             }
-            $table = new ReflectedTable($meta, $tableName);
-            $this->tables[$table->getName()] = $table;
+            $table = ReflectedTable::fromMeta($meta, $tableName);
+            $tables[$table->getName()] = $table;
         }
+        return new ReflectedDatabase($name, array_values($tables));
+    }
+
+    public static function fromJson(object $json): ReflectedDatabase
+    {
+        return new ReflectedDatabase($json->name, $json->tables);
     }
 
     public function exists(String $tableName): bool
@@ -37,12 +51,11 @@ class ReflectedDatabase
         return array_keys($this->tables);
     }
 
-    public function toDefinition()
+    public function jsonSerialize()
     {
-        $tables = [];
-        foreach ($this->tables as $table) {
-            $tables[] = $table->toDefinition();
-        }
-        return new DatabaseDefinition($this->name, $tables);
+        return [
+            'name' => $this->name,
+            'tables' => array_values($this->tables),
+        ];
     }
 }

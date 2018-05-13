@@ -2,35 +2,70 @@
 namespace Com\Tqdev\CrudApi\Meta\Reflection;
 
 use Com\Tqdev\CrudApi\Database\GenericMeta;
-use Com\Tqdev\CrudApi\Meta\Definition\TableDefinition;
 
-class ReflectedTable
+class ReflectedTable implements \JsonSerializable
 {
     private $name;
     private $columns;
     private $pk;
     private $fks;
 
-    public function __construct(GenericMeta $meta, array $tableResult)
+    public function __construct(String $name, array $columns)
     {
-        $this->name = $tableResult['TABLE_NAME'];
-        $results = $meta->getTableColumns($this->name);
-        foreach ($results as $result) {
-            $column = new ReflectedColumn($meta, $result);
-            $this->columns[$column->getName()] = $column;
+        $this->name = $name;
+        // set columns
+        $this->columns = [];
+        foreach ($columns as $column) {
+            $columnName = $column->getName();
+            $this->columns[$columnName] = $column;
         }
-        $columnNames = $meta->getTablePrimaryKeys($this->name);
-        if (count($columnNames) == 1) {
-            $columnName = $columnNames[0];
-            if (isset($this->columns[$columnName])) {
-                $this->pk = $this->columns[$columnName];
-                $this->pk->setPk(true);
+        // set primary key
+        $this->pk = null;
+        foreach ($columns as $column) {
+            if ($column->getPk() == true) {
+                $this->pk = $column;
             }
         }
-        $this->fks = $meta->getTableForeignKeys($this->name);
-        foreach ($this->fks as $columnName => $table) {
-            $this->columns[$columnName]->setFk($table);
+        // set foreign keys
+        $this->fks = [];
+        foreach ($columns as $column) {
+            $columnName = $column->getName();
+            $referencedTableName = $column->getFk();
+            if ($referencedTableName != '') {
+                $this->fks[$columnName] = $referencedTableName;
+            }
         }
+    }
+
+    public static function fromMeta(GenericMeta $meta, array $tableResult): ReflectedTable
+    {
+        $name = $tableResult['TABLE_NAME'];
+        // set columns
+        $columns = [];
+        foreach ($meta->getTableColumns($name) as $tableColumn) {
+            $column = ReflectedColumn::fromMeta($meta, $tableColumn);
+            $columns[$column->getName()] = $column;
+        }
+        // set primary key
+        $columnNames = $meta->getTablePrimaryKeys($name);
+        if (count($columnNames) == 1) {
+            $columnName = $columnNames[0];
+            if (isset($columns[$columnName])) {
+                $pk = $columns[$columnName];
+                $pk->setPk(true);
+            }
+        }
+        // set foreign keys
+        $fks = $meta->getTableForeignKeys($name);
+        foreach ($fks as $columnName => $table) {
+            $columns[$columnName]->setFk($table);
+        }
+        return new ReflectedTable($name, array_values($columns));
+    }
+
+    public static function fromJson(object $json): ReflectedTable
+    {
+        return new ReflectedTable($json->name, $json->columns);
     }
 
     public function exists(String $columnName): bool
@@ -69,12 +104,11 @@ class ReflectedTable
         return $columns;
     }
 
-    public function toDefinition()
+    public function jsonSerialize()
     {
-        $columns = [];
-        foreach ($this->columns as $column) {
-            $columns[] = $column->toDefinition();
-        }
-        return new TableDefinition($this->name, $columns);
+        return [
+            'name' => $this->name,
+            'columns' => array_values($this->columns),
+        ];
     }
 }
