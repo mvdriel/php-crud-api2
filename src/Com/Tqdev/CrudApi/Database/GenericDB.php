@@ -194,7 +194,7 @@ class GenericDB
     {
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute($parameters);
-        //echo "- $sql -- " . json_encode($parameters) . "\n";
+        //echo "- $sql -- " . json_encode($parameters, JSON_UNESCAPED_UNICODE) . "\n";
         return $stmt;
     }
 }

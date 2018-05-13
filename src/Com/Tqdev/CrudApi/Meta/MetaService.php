@@ -17,7 +17,7 @@ class MetaService
         $this->db = $db;
         $this->cache = $cache;
         $data = $this->cache->get('ReflectedDatabase');
-        if ($data != null) {
+        if ($data != '') {
             $this->tables = ReflectedDatabase::fromJson(json_decode(gzuncompress($data)));
         } else {
             $this->tables = ReflectedDatabase::fromMeta($db->meta());
