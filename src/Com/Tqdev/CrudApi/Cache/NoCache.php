@@ -12,9 +12,9 @@ class NoCache implements Cache
         return true;
     }
 
-    public function get(String $key)
+    public function get(String $key): String
     {
-        return null;
+        return '';
     }
 
     public function clear(): bool

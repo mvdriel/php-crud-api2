@@ -55,28 +55,28 @@ class TempFileCache implements Cache
         return file_put_contents($filename, $string, LOCK_EX) !== false;
     }
 
-    private function getString($filename)
+    private function getString($filename): String
     {
         $data = file_get_contents($filename);
         if ($data === false) {
-            return null;
+            return '';
         }
         list($ttl, $string) = explode('|', $data, 2);
         if ($ttl > 0 && time() - filemtime($filename) > $ttl) {
-            return null;
+            return '';
         }
         return $string;
     }
 
-    public function get(String $key)
+    public function get(String $key): String
     {
         $filename = $this->getFileName($key);
         if (!file_exists($filename)) {
-            return null;
+            return '';
         }
         $string = $this->getString($filename);
         if ($string == null) {
-            return null;
+            return '';
         }
         return $string;
     }

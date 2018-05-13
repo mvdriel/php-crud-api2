@@ -32,9 +32,9 @@ class MemcachedCache implements Cache
         return $this->memcache->set($this->prefix . $key, $value, $ttl);
     }
 
-    public function get(String $key)
+    public function get(String $key): String
     {
-        return $this->memcache->get($this->prefix . $key) ?: null;
+        return $this->memcache->get($this->prefix . $key) ?: '';
     }
 
     public function clear(): bool

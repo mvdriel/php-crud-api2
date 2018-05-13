@@ -16,12 +16,13 @@ class MetaService
     {
         $this->db = $db;
         $this->cache = $cache;
-        $json = $this->cache->get('ReflectedDatabase');
-        if ($json != null) {
-            $this->tables = ReflectedDatabase::fromJson(json_decode($json));
+        $data = $this->cache->get('ReflectedDatabase');
+        if ($data != null) {
+            $this->tables = ReflectedDatabase::fromJson(json_decode(gzuncompress($data)));
         } else {
             $this->tables = ReflectedDatabase::fromMeta($db->meta());
-            $this->cache->set('ReflectedDatabase', json_encode($this->tables), $ttl);
+            $data = gzcompress(json_encode($this->tables, JSON_UNESCAPED_UNICODE));
+            $this->cache->set('ReflectedDatabase', $data, $ttl);
         }
     }
 

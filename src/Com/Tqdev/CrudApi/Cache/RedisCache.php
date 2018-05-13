@@ -25,9 +25,9 @@ class RedisCache implements Cache
         return $this->redis->set($this->prefix . $key, $value, $ttl);
     }
 
-    public function get(String $key)
+    public function get(String $key): String
     {
-        return $this->redis->get($this->prefix . $key) ?: null;
+        return $this->redis->get($this->prefix . $key) ?: '';
     }
 
     public function clear(): bool
