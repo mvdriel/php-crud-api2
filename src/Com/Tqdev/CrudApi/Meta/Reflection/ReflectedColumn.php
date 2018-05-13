@@ -2,32 +2,42 @@
 namespace Com\Tqdev\CrudApi\Meta\Reflection;
 
 use Com\Tqdev\CrudApi\Database\GenericMeta;
+use Com\Tqdev\CrudApi\Meta\Definition\ColumnDefinition;
 
-class ReflectedColumn implements \JsonSerializable
+class ReflectedColumn
 {
     const DEFAULT_LENGTH = 255;
     const DEFAULT_PRECISION = 19;
     const DEFAULT_SCALE = 4;
 
     private $name;
-    private $nullable;
     private $type;
     private $length;
     private $precision;
     private $scale;
+    private $nullable;
     private $pk;
     private $fk;
 
     public function __construct(GenericMeta $meta, array $columnResult)
     {
         $this->name = $columnResult['COLUMN_NAME'];
+        $length = $columnResult['CHARACTER_MAXIMUM_LENGTH'] + 0;
+        $this->type = $meta->getTypeConverter()->toJdbc($columnResult['DATA_TYPE'], $length);
+        $this->length = $length;
+        $this->precision = $columnResult['NUMERIC_PRECISION'] + 0;
+        $this->scale = $columnResult['NUMERIC_SCALE'] + 0;
         $this->nullable = in_array(strtoupper($columnResult['IS_NULLABLE']), ['TRUE', 'YES', 'T', 'Y', '1']);
-        $this->length = $columnResult['CHARACTER_MAXIMUM_LENGTH'];
-        $this->type = $meta->getTypeConverter()->toJdbc($columnResult['DATA_TYPE'], $this->length + 0);
-        $this->precision = $columnResult['NUMERIC_PRECISION'];
-        $this->scale = $columnResult['NUMERIC_SCALE'];
         $this->pk = false;
         $this->fk = '';
+        $this->sanitize();
+    }
+
+    private function sanitize()
+    {
+        $this->length = $this->hasLength() ? $this->getLength() : 0;
+        $this->precision = $this->hasPrecision() ? $this->getPrecision() : 0;
+        $this->scale = $this->hasScale() ? $this->getScale() : 0;
     }
 
     public function getName(): String
@@ -110,29 +120,17 @@ class ReflectedColumn implements \JsonSerializable
         return $this->fk;
     }
 
-    public function jsonSerialize()
+    public function toDefinition()
     {
-        $json = array();
-        $json['name'] = $this->name;
-        $json['type'] = $this->type;
-        if ($this->pk) {
-            $json['pk'] = true;
-        }
-        if ($this->nullable) {
-            $json['nullable'] = true;
-        }
-        if ($this->hasLength()) {
-            $json['length'] = $this->length;
-        }
-        if ($this->hasPrecision()) {
-            $json['precision'] = $this->precision;
-        }
-        if ($this->hasScale()) {
-            $json['scale'] = $this->scale;
-        }
-        if ($this->fk) {
-            $json['fk'] = $this->fk;
-        }
-        return $json;
+        return new ColumnDefinition(
+            $this->name,
+            $this->type,
+            $this->length,
+            $this->precision,
+            $this->scale,
+            $this->nullable,
+            $this->pk,
+            $this->fk
+        );
     }
 }

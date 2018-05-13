@@ -2,8 +2,9 @@
 namespace Com\Tqdev\CrudApi\Meta\Reflection;
 
 use Com\Tqdev\CrudApi\Database\GenericMeta;
+use Com\Tqdev\CrudApi\Meta\Definition\TableDefinition;
 
-class ReflectedTable implements \JsonSerializable
+class ReflectedTable
 {
     private $name;
     private $columns;
@@ -68,11 +69,12 @@ class ReflectedTable implements \JsonSerializable
         return $columns;
     }
 
-    public function jsonSerialize()
+    public function toDefinition()
     {
-        return [
-            'name' => $this->name,
-            'columns' => array_values($this->columns),
-        ];
+        $columns = [];
+        foreach ($this->columns as $column) {
+            $columns[] = $column->toDefinition();
+        }
+        return new TableDefinition($this->name, $columns);
     }
 }

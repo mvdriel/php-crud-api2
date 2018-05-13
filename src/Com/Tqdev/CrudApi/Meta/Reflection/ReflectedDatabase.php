@@ -2,8 +2,9 @@
 namespace Com\Tqdev\CrudApi\Meta\Reflection;
 
 use Com\Tqdev\CrudApi\Database\GenericMeta;
+use Com\Tqdev\CrudApi\Meta\Definition\DatabaseDefinition;
 
-class ReflectedDatabase implements \JsonSerializable
+class ReflectedDatabase
 {
     private $name;
     private $tables;
@@ -36,11 +37,12 @@ class ReflectedDatabase implements \JsonSerializable
         return array_keys($this->tables);
     }
 
-    public function jsonSerialize()
+    public function toDefinition()
     {
-        return [
-            'name' => $this->name,
-            'tables' => array_values($this->tables),
-        ];
+        $tables = [];
+        foreach ($this->tables as $table) {
+            $tables[] = $table->toDefinition();
+        }
+        return new DatabaseDefinition($this->name, $tables);
     }
 }
