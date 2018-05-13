@@ -33,7 +33,14 @@ class ReflectedDatabase implements \JsonSerializable
 
     public static function fromJson(object $json): ReflectedDatabase
     {
-        return new ReflectedDatabase($json->name, $json->tables);
+        $name = $json->name;
+        $tables = [];
+        if (isset($json->tables) && is_array($json->tables)) {
+            foreach ($json->tables as $table) {
+                $tables[] = ReflectedTable::fromJson($table);
+            }
+        }
+        return new ReflectedDatabase($name, $tables);
     }
 
     public function exists(String $tableName): bool
