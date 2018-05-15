@@ -105,14 +105,59 @@ It will return:
 
 On list operations you may apply filters and includes.
 
-### Batch operations
-
-When you want to create, read, update or delete you may specify multiple primary key values in the URL.
-You also need to send an array instead of an object in the request body for create and update. 
-
-(may need examples)  
-
 ### Filters
+
+Filters provide search functionality, on list calls, using the "filter" parameter. You need to specify the column
+name, a comma, the match type, another commma and the value you want to filter on. These are supported match types:
+
+    cs: contain string (string contains value)
+    sw: start with (string starts with value)
+    ew: end with (string end with value)
+    eq: equal (string or number matches exactly)
+    lt: lower than (number is lower than value)
+    le: lower or equal (number is lower than or equal to value)
+    ge: greater or equal (number is higher than or equal to value)
+    gt: greater than (number is higher than value)
+    bt: between (number is between two comma separated values)
+    in: in (number or string is in comma separated list of values)
+    is: is null (field contains "NULL" value)
+
+You can negate all filters by prepending a 'n' character, so that 'eq' becomes 'neq'. 
+Examples of filter usage are:
+
+    GET /categories?filter=name,eq,Internet
+    GET /categories?filter=name,sw,Inter
+    GET /categories?filter=id,le,1
+    GET /categories?filter=id,ngt,2
+    GET /categories?filter=id,bt,1,1
+    GET /categories?filter=categories.id,eq,1
+
+Output:
+
+    {
+        "records":[
+            {
+                "id": 1
+                "name": "Internet"
+            }
+        ]
+    }
+
+In the next section we dive deeper into how you can apply multiple filters on a single list call.
+
+### Multiple filters
+
+Filters can be a by applied by repeating the "filter" parameter in the URL. For example the following URL: 
+
+    GET /categories?filter=id,gt,1&filter=id,lt,3
+
+will request all categories "where id > 1 and id < 3". If you wanted "where id = 2 or id = 4" you should write:
+
+    GET /categories?filter1=id,eq,2&filter2=id,eq,4
+    
+As you see we added a number to the "filter" parameter to indicate that "OR" instead of "AND" should be applied. Note that you can also repeat "filter1" and create an "AND" within an "OR". Since you can also go one level deeper by adding a letter (a-f) you can create almost any reasonably complex condition tree.
+
+NB: You can only filter on the most top level table and filters are only applied on list calls.
 
 ### Includes
 
@@ -197,6 +242,73 @@ This may lead to the following JSON data:
 You see that the "belongsTo" relationships are detected and the foreign key value is replaced by the referenced object.
 In case of "hasMany" and "hasAndBelongsToMany" the table name is used a new property on the object.
 
+### Batch operations
+
+When you want to create, read, update or delete you may specify multiple primary key values in the URL.
+You also need to send an array instead of an object in the request body for create and update. 
+
+To read a record from this table the request can be written in URL format as:
+
+    GET /data/posts/1,2
+
+The result may be:
+
+    [
+            {
+                "id": 1,
+                "title": "Hello world!",
+                "content": "Welcome to the first post.",
+                "created": "2018-03-05T20:12:56Z"
+            },
+            {
+                "id": 2,
+                "title": "Black is the new red",
+                "content": "This is the second post.",
+                "created": "2018-03-06T21:34:01Z"
+            }
+    ]
+
+Similarly when you want to do a batch update the request in URL format is written as:
+
+    PUT /data/posts/1,2
+
+Where "1" and "2" are the values of the primary keys of the records that you want to update. The body should 
+contain the same number of objects as there are primary keys in the URL:
+
+    [   
+        {
+            "title": "Adjusted title for ID 1"
+        },
+        {
+            "title": "Adjusted title for ID 2"
+        }        
+    ]
+
+This adjusts the titles of the posts. And the return values are the number of rows that are set:
+
+    1,1
+
+Which means that there were two update operations and each of them had set one row. Batch operations use database
+transactions, so they either all succeed or all fail (successful ones get roled back).
+
+### Spatial support
+
+For spatial support there is an extra set of filters that can be applied on geometry columns and that starting with an "s":
+
+    sco: spatial contains (geometry contains another)
+    scr: spatial crosses (geometry crosses another)
+    sdi: spatial disjoint (geometry is disjoint from another)
+    seq: spatial equal (geometry is equal to another)
+    sin: spatial intersects (geometry intersects another)
+    sov: spatial overlaps (geometry overlaps another)
+    sto: spatial touches (geometry touches another)
+    swi: spatial within (geometry is within another)
+    sic: spatial is closed (geometry is closed and simple)
+    sis: spatial is simple (geometry is simple)
+    siv: spatial is valid (geometry is valid)
+
+These filters are based on OGC standards and so is the WKT specification in which the geometry columns are represented.
+
 ### Cache
 
 There are 4 cache engines that can be configured by the "cacheType" config parameter:
@@ -213,6 +325,9 @@ You can install the dependencies for the last three engines by running:
     sudo apt install php-memcached memcached
 
 The default engine has no dependencies and will use temporary files in the system "temp" path.
+
+You may use the "cachePath" config parameter to specify the file system path for the temporary files or
+in case that you use a non-default "cacheType" the hostname (optionally with port) of the cache server.
 
 ### Types
 
@@ -248,3 +363,6 @@ binary types:
 other types:
 - geometry /* non-jdbc type, extension with limited support */
 
+### 64 bit integers in JavaScript
+
+JavaScript does not support 64 bit integers. All numbers are stored as 64 bit floating point values. The mantissa of a 64 bit floating point number is only 53 bit and that is why all integer numbers bigger than 53 bit may cause problems in JavaScript.
