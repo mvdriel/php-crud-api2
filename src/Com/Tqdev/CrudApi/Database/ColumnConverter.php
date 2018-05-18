@@ -28,7 +28,7 @@ class ColumnConverter
                 case 'pgsql':
                     return "ST_GeomFromText(?)";
                 case 'sqlsrv':
-                    return "geometry::STGeomFromText(?)";
+                    return "geometry::STGeomFromText(?,0)";
             }
         }
         return '?';
