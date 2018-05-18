@@ -21,6 +21,7 @@ class GenericMeta
         switch ($this->driver) {
             case 'mysql':return [];
             case 'pgsql':return ['spatial_ref_sys'];
+            case 'sqlsrv':return [];
         }
     }
 
@@ -29,6 +30,7 @@ class GenericMeta
         switch ($this->driver) {
             case 'mysql':return 'SELECT "TABLE_NAME" FROM "INFORMATION_SCHEMA"."TABLES" WHERE "TABLE_TYPE" IN (\'BASE TABLE\') AND "TABLE_SCHEMA" = ? ORDER BY BINARY "TABLE_NAME"';
             case 'pgsql':return 'SELECT c.relname as "TABLE_NAME" FROM pg_catalog.pg_class c LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace WHERE c.relkind IN (\'r\') AND n.nspname <> \'pg_catalog\' AND n.nspname <> \'information_schema\' AND n.nspname !~ \'^pg_toast\' AND pg_catalog.pg_table_is_visible(c.oid) AND \'\' <> ? ORDER BY "TABLE_NAME";';
+            case 'sqlsrv':return 'SELECT sobjects.name FROM sysobjects sobjects WHERE sobjects.xtype = \'U\'';
         }
     }
 
