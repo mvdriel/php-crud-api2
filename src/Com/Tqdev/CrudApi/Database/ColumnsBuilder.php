@@ -15,15 +15,6 @@ class ColumnsBuilder
         $this->converter = new ColumnConverter($driver);
     }
 
-    public function getLastInsertId(): String
-    {
-        switch ($this->driver) {
-            case 'mysql':return 'LAST_INSERT_ID()';
-            case 'pgsql':return 'LASTVAL()';
-            case 'sqlsrv':return 'SCOPE_IDENTITY()';
-        }
-    }
-
     public function getOffsetLimit(int $offset, int $limit): String
     {
         if ($limit < 0 || $offset < 0) {

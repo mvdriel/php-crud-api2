@@ -98,7 +98,7 @@ class GenericDB
         switch ($this->driver) {
             case 'mysql':
                 $stmt = $this->query($sql, $parameters);
-                $sql = 'SELECT ' . $this->columns->getLastInsertId();
+                $sql = 'SELECT LAST_INSERT_ID()';
                 $parameters = array();
                 break;
             case 'pgsql':
