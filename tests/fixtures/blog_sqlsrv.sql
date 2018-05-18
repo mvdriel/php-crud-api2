@@ -287,9 +287,9 @@ SET IDENTITY_INSERT [posts] OFF
 GO
 SET IDENTITY_INSERT [tags] ON
 GO
-INSERT [tags] ([id], [name]) VALUES (1, N'funny')
+INSERT [tags] ([id], [name], [is_important]) VALUES (1, N'funny', 0)
 GO
-INSERT [tags] ([id], [name]) VALUES (2, N'important')
+INSERT [tags] ([id], [name], [is_important]) VALUES (2, N'important', 1)
 GO
 SET IDENTITY_INSERT [tags] OFF
 GO
