@@ -105,7 +105,7 @@ class GenericDB
                 $sql .= ' RETURNING ' . $outputColumn;
                 break;
             case 'sqlsrv':
-                $sql .= ' OUTPUT INSERTED.' . $outputColumn . ' VALUES (?)';
+                $sql .= ' OUTPUT INSERTED.' . $outputColumn;
                 break;
         }
         $stmt = $this->query($sql, $parameters);
