@@ -160,6 +160,9 @@ class GenericDB
 
     public function selectAll(ReflectedTable $table, array $columnNames, Condition $condition, array $columnOrdering, int $offset, int $limit): array
     {
+        if ($limit == 0) {
+            return array();
+        }
         $selectColumns = $this->columns->getSelect($table, $columnNames);
         $tableName = $table->getName();
         $parameters = array();

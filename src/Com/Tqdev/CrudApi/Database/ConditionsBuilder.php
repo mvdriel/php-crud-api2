@@ -172,7 +172,7 @@ class ConditionsBuilder
             case 'pgsql':
                 return "$functionName($column, $argument)=TRUE";
             case 'sql_srv':
-                $functionName = str_replace('_', '', $functionName);
+                $functionName = str_replace('ST_', 'ST', $functionName);
                 $argument = str_replace('ST_GeomFromText(?)', 'geometry::STGeomFromText(?,0)', $argument);
                 return "$column.$functionName($argument)=1";
         }
