@@ -48,7 +48,7 @@ class GenericMeta
         switch ($this->driver) {
             case 'mysql':return 'SELECT "COLUMN_NAME" FROM "INFORMATION_SCHEMA"."KEY_COLUMN_USAGE" WHERE "CONSTRAINT_NAME" = \'PRIMARY\' AND "TABLE_NAME" = ? AND "TABLE_SCHEMA" = ?';
             case 'pgsql':return 'SELECT a.attname AS "COLUMN_NAME" FROM pg_attribute a JOIN pg_constraint c ON (c.conrelid, c.conkey[1]) = (a.attrelid, a.attnum) JOIN pg_class pgc ON pgc.oid = a.attrelid WHERE pgc.relname = ? AND \'\' <> ? AND c.contype = \'p\'';
-            case 'sqlsrv':return 'SELECT tc.name AS "COLUMN_NAME" FROM sys.schemas s inner join sys.tables t on s.schema_id=t.schema_id inner join sys.indexes i on t.object_id=i.object_id inner join sys.index_columns ic on i.object_id=ic.object_id and i.index_id=ic.index_id inner join sys.columns tc on ic.object_id=tc.object_id and ic.column_id=tc.column_id where i.is_primary_key=1 and t.name = ? and s.name = ? order by ic.key_ordinal';
+            case 'sqlsrv':return 'SELECT c.NAME as "COLUMN_NAME" FROM sys.key_constraints kc inner join sys.objects t on t.object_id = kc.parent_object_id INNER JOIN sys.index_columns ic ON kc.parent_object_id = ic.object_id and kc.unique_index_id = ic.index_id INNER JOIN sys.columns c ON ic.object_id = c.object_id AND ic.column_id = c.column_id WHERE kc.type = \'PK\' and t.object_id = OBJECT_ID(?) and \'\' <> ?';
         }
     }
 
