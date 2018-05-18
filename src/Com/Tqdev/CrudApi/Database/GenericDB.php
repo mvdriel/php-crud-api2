@@ -20,6 +20,7 @@ class GenericDB
         switch ($this->driver) {
             case 'mysql':return "$this->driver:host=$address;port=$port;dbname=$database;charset=utf8mb4";
             case 'pgsql':return "$this->driver:host=$address port=$port dbname=$database options='--client_encoding=UTF8'";
+            case 'sqlsrv':return "$this->driver:Server=$address,$port;Database=$database";
         }
     }
 
@@ -32,6 +33,9 @@ class GenericDB
                     'SET SESSION sql_mode = "ANSI,TRADITIONAL";',
                 ];
             case 'pgsql':return [
+                    "SET NAMES 'UTF8';",
+                ];
+            case 'sqlsrv':return [
                     "SET NAMES 'UTF8';",
                 ];
         }
@@ -49,6 +53,8 @@ class GenericDB
                     \PDO::MYSQL_ATTR_FOUND_ROWS => true,
                 ];
             case 'pgsql':return $options + [
+                ];
+            case 'sqlsrv':return $options + [
                 ];
         }
     }

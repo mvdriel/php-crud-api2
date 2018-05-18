@@ -30,6 +30,7 @@ class Config
         switch ($driver) {
             case 'mysql':return 3306;
             case 'pgsql':return 5432;
+            case 'sqlsrv':return 1433;
         }
     }
 
@@ -38,6 +39,7 @@ class Config
         switch ($driver) {
             case 'mysql':return 'localhost';
             case 'pgsql':return 'localhost';
+            case 'sqlsrv':return 'localhost';
         }
     }
 

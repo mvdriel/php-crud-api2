@@ -119,4 +119,4 @@ function run(array $drivers, String $match)
     }
 }
 
-run(['mysql', 'pgsql'], '');
+run(['mysql', 'pgsql', 'mssql'], '');
