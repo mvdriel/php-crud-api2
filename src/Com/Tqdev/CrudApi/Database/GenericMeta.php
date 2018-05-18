@@ -30,7 +30,7 @@ class GenericMeta
         switch ($this->driver) {
             case 'mysql':return 'SELECT "TABLE_NAME" FROM "INFORMATION_SCHEMA"."TABLES" WHERE "TABLE_TYPE" IN (\'BASE TABLE\') AND "TABLE_SCHEMA" = ? ORDER BY BINARY "TABLE_NAME"';
             case 'pgsql':return 'SELECT c.relname as "TABLE_NAME" FROM pg_catalog.pg_class c LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace WHERE c.relkind IN (\'r\') AND n.nspname <> \'pg_catalog\' AND n.nspname <> \'information_schema\' AND n.nspname !~ \'^pg_toast\' AND pg_catalog.pg_table_is_visible(c.oid) AND \'\' <> ? ORDER BY "TABLE_NAME";';
-            case 'sqlsrv':return 'SELECT sobjects.name as "TABLE_NAME" FROM sysobjects sobjects WHERE sobjects.xtype = \'U\' ORDER BY "TABLE_NAME"';
+            case 'sqlsrv':return 'SELECT o.name as "TABLE_NAME" FROM sysobjects o WHERE o.xtype = \'U\' ORDER BY "TABLE_NAME"';
         }
     }
 
@@ -48,6 +48,7 @@ class GenericMeta
         switch ($this->driver) {
             case 'mysql':return 'SELECT "COLUMN_NAME" FROM "INFORMATION_SCHEMA"."KEY_COLUMN_USAGE" WHERE "CONSTRAINT_NAME" = \'PRIMARY\' AND "TABLE_NAME" = ? AND "TABLE_SCHEMA" = ?';
             case 'pgsql':return 'SELECT a.attname AS "COLUMN_NAME" FROM pg_attribute a JOIN pg_constraint c ON (c.conrelid, c.conkey[1]) = (a.attrelid, a.attnum) JOIN pg_class pgc ON pgc.oid = a.attrelid WHERE pgc.relname = ? AND \'\' <> ? AND c.contype = \'p\'';
+            case 'sqlsrv':return 'SELECT tc.name AS "COLUMN_NAME" FROM sys.schemas s inner join sys.tables t on s.schema_id=t.schema_id inner join sys.indexes i on t.object_id=i.object_id inner join sys.index_columns ic on i.object_id=ic.object_id and i.index_id=ic.index_id inner join sys.columns tc on ic.object_id=tc.object_id and ic.column_id=tc.column_id where i.is_primary_key=1 and t.name = ? and s.name = ? order by ic.key_ordinal';
         }
     }
 
