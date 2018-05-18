@@ -108,6 +108,10 @@ function loadFixture(Config $config)
 function run(array $drivers, String $match)
 {
     foreach ($drivers as $driver) {
+        if (!extension_loaded("pdo_$driver")) {
+            echo sprintf("%s: skipped, driver not loaded\n", $driver);
+            continue;
+        }
         $dir = __DIR__;
         $start = microtime(true);
         $ini = parse_ini_file(sprintf("config/config_%s.ini", $driver));
