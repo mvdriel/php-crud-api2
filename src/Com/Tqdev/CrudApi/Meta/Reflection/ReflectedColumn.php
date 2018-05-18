@@ -44,7 +44,7 @@ class ReflectedColumn implements \JsonSerializable
         return new ReflectedColumn($name, $type, $length, $precision, $scale, $nullable, $pk, $fk);
     }
 
-    public static function fromJson(/* object */$json): ReflectedColumn
+    public static function fromJson( /* object */$json): ReflectedColumn
     {
         $name = $json->name;
         $type = $json->type;
@@ -109,6 +109,11 @@ class ReflectedColumn implements \JsonSerializable
         return $this->type == 'decimal';
     }
 
+    public function isInteger(): bool
+    {
+        return $this->type == 'integer';
+    }
+
     public function isBinary(): bool
     {
         return in_array($this->type, ['blob', 'varbinary']);
@@ -124,7 +129,7 @@ class ReflectedColumn implements \JsonSerializable
         return $this->type == 'geometry';
     }
 
-    public function setPk($value)/*: void*/
+    public function setPk($value) /*: void*/
     {
         $this->pk = $value;
     }
@@ -134,7 +139,7 @@ class ReflectedColumn implements \JsonSerializable
         return $this->pk;
     }
 
-    public function setFk($value)/*: void*/
+    public function setFk($value) /*: void*/
     {
         $this->fk = $value;
     }

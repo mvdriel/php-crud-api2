@@ -93,10 +93,14 @@ class GenericDB
         $insertColumns = $this->columns->getInsert($table, $columnValues);
         $tableName = $table->getName();
         $parameters = array_values($columnValues);
-        $sql = 'INSERT INTO "' . $tableName . '" ' . $insertColumns;
+        $sql = 'INSERT INTO "' . $tableName . '" ' . $insertColumns . ';SELECT ' . $this->columns->getLastInsertId();
         $stmt = $this->query($sql, $parameters);
-        $sql = 'SELECT ' . $this->columns->getLastInsertId();
-        $stmt = $this->query($sql, array());
+        if (!$stmt->nextRowset()) {
+            return null;
+        }
+        if ($table->getPk()->isInteger()) {
+            return (int) $stmt->fetchColumn();
+        }
         return $stmt->fetchColumn();
     }
 
