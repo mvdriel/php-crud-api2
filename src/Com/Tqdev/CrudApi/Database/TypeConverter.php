@@ -85,7 +85,7 @@ class TypeConverter
             'xml' => 'clob',
         ],
         // source: https://docs.microsoft.com/en-us/sql/connect/jdbc/using-basic-data-types?view=sql-server-2017
-        'mssql' => [
+        'sqlsrv' => [
             'datetime' => 'timestamp',
             'datetime2' => 'timestamp',
             'float' => 'double',
