@@ -166,14 +166,14 @@ class ConditionsBuilder
 
     private function getSpatialFunctionCall(String $functionName, String $column, bool $hasArgument): String
     {
-        $argument = $hasArgument ? 'ST_GeomFromText(?)' : '';
         switch ($this->driver) {
             case 'mysql':
             case 'pgsql':
+                $argument = $hasArgument ? 'ST_GeomFromText(?)' : '';
                 return "$functionName($column, $argument)=TRUE";
             case 'sql_srv':
                 $functionName = str_replace('ST_', 'ST', $functionName);
-                $argument = str_replace('ST_GeomFromText(?)', 'geometry::STGeomFromText(?,0)', $argument);
+                $argument = $hasArgument ? 'geometry::STGeomFromText(?,0)' : '';
                 return "$column.$functionName($argument)=1";
         }
     }
