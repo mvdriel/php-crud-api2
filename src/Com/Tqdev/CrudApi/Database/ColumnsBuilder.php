@@ -20,6 +20,7 @@ class ColumnsBuilder
         switch ($this->driver) {
             case 'mysql':return 'LAST_INSERT_ID()';
             case 'pgsql':return 'LASTVAL()';
+            case 'sqlsrv':return 'SCOPE_IDENTITY()';
         }
     }
 
@@ -31,6 +32,7 @@ class ColumnsBuilder
         switch ($this->driver) {
             case 'mysql':return "LIMIT $offset, $limit";
             case 'pgsql':return "LIMIT $limit OFFSET $offset";
+            case 'sqlsrv':return "LIMIT $limit OFFSET $offset";
         }
     }
 
