@@ -206,12 +206,8 @@ class GenericDB
 
     private function query(String $sql, array $parameters): \PDOStatement
     {
-        if (count($parameters) > 0) {
-            $stmt = $this->pdo->prepare($sql);
-            $stmt->execute($parameters);
-        } else {
-            $stmt = $this->pdo->query($sql);
-        }
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($parameters);
         //echo "- $sql -- " . json_encode($parameters, JSON_UNESCAPED_UNICODE) . "\n";
         return $stmt;
     }
