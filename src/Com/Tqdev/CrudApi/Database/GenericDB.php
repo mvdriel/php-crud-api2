@@ -36,7 +36,6 @@ class GenericDB
                     "SET NAMES 'UTF8';",
                 ];
             case 'sqlsrv':return [
-                    "SET NAMES 'UTF8';",
                 ];
         }
     }
