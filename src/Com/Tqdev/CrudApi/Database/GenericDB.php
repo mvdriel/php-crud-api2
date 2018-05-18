@@ -93,15 +93,11 @@ class GenericDB
         $insertColumns = $this->columns->getInsert($table, $columnValues);
         $tableName = $table->getName();
         $parameters = array_values($columnValues);
-        $sql = 'INSERT INTO "' . $tableName . '" ' . $insertColumns . ';SELECT ' . $this->columns->getLastInsertId();
+        $sql = 'INSERT INTO "' . $tableName . '" ' . $insertColumns;
         $stmt = $this->query($sql, $parameters);
-        if (!$stmt->nextRowset()) {
-            return null;
-        }
-        if ($table->getPk()->isInteger()) {
-            return (int) $stmt->fetchColumn();
-        }
-        return $stmt->fetchColumn();
+        $sql = 'SELECT ' . $this->columns->getLastInsertId();
+        $stmt = $this->query($sql, array());
+        return $stmt->fetchColumn(0);
     }
 
     public function selectSingle(ReflectedTable $table, array $columnNames, String $id) /*: ?array*/
