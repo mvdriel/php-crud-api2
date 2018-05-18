@@ -23,7 +23,13 @@ class ColumnConverter
             }
         }
         if ($column->isGeometry()) {
-            return "ST_GeomFromText(?)";
+            switch ($this->driver) {
+                case 'mysql':
+                case 'pgsql':
+                    return "ST_GeomFromText(?)";
+                case 'sqlsrv':
+                    return "geometry::STGeomFromText(?)";
+            }
         }
         return '?';
     }
