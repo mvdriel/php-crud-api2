@@ -27,7 +27,7 @@ class GlobRouter implements Router
         $this->routes->put($parts, $handler);
     }
 
-    public function load(Middleware $middleware): void
+    public function load(Middleware $middleware)/*: void*/
     {
         if (count($this->middlewares) > 0) {
             $next = $this->middlewares[0];

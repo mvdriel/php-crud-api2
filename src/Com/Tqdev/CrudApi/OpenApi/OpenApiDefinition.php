@@ -5,7 +5,7 @@ use Com\Tqdev\CrudApi\Meta\MetaService;
 
 class OpenApiDefinition extends DefaultOpenApiDefinition
 {
-    private function set(String $path, String $value): void {
+    private function set(String $path, String $value)/*: void*/ {
         $parts = explode('/',trim($path,'/'));
         $current = &$this->root;
         while (count($parts)>0) {
@@ -28,7 +28,7 @@ class OpenApiDefinition extends DefaultOpenApiDefinition
 		}
 	}
 
-	private function fillParametersWithPrimaryKey(String $method, TableDefinition $table): void {
+	private function fillParametersWithPrimaryKey(String $method, TableDefinition $table)/*: void*/ {
 		if (table.getPk() != null) {
             $pathWithId = sprintf('/data/%s/{%s}', $table->getName(), $table->getPk()->getName());
 			$this->set("/paths/$pathWithId/$method/responses/200/description", "$method operation");

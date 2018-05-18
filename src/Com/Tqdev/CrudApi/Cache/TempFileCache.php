@@ -81,7 +81,7 @@ class TempFileCache implements Cache
         return $string;
     }
 
-    private function clean(String $path, array $segments, int $len, bool $all): void
+    private function clean(String $path, array $segments, int $len, bool $all)/*: void*/
     {
         $entries = scandir($path);
         foreach ($entries as $entry) {

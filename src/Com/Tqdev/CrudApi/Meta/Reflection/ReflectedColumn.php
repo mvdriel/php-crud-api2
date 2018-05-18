@@ -124,7 +124,7 @@ class ReflectedColumn implements \JsonSerializable
         return $this->type == 'geometry';
     }
 
-    public function setPk($value): void
+    public function setPk($value)/*: void*/
     {
         $this->pk = $value;
     }
@@ -134,7 +134,7 @@ class ReflectedColumn implements \JsonSerializable
         return $this->pk;
     }
 
-    public function setFk($value): void
+    public function setFk($value)/*: void*/
     {
         $this->fk = $value;
     }

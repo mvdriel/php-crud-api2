@@ -30,7 +30,7 @@ class DataConverter
         return 'none';
     }
 
-    public function convertRecords(ReflectedTable $table, array $columnNames, array &$records): void
+    public function convertRecords(ReflectedTable $table, array $columnNames, array &$records)/*: void*/
     {
         foreach ($columnNames as $columnName) {
             $column = $table->get($columnName);
@@ -64,7 +64,7 @@ class DataConverter
         return 'none';
     }
 
-    public function convertColumnValues(ReflectedTable $table, array &$columnValues): void
+    public function convertColumnValues(ReflectedTable $table, array &$columnValues)/*: void*/
     {
         $columnNames = array_keys($columnValues);
         foreach ($columnNames as $columnName) {
