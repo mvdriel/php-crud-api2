@@ -85,7 +85,11 @@ function loadFixture(Config $config)
     );
     $pdo = $db->pdo();
     $file = preg_replace('/--.*$/m', '', $file);
-    $statements = preg_split('/(?<=;)\n/s', $file);
+    if ($driver == 'sqlsrv') {
+        $statements = preg_split('/\n\s*GO\s*\n/s', $file);
+    } else {
+        $statements = preg_split('/(?<=;)\n/s', $file);
+    }
     foreach ($statements as $i => $statement) {
         $statement = trim($statement);
         if ($statement) {
@@ -119,4 +123,4 @@ function run(array $drivers, String $match)
     }
 }
 
-run(['mysql', 'pgsql', 'mssql'], '');
+run(['mysql', 'pgsql', 'sqlsrv'], '');
