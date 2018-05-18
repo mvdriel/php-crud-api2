@@ -51,7 +51,7 @@ class ColumnSelector
         return $results;
     }
 
-    public function getValues(ReflectedTable $table, bool $primaryTable, object $record, array $params): array
+    public function getValues(ReflectedTable $table, bool $primaryTable, /* object */$record, array $params): array
     {
         $results = array();
         $columnNames = $this->getNames($table, $primaryTable, $params);

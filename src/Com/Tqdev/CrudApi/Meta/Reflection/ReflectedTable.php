@@ -63,7 +63,7 @@ class ReflectedTable implements \JsonSerializable
         return new ReflectedTable($name, array_values($columns));
     }
 
-    public static function fromJson(object $json): ReflectedTable
+    public static function fromJson(/* object */$json): ReflectedTable
     {
         $name = $json->name;
         $columns = [];

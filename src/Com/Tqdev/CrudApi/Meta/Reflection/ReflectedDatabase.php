@@ -31,7 +31,7 @@ class ReflectedDatabase implements \JsonSerializable
         return new ReflectedDatabase($name, array_values($tables));
     }
 
-    public static function fromJson(object $json): ReflectedDatabase
+    public static function fromJson(/* object */$json): ReflectedDatabase
     {
         $name = $json->name;
         $tables = [];
