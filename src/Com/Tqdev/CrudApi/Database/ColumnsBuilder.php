@@ -32,7 +32,7 @@ class ColumnsBuilder
         switch ($this->driver) {
             case 'mysql':return "LIMIT $offset, $limit";
             case 'pgsql':return "LIMIT $limit OFFSET $offset";
-            case 'sqlsrv':return "LIMIT $limit OFFSET $offset";
+            case 'sqlsrv':return "OFFSET $offset ROWS FETCH NEXT $limit ROWS ONLY";
         }
     }
 
