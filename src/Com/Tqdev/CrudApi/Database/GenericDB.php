@@ -92,11 +92,23 @@ class GenericDB
         $this->converter->convertColumnValues($table, $columnValues);
         $insertColumns = $this->columns->getInsert($table, $columnValues);
         $tableName = $table->getName();
+        $outputColumn = $this->columns->getOutputColumn($table);
         $parameters = array_values($columnValues);
         $sql = 'INSERT INTO "' . $tableName . '" ' . $insertColumns;
+        switch ($this->driver) {
+            case 'mysql':
+                $stmt = $this->query($sql, $parameters);
+                $sql = 'SELECT ' . $this->columns->getLastInsertId();
+                $parameters = array();
+                break;
+            case 'pgsql':
+                $sql .= ' RETURNING ' . $outputColumn;
+                break;
+            case 'sqlsrv':
+                $sql .= ' OUTPUT INSERTED.' . $outputColumn . ' VALUES (?)';
+                break;
+        }
         $stmt = $this->query($sql, $parameters);
-        $sql = 'SELECT ' . $this->columns->getLastInsertId();
-        $stmt = $this->query($sql, array());
         return $stmt->fetchColumn(0);
     }
 
