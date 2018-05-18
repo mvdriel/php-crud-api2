@@ -17,6 +17,9 @@ class TypeConverter
             'blob' => 'longblob',
             'timestamp' => 'datetime',
         ],
+        'sqlsrv' => [
+            'boolean' => 'bit',
+        ],
     ];
 
     private $toJdbc = [

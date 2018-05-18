@@ -147,7 +147,7 @@ GO
 CREATE TABLE [tags](
 	[id] [int] IDENTITY,
 	[name] [nvarchar](255) NOT NULL,
-	[is_important] [boolean] NOT NULL,
+	[is_important] [bit] NOT NULL,
 PRIMARY KEY CLUSTERED
 (
 	[id] ASC
