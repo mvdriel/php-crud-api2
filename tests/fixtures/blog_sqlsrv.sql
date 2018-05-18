@@ -85,7 +85,7 @@ END
 GO
 CREATE TABLE [categories](
 	[id] [int] IDENTITY,
-	[name] [nvarchar](max) NOT NULL,
+	[name] [nvarchar](255) NOT NULL,
 	[icon] [varbinary](max) NULL,
 PRIMARY KEY CLUSTERED
 (
@@ -101,7 +101,7 @@ GO
 CREATE TABLE [comments](
 	[id] [int] IDENTITY,
 	[post_id] [int] NOT NULL,
-	[message] [nvarchar](max) NOT NULL,
+	[message] [nvarchar](255) NOT NULL,
 PRIMARY KEY CLUSTERED
 (
 	[id] ASC
@@ -132,7 +132,7 @@ CREATE TABLE [posts](
 	[id] [int] IDENTITY,
 	[user_id] [int] NOT NULL,
 	[category_id] [int] NOT NULL,
-	[content] [nvarchar](max) NOT NULL,
+	[content] [nvarchar](255) NOT NULL,
 PRIMARY KEY CLUSTERED
 (
 	[id] ASC
@@ -146,7 +146,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [tags](
 	[id] [int] IDENTITY,
-	[name] [nvarchar](max) NOT NULL,
+	[name] [nvarchar](255) NOT NULL,
 PRIMARY KEY CLUSTERED
 (
 	[id] ASC
@@ -160,8 +160,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [users](
 	[id] [int] IDENTITY,
-	[username] [nvarchar](max) NOT NULL,
-	[password] [nvarchar](max) NOT NULL,
+	[username] [nvarchar](255) NOT NULL,
+	[password] [nvarchar](255) NOT NULL,
 	[location] [geometry] NULL,
  CONSTRAINT [PK_users] PRIMARY KEY CLUSTERED
 (
@@ -176,7 +176,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [countries](
 	[id] [int] IDENTITY,
-	[name] [nvarchar](max) NOT NULL,
+	[name] [nvarchar](255) NOT NULL,
 	[shape] [geometry] NOT NULL,
  CONSTRAINT [PK_countries] PRIMARY KEY CLUSTERED
 (
@@ -191,7 +191,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [events](
 	[id] [int] IDENTITY,
-	[name] [nvarchar](max) NOT NULL,
+	[name] [nvarchar](255) NOT NULL,
 	[datetime] [datetime2](0) NOT NULL,
 	[visitors] [int] NOT NULL,
  CONSTRAINT [PK_events] PRIMARY KEY CLUSTERED
@@ -216,7 +216,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [products](
 	[id] [int] IDENTITY,
-	[name] [nvarchar](max) NOT NULL,
+	[name] [nvarchar](255) NOT NULL,
 	[price] [decimal](10,2) NOT NULL,
 	[properties] [xml] NOT NULL,
 	[created_at] [datetime2](0) NOT NULL,
@@ -235,7 +235,7 @@ GO
 CREATE TABLE [barcodes](
 	[id] [int] IDENTITY,
 	[product_id] [int] NOT NULL,
-	[hex] [nvarchar](max) NOT NULL,
+	[hex] [nvarchar](255) NOT NULL,
 	[bin] [varbinary](max) NOT NULL,
  CONSTRAINT [PK_barcodes] PRIMARY KEY CLUSTERED
 (
