@@ -39,7 +39,13 @@ class ColumnConverter
             }
         }
         if ($column->isGeometry()) {
-            return "ST_AsText($value) as $value";
+            switch ($this->driver) {
+                case 'mysql':
+                case 'pgsql':
+                    return "ST_AsText($value) as $value";
+                case 'sqlsrv':
+                    return "$value.STAsText() as $value";
+            }
         }
         return $value;
     }
