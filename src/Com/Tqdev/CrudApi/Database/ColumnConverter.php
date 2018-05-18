@@ -50,7 +50,7 @@ class ColumnConverter
                 case 'pgsql':
                     return "ST_AsText($value) as $value";
                 case 'sqlsrv':
-                    return "$value.STAsText() as $value";
+                    return "REPLACE($value.STAsText(),' (','(') as $value";
             }
         }
         return $value;
