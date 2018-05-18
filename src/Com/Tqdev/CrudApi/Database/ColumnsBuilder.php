@@ -66,7 +66,14 @@ class ColumnsBuilder
             $columnValue = $this->converter->convertColumnValue($column);
             $values[] = $columnValue;
         }
-        return '(' . implode(',', $columns) . ') VALUES (' . implode(',', $values) . ')';
+        $columnsSql = '(' . implode(',', $columns) . ')';
+        $valuesSql = '(' . implode(',', $values) . ')';
+        $outputColumn = $this->quoteColumnName($table->getPk());
+        switch ($this->driver) {
+            case 'mysql':return "$columnsSql VALUES $valuesSql";
+            case 'pgsql':return "$columnsSql VALUES $valuesSql RETURNING $outputColumn";
+            case 'sqlsrv':return "$columnsSql OUTPUT INSERTED.$outputColumn VALUES $valuesSql";
+        }
     }
 
     public function getUpdate(ReflectedTable $table, array $columnValues): String
@@ -94,11 +101,6 @@ class ColumnsBuilder
             $results[] = $quotedColumnName . '=' . $quotedColumnName . '+' . $columnValue;
         }
         return implode(',', $results);
-    }
-
-    public function getOutputColumn(ReflectedTable $table): String
-    {
-        return $this->quoteColumnName($table->getPk());
     }
 
 }
