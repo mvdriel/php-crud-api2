@@ -107,7 +107,7 @@ class ColumnsBuilder
 
     public function getOutputColumn(ReflectedTable $table): String
     {
-        return $this->quoteColumnName($table->getPk()->getName());
+        return $this->quoteColumnName($table->getPk());
     }
 
 }
