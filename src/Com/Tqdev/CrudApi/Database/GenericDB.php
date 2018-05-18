@@ -55,6 +55,7 @@ class GenericDB
                     \PDO::ATTR_EMULATE_PREPARES => false,
                 ];
             case 'sqlsrv':return $options + [
+                    \PDO::SQLSRV_ATTR_FETCHES_NUMERIC_TYPE => true,
                 ];
         }
     }
