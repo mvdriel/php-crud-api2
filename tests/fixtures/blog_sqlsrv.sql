@@ -304,5 +304,3 @@ GO
 
 ALTER TABLE [kunsthåndværk]  WITH CHECK ADD 	CONSTRAINT [UC_kunsthåndværk_Umlauts ä_ö_ü-COUNT] UNIQUE([Umlauts ä_ö_ü-COUNT])
 GO
-ALTER TABLE [kunsthåndværk] CHECK	CONSTRAINT [UC_kunsthåndværk_Umlauts ä_ö_ü-COUNT]
-GO

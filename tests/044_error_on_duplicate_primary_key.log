@@ -1,7 +1,7 @@
-POST /data/posts
+POST /data/kunsthåndværk
 Content-Type: application/json
 
-{"id":1,"user_id":1,"category_id":1,"content":"blog started (duplicate)"}
+{"Umlauts ä_ö_ü-COUNT":1}
 ===
 406
 Content-Type: application/json
