@@ -1,7 +1,7 @@
 POST /data/kunsthåndværk
 Content-Type: application/json
 
-{"Umlauts ä_ö_ü-COUNT":1}
+{"id":"23587850-8738-437e-8c41-466627ca6094","Umlauts ä_ö_ü-COUNT":1}
 ===
 406
 Content-Type: application/json

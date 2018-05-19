@@ -160,7 +160,7 @@ CREATE TABLE barcodes (
 --
 
 CREATE TABLE "kunsthåndværk" (
-  id serial NOT NULL,
+  id character varying(36) NOT NULL,
   "Umlauts ä_ö_ü-COUNT" integer NOT NULL
 );
 
@@ -249,8 +249,8 @@ INSERT INTO "barcodes" ("product_id", "hex", "bin") VALUES
 -- Data for Name: kunsthåndværk; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO "kunsthåndværk" ("Umlauts ä_ö_ü-COUNT") VALUES
-(1);
+INSERT INTO "kunsthåndværk" ("id", "Umlauts ä_ö_ü-COUNT") VALUES
+('e42c77c6-06a4-4502-816c-d112c7142e6d', 1);
 
 --
 -- Name: categories_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace:

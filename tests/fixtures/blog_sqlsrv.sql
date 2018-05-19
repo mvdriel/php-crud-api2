@@ -204,7 +204,7 @@ CREATE TABLE [barcodes](
 GO
 
 CREATE TABLE [kunsthåndværk](
-	[id] [int] IDENTITY,
+	[id] [nvarchar](36),
 	[Umlauts ä_ö_ü-COUNT] [int] NOT NULL,
 	CONSTRAINT [PK_kunsthåndværk]
 	PRIMARY KEY CLUSTERED([id] ASC)
@@ -263,7 +263,7 @@ GO
 INSERT [barcodes] ([product_id], [hex], [bin]) VALUES (1, N'00ff01', 0x00ff01)
 GO
 
-INSERT [kunsthåndværk] ([Umlauts ä_ö_ü-COUNT]) VALUES (1)
+INSERT [kunsthåndværk] ([id], [Umlauts ä_ö_ü-COUNT]) VALUES ('e42c77c6-06a4-4502-816c-d112c7142e6d', 1)
 GO
 
 ALTER TABLE [comments]  WITH CHECK ADD 	CONSTRAINT [FK_comments_posts] FOREIGN KEY([post_id])

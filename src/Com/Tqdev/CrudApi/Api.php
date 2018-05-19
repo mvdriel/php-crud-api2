@@ -57,6 +57,9 @@ class Api
                 if (strpos(strtolower($e->getMessage()), 'duplicate') !== false) {
                     return $this->responder->error(ErrorCode::DUPLICATE_KEY_EXCEPTION, '');
                 }
+                if (strpos(strtolower($e->getMessage()), 'default value') !== false) {
+                    return $this->responder->error(ErrorCode::DATA_INTEGRITY_VIOLATION, '');
+                }
                 if (strpos(strtolower($e->getMessage()), 'constraint') !== false) {
                     return $this->responder->error(ErrorCode::DATA_INTEGRITY_VIOLATION, '');
                 }
