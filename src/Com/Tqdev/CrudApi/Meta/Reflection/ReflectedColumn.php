@@ -109,11 +109,6 @@ class ReflectedColumn implements \JsonSerializable
         return $this->type == 'decimal';
     }
 
-    public function isInteger(): bool
-    {
-        return $this->type == 'integer';
-    }
-
     public function isBinary(): bool
     {
         return in_array($this->type, ['blob', 'varbinary']);
