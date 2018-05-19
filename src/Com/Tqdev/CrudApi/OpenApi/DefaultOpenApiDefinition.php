@@ -1,7 +1,7 @@
 <?php
 namespace Com\Tqdev\CrudApi\OpenApi;
 
-class OpenApiDefinition
+class DefaultOpenApiDefinition
 {
     private $root = [
         "openapi" => "3.0.0",
