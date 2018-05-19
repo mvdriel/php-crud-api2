@@ -1,225 +1,186 @@
 IF (OBJECT_ID('FK_barcodes_products', 'F') IS NOT NULL)
 BEGIN
-ALTER TABLE [barcodes] DROP CONSTRAINT [FK_barcodes_products]
+ALTER TABLE [barcodes] DROP	CONSTRAINT [FK_barcodes_products]
 END
 GO
+
 IF (OBJECT_ID('FK_posts_users', 'F') IS NOT NULL)
 BEGIN
-ALTER TABLE [posts] DROP CONSTRAINT [FK_posts_users]
+ALTER TABLE [posts] DROP	CONSTRAINT [FK_posts_users]
 END
 GO
+
 IF (OBJECT_ID('FK_posts_categories', 'F') IS NOT NULL)
 BEGIN
-ALTER TABLE [posts] DROP CONSTRAINT [FK_posts_categories]
+ALTER TABLE [posts] DROP	CONSTRAINT [FK_posts_categories]
 END
 GO
+
 IF (OBJECT_ID('FK_post_tags_tags', 'F') IS NOT NULL)
 BEGIN
-ALTER TABLE [post_tags] DROP CONSTRAINT [FK_post_tags_tags]
+ALTER TABLE [post_tags] DROP	CONSTRAINT [FK_post_tags_tags]
 END
 GO
+
 IF (OBJECT_ID('FK_post_tags_posts', 'F') IS NOT NULL)
 BEGIN
-ALTER TABLE [post_tags] DROP CONSTRAINT [FK_post_tags_posts]
+ALTER TABLE [post_tags] DROP	CONSTRAINT [FK_post_tags_posts]
 END
 GO
+
 IF (OBJECT_ID('FK_comments_posts', 'F') IS NOT NULL)
 BEGIN
-ALTER TABLE [comments] DROP CONSTRAINT [FK_comments_posts]
+ALTER TABLE [comments] DROP	CONSTRAINT [FK_comments_posts]
 END
 GO
+
 IF (OBJECT_ID('barcodes', 'U') IS NOT NULL)
 BEGIN
 DROP TABLE [barcodes]
 END
 GO
+
 IF (OBJECT_ID('products', 'U') IS NOT NULL)
 BEGIN
 DROP TABLE [products]
 END
 GO
+
 IF (OBJECT_ID('events', 'U') IS NOT NULL)
 BEGIN
 DROP TABLE [events]
 END
 GO
+
 IF (OBJECT_ID('countries', 'U') IS NOT NULL)
 BEGIN
 DROP TABLE [countries]
 END
 GO
+
 IF (OBJECT_ID('users', 'U') IS NOT NULL)
 BEGIN
 DROP TABLE [users]
 END
 GO
+
 IF (OBJECT_ID('tags', 'U') IS NOT NULL)
 BEGIN
 DROP TABLE [tags]
 END
 GO
+
 IF (OBJECT_ID('posts', 'U') IS NOT NULL)
 BEGIN
 DROP TABLE [posts]
 END
 GO
+
 IF (OBJECT_ID('post_tags', 'U') IS NOT NULL)
 BEGIN
 DROP TABLE [post_tags]
 END
 GO
+
 IF (OBJECT_ID('comments', 'U') IS NOT NULL)
 BEGIN
 DROP TABLE [comments]
 END
 GO
+
 IF (OBJECT_ID('categories', 'U') IS NOT NULL)
 BEGIN
 DROP TABLE [categories]
 END
 GO
+
 IF (OBJECT_ID('tag_usage', 'V') IS NOT NULL)
 BEGIN
 DROP VIEW [tag_usage]
 END
 GO
+
 IF (OBJECT_ID('kunsthåndværk', 'U') IS NOT NULL)
 BEGIN
 DROP TABLE [kunsthåndværk]
 END
 GO
+
 CREATE TABLE [categories](
 	[id] [int] IDENTITY,
 	[name] [nvarchar](255) NOT NULL,
 	[icon] [varbinary](max) NULL,
-PRIMARY KEY CLUSTERED
-(
-	[id] ASC
+	PRIMARY KEY CLUSTERED([id] ASC)
 )
-)
+GO
 
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
 CREATE TABLE [comments](
 	[id] [int] IDENTITY,
 	[post_id] [int] NOT NULL,
 	[message] [nvarchar](255) NOT NULL,
-PRIMARY KEY CLUSTERED
-(
-	[id] ASC
+	PRIMARY KEY CLUSTERED([id] ASC)
 )
-)
+GO
 
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
 CREATE TABLE [post_tags](
 	[id] [int] IDENTITY,
 	[post_id] [int] NOT NULL,
 	[tag_id] [int] NOT NULL,
-PRIMARY KEY CLUSTERED
-(
-	[id] ASC
+	PRIMARY KEY CLUSTERED([id] ASC)
 )
-)
+GO
 
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
 CREATE TABLE [posts](
 	[id] [int] IDENTITY,
 	[user_id] [int] NOT NULL,
 	[category_id] [int] NOT NULL,
 	[content] [nvarchar](255) NOT NULL,
-PRIMARY KEY CLUSTERED
-(
-	[id] ASC
+	PRIMARY KEY CLUSTERED([id] ASC)
 )
-)
+GO
 
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
 CREATE TABLE [tags](
 	[id] [int] IDENTITY,
 	[name] [nvarchar](255) NOT NULL,
 	[is_important] [bit] NOT NULL,
-PRIMARY KEY CLUSTERED
-(
-	[id] ASC
+	PRIMARY KEY CLUSTERED([id] ASC)
 )
-)
+GO
 
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
 CREATE TABLE [users](
 	[id] [int] IDENTITY,
 	[username] [nvarchar](255) NOT NULL,
 	[password] [nvarchar](255) NOT NULL,
 	[location] [geometry] NULL,
- CONSTRAINT [PK_users] PRIMARY KEY CLUSTERED
-(
-	[id] ASC
+	CONSTRAINT [PK_users]
+	PRIMARY KEY CLUSTERED([id] ASC)
 )
-)
+GO
 
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
 CREATE TABLE [countries](
 	[id] [int] IDENTITY,
 	[name] [nvarchar](255) NOT NULL,
 	[shape] [geometry] NOT NULL,
- CONSTRAINT [PK_countries] PRIMARY KEY CLUSTERED
-(
-	[id] ASC
+	CONSTRAINT [PK_countries]
+	PRIMARY KEY CLUSTERED([id] ASC)
 )
-)
+GO
 
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
 CREATE TABLE [events](
 	[id] [int] IDENTITY,
 	[name] [nvarchar](255) NOT NULL,
 	[datetime] [datetime2](0) NOT NULL,
 	[visitors] [int] NOT NULL,
- CONSTRAINT [PK_events] PRIMARY KEY CLUSTERED
-(
-	[id] ASC
+	CONSTRAINT [PK_events]
+	PRIMARY KEY CLUSTERED([id] ASC)
 )
-)
+GO
 
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
 CREATE VIEW [tag_usage]
 AS
 SELECT top 100 PERCENT name, COUNT(name) AS [count] FROM tags, post_tags WHERE tags.id = post_tags.tag_id GROUP BY name ORDER BY [count] DESC, name
+GO
 
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
 CREATE TABLE [products](
 	[id] [int] IDENTITY,
 	[name] [nvarchar](255) NOT NULL,
@@ -227,158 +188,116 @@ CREATE TABLE [products](
 	[properties] [xml] NOT NULL,
 	[created_at] [datetime2](0) NOT NULL,
 	[deleted_at] [datetime2](0) NULL,
- CONSTRAINT [PK_products] PRIMARY KEY CLUSTERED
-(
-	[id] ASC
+	CONSTRAINT [PK_products]
+	PRIMARY KEY CLUSTERED([id] ASC)
 )
-)
+GO
 
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
 CREATE TABLE [barcodes](
 	[id] [int] IDENTITY,
 	[product_id] [int] NOT NULL,
 	[hex] [nvarchar](255) NOT NULL,
 	[bin] [varbinary](max) NOT NULL,
- CONSTRAINT [PK_barcodes] PRIMARY KEY CLUSTERED
-(
-	[id] ASC
+	CONSTRAINT [PK_barcodes]
+	PRIMARY KEY CLUSTERED([id] ASC)
 )
-)
+GO
 
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
 CREATE TABLE [kunsthåndværk](
 	[id] [int] IDENTITY,
 	[Umlauts ä_ö_ü-COUNT] [int] NOT NULL,
- CONSTRAINT [PK_kunsthåndværk] PRIMARY KEY CLUSTERED
-(
-	[id] ASC
+	CONSTRAINT [PK_kunsthåndværk]
+	PRIMARY KEY CLUSTERED([id] ASC)
 )
-)
+GO
 
+INSERT [categories] ([name], [icon]) VALUES (N'announcement', NULL)
 GO
-SET IDENTITY_INSERT [categories] ON
+INSERT [categories] ([name], [icon]) VALUES (N'article', NULL)
 GO
-INSERT [categories] ([id], [name], [icon]) VALUES (1, N'announcement', NULL)
+
+INSERT [comments] ([post_id], [message]) VALUES (1, N'great')
 GO
-INSERT [categories] ([id], [name], [icon]) VALUES (2, N'article', NULL)
+INSERT [comments] ([post_id], [message]) VALUES (1, N'fantastic')
 GO
-SET IDENTITY_INSERT [categories] OFF
+INSERT [comments] ([post_id], [message]) VALUES (2, N'thank you')
 GO
-SET IDENTITY_INSERT [comments] ON
+INSERT [comments] ([post_id], [message]) VALUES (2, N'awesome')
 GO
-INSERT [comments] ([id], [post_id], [message]) VALUES (1, 1, N'great')
+
+INSERT [post_tags] ([post_id], [tag_id]) VALUES (1, 1)
 GO
-INSERT [comments] ([id], [post_id], [message]) VALUES (2, 1, N'fantastic')
+INSERT [post_tags] ([post_id], [tag_id]) VALUES (1, 2)
 GO
-INSERT [comments] ([id], [post_id], [message]) VALUES (3, 2, N'thank you')
+INSERT [post_tags] ([post_id], [tag_id]) VALUES (2, 1)
 GO
-INSERT [comments] ([id], [post_id], [message]) VALUES (4, 2, N'awesome')
+INSERT [post_tags] ([post_id], [tag_id]) VALUES (2, 2)
 GO
-SET IDENTITY_INSERT [comments] OFF
+
+INSERT [posts] ([user_id], [category_id], [content]) VALUES (1, 1, N'blog started')
 GO
-SET IDENTITY_INSERT [post_tags] ON
+INSERT [posts] ([user_id], [category_id], [content]) VALUES (1, 2, N'It works!')
 GO
-INSERT [post_tags] ([id], [post_id], [tag_id]) VALUES (1, 1, 1)
+
+INSERT [tags] ([name], [is_important]) VALUES (N'funny', 0)
 GO
-INSERT [post_tags] ([id], [post_id], [tag_id]) VALUES (2, 1, 2)
+INSERT [tags] ([name], [is_important]) VALUES (N'important', 1)
 GO
-INSERT [post_tags] ([id], [post_id], [tag_id]) VALUES (3, 2, 1)
+
+INSERT [users] ([username], [password], [location]) VALUES (N'user1', N'pass1', NULL)
 GO
-INSERT [post_tags] ([id], [post_id], [tag_id]) VALUES (4, 2, 2)
+INSERT [users] ([username], [password], [location]) VALUES (N'user2', N'pass2', NULL)
 GO
-SET IDENTITY_INSERT [post_tags] OFF
+
+INSERT [countries] ([name], [shape]) VALUES (N'Left', N'POLYGON ((30 10, 40 40, 20 40, 10 20, 30 10))')
 GO
-SET IDENTITY_INSERT [posts] ON
+INSERT [countries] ([name], [shape]) VALUES (N'Right', N'POLYGON ((70 10, 80 40, 60 40, 50 20, 70 10))')
 GO
-INSERT [posts] ([id], [user_id], [category_id], [content]) VALUES (1, 1, 1, N'blog started')
+
+INSERT [events] ([name], [datetime], [visitors]) VALUES (N'Launch', N'2016-01-01 13:01:01', 0)
 GO
-INSERT [posts] ([id], [user_id], [category_id], [content]) VALUES (2, 1, 2, N'It works!')
+
+INSERT [products] ([name], [price], [properties], [created_at]) VALUES (N'Calculator', N'23.01', N'<root type="object"><depth type="boolean">false</depth><model type="string">TRX-120</model><width type="number">100</width><height type="null" /></root>', '1970-01-01 01:01:01')
 GO
-SET IDENTITY_INSERT [posts] OFF
+
+INSERT [barcodes] ([product_id], [hex], [bin]) VALUES (1, N'00ff01', 0x00ff01)
 GO
-SET IDENTITY_INSERT [tags] ON
+
+INSERT [kunsthåndværk] ([Umlauts ä_ö_ü-COUNT]) VALUES (1)
 GO
-INSERT [tags] ([id], [name], [is_important]) VALUES (1, N'funny', 0)
-GO
-INSERT [tags] ([id], [name], [is_important]) VALUES (2, N'important', 1)
-GO
-SET IDENTITY_INSERT [tags] OFF
-GO
-SET IDENTITY_INSERT [users] ON
-GO
-INSERT [users] ([id], [username], [password], [location]) VALUES (1, N'user1', N'pass1', NULL)
-GO
-INSERT [users] ([id], [username], [password], [location]) VALUES (2, N'user2', N'pass2', NULL)
-GO
-SET IDENTITY_INSERT [users] OFF
-GO
-SET IDENTITY_INSERT [countries] ON
-GO
-INSERT [countries] ([id], [name], [shape]) VALUES (1, N'Left', N'POLYGON ((30 10, 40 40, 20 40, 10 20, 30 10))')
-GO
-INSERT [countries] ([id], [name], [shape]) VALUES (2, N'Right', N'POLYGON ((70 10, 80 40, 60 40, 50 20, 70 10))')
-GO
-SET IDENTITY_INSERT [countries] OFF
-GO
-SET IDENTITY_INSERT [events] ON
-GO
-INSERT [events] ([id], [name], [datetime], [visitors]) VALUES (1, N'Launch', N'2016-01-01 13:01:01', 0)
-GO
-SET IDENTITY_INSERT [events] OFF
-GO
-SET IDENTITY_INSERT [products] ON
-GO
-INSERT [products] ([id], [name], [price], [properties], [created_at]) VALUES (1, N'Calculator', N'23.01', N'<root type="object"><depth type="boolean">false</depth><model type="string">TRX-120</model><width type="number">100</width><height type="null" /></root>', '1970-01-01 01:01:01')
-GO
-SET IDENTITY_INSERT [products] OFF
-GO
-SET IDENTITY_INSERT [barcodes] ON
-GO
-INSERT [barcodes] ([id], [product_id], [hex], [bin]) VALUES (1, 1, N'00ff01', 0x00ff01)
-GO
-SET IDENTITY_INSERT [barcodes] OFF
-GO
-SET IDENTITY_INSERT [kunsthåndværk] ON
-GO
-INSERT [kunsthåndværk] ([id], [Umlauts ä_ö_ü-COUNT]) VALUES (1, 1)
-GO
-SET IDENTITY_INSERT [kunsthåndværk] OFF
-GO
-ALTER TABLE [comments]  WITH CHECK ADD  CONSTRAINT [FK_comments_posts] FOREIGN KEY([post_id])
+
+ALTER TABLE [comments]  WITH CHECK ADD 	CONSTRAINT [FK_comments_posts] FOREIGN KEY([post_id])
 REFERENCES [posts] ([id])
 GO
-ALTER TABLE [comments] CHECK CONSTRAINT [FK_comments_posts]
+ALTER TABLE [comments] CHECK	CONSTRAINT [FK_comments_posts]
 GO
-ALTER TABLE [post_tags]  WITH CHECK ADD  CONSTRAINT [FK_post_tags_posts] FOREIGN KEY([post_id])
+
+ALTER TABLE [post_tags]  WITH CHECK ADD 	CONSTRAINT [FK_post_tags_posts] FOREIGN KEY([post_id])
 REFERENCES [posts] ([id])
 GO
-ALTER TABLE [post_tags] CHECK CONSTRAINT [FK_post_tags_posts]
+ALTER TABLE [post_tags] CHECK	CONSTRAINT [FK_post_tags_posts]
 GO
-ALTER TABLE [post_tags]  WITH CHECK ADD  CONSTRAINT [FK_post_tags_tags] FOREIGN KEY([tag_id])
+
+ALTER TABLE [post_tags]  WITH CHECK ADD 	CONSTRAINT [FK_post_tags_tags] FOREIGN KEY([tag_id])
 REFERENCES [tags] ([id])
 GO
-ALTER TABLE [post_tags] CHECK CONSTRAINT [FK_post_tags_tags]
+ALTER TABLE [post_tags] CHECK	CONSTRAINT [FK_post_tags_tags]
 GO
-ALTER TABLE [posts]  WITH CHECK ADD  CONSTRAINT [FK_posts_categories] FOREIGN KEY([category_id])
+
+ALTER TABLE [posts]  WITH CHECK ADD 	CONSTRAINT [FK_posts_categories] FOREIGN KEY([category_id])
 REFERENCES [categories] ([id])
 GO
-ALTER TABLE [posts] CHECK CONSTRAINT [FK_posts_categories]
+ALTER TABLE [posts] CHECK	CONSTRAINT [FK_posts_categories]
 GO
-ALTER TABLE [posts]  WITH CHECK ADD  CONSTRAINT [FK_posts_users] FOREIGN KEY([user_id])
+
+ALTER TABLE [posts]  WITH CHECK ADD 	CONSTRAINT [FK_posts_users] FOREIGN KEY([user_id])
 REFERENCES [users] ([id])
 GO
-ALTER TABLE [posts] CHECK CONSTRAINT [FK_posts_users]
+ALTER TABLE [posts] CHECK	CONSTRAINT [FK_posts_users]
 GO
-ALTER TABLE [barcodes]  WITH CHECK ADD  CONSTRAINT [FK_barcodes_products] FOREIGN KEY([product_id])
+
+ALTER TABLE [barcodes]  WITH CHECK ADD 	CONSTRAINT [FK_barcodes_products] FOREIGN KEY([product_id])
 REFERENCES [products] ([id])
 GO
-ALTER TABLE [barcodes] CHECK CONSTRAINT [FK_barcodes_products]
+ALTER TABLE [barcodes] CHECK	CONSTRAINT [FK_barcodes_products]
 GO
