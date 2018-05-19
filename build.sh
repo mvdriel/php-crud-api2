@@ -24,5 +24,5 @@ if [ $? != 0 ]; then
     exit 1
 fi;
 END=$(date +%s.%N)
-DIFF=$(python -c "print int(( $END - $START ) * 1000)")
+DIFF=$(php -r "echo floor(($END-$START)*1000);")
 echo "$FILECOUNT files combined in $DIFF ms into 'target/api.php'"
