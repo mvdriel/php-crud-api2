@@ -20,6 +20,8 @@ class ColumnConverter
                     return "FROM_BASE64(?)";
                 case 'pgsql':
                     return "decode(?, 'base64')";
+                case 'sqlsrv':
+                    return "CONVERT(XML, ?).value('.','varbinary(max)')";
             }
         }
         if ($column->isGeometry()) {
@@ -42,6 +44,9 @@ class ColumnConverter
                     return "TO_BASE64($value) as $value";
                 case 'pgsql':
                     return "encode($value::bytea, 'base64') as $value";
+                case 'sqlsrv':
+                    return "CAST($value as varbinary(max)) FOR XML PATH(''), BINARY BASE64";
+
             }
         }
         if ($column->isGeometry()) {
