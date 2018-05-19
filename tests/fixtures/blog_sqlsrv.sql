@@ -83,6 +83,11 @@ BEGIN
 DROP VIEW [tag_usage]
 END
 GO
+IF (OBJECT_ID('kunsthåndværk', 'U') IS NOT NULL)
+BEGIN
+DROP TABLE [kunsthåndværk]
+END
+GO
 CREATE TABLE [categories](
 	[id] [int] IDENTITY,
 	[name] [nvarchar](255) NOT NULL,
@@ -245,6 +250,20 @@ CREATE TABLE [barcodes](
 )
 
 GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [kunsthåndværk](
+	[id] [int] IDENTITY,
+	[Umlauts ä_ö_ü-COUNT] [int] NOT NULL,
+ CONSTRAINT [PK_kunsthåndværk] PRIMARY KEY CLUSTERED
+(
+	[id] ASC
+)
+)
+
+GO
 SET IDENTITY_INSERT [categories] ON
 GO
 INSERT [categories] ([id], [name], [icon]) VALUES (1, N'announcement', NULL)
@@ -326,6 +345,12 @@ GO
 INSERT [barcodes] ([id], [product_id], [hex], [bin]) VALUES (1, 1, N'00ff01', 0x00ff01)
 GO
 SET IDENTITY_INSERT [barcodes] OFF
+GO
+SET IDENTITY_INSERT [kunsthåndværk] ON
+GO
+INSERT [kunsthåndværk] ([id], [Umlauts ä_ö_ü-COUNT]) VALUES (1, 1)
+GO
+SET IDENTITY_INSERT [kunsthåndværk] OFF
 GO
 ALTER TABLE [comments]  WITH CHECK ADD  CONSTRAINT [FK_comments_posts] FOREIGN KEY([post_id])
 REFERENCES [posts] ([id])

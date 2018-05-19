@@ -89,6 +89,7 @@ class TypeConverter
         ],
         // source: https://docs.microsoft.com/en-us/sql/connect/jdbc/using-basic-data-types?view=sql-server-2017
         'sqlsrv' => [
+            'varbinary(0)' => 'blob',
             'bit' => 'boolean',
             'datetime' => 'timestamp',
             'datetime2' => 'timestamp',

@@ -81,17 +81,17 @@ class ReflectedColumn implements \JsonSerializable
 
     public function getLength(): int
     {
-        return $this->length ?: DEFAULT_LENGTH;
+        return $this->length ?: self::DEFAULT_LENGTH;
     }
 
     public function getPrecision(): int
     {
-        return $this->precision ?: DEFAULT_PRECISION;
+        return $this->precision ?: self::DEFAULT_PRECISION;
     }
 
     public function getScale(): int
     {
-        return $this->scale ?: DEFAULT_SCALE;
+        return $this->scale ?: self::DEFAULT_SCALE;
     }
 
     public function hasLength(): bool
