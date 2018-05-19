@@ -100,9 +100,6 @@ class GenericDB
                 $sql = 'SELECT LAST_INSERT_ID()';
                 $parameters = array();
                 break;
-            case 'sqlsrv':
-                $stmt = $this->query('SET IDENTITY_INSERT "' . $tableName . '" ON', []);
-                break;
         }
         $stmt = $this->query($sql, $parameters);
         return $stmt->fetchColumn(0);
