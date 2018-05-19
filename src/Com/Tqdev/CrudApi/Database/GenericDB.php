@@ -92,16 +92,20 @@ class GenericDB
         $this->converter->convertColumnValues($table, $columnValues);
         $insertColumns = $this->columns->getInsert($table, $columnValues);
         $tableName = $table->getName();
+        $pkName = $table->getPk()->getName();
         $parameters = array_values($columnValues);
         $sql = 'INSERT INTO "' . $tableName . '" ' . $insertColumns;
+        $stmt = $this->query($sql, $parameters);
+        // return primary key value if specified in the input
+        if (isset($columnValues[$pkName])) {
+            return $columnValues[$pkName];
+        }
+        // work around missing "returning" or "output" in mysql
         switch ($this->driver) {
             case 'mysql':
-                $stmt = $this->query($sql, $parameters);
-                $sql = 'SELECT LAST_INSERT_ID()';
-                $parameters = array();
+                $stmt = $this->query('SELECT LAST_INSERT_ID()', []);
                 break;
         }
-        $stmt = $this->query($sql, $parameters);
         return $stmt->fetchColumn(0);
     }
 
