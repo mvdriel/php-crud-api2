@@ -22,13 +22,13 @@ class Response
 
     private function parseBody($body)
     {
-        if ($body) {
+        if ($body === '') {
+            $this->body = '';
+        } else {
             $data = json_encode($body, JSON_UNESCAPED_UNICODE);
             $this->addHeader('Content-Type', 'application/json');
             $this->addHeader('Content-Length', strlen($data));
             $this->body = $data;
-        } else {
-            $this->body = '';
         }
     }
 
@@ -75,7 +75,7 @@ class Response
         foreach ($this->headers as $key => $value) {
             $str .= "$key: $value\n";
         }
-        if ($this->body) {
+        if ($this->body !== '') {
             $str .= "\n";
             $str .= "$this->body\n";
         }

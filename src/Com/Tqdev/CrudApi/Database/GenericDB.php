@@ -184,6 +184,9 @@ class GenericDB
     public function updateSingle(ReflectedTable $table, array $columnValues, String $id)
     {
         $this->converter->convertColumnValues($table, $columnValues);
+        if (count($columnValues) == 0) {
+            return 0;
+        }
         $updateColumns = $this->columns->getUpdate($table, $columnValues);
         $tableName = $table->getName();
         $condition = new ColumnCondition($table->getPk(), 'eq', $id);
