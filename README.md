@@ -1,8 +1,66 @@
 # php-crud-api2
 
-working repo for v2 of php-crud-api
+This is the working repo for v2 of [PHP-CRUD-API](https://github.com/mevdschee/php-crud-api).
 
-- PHP 7 required
+## Requirements
+
+  - PHP 7.0 or higher with PDO drivers for MySQL, PgSQL or SqlSrv enabled
+  - MySQL 5.6 / MariaDB 10.0 or higher for spatial features in MySQL
+  - PostGIS 2.0 or higher for spatial features in PostgreSQL 9.1 or higher
+  - SQL Server 2012 or higher (2017 for Linux support)
+
+## Installation
+
+This is a single file application! Upload "api.php" somewhere and enjoy!
+
+Contrary to v1 the code is in v2 actually structured in namespaces and files.
+You may compile all files into a single "api.php" using the "build.sh" script.
+
+### Limitations
+
+These limitation were also present in v1:
+
+  - Primary keys should either be auto-increment (from 1 to 2^53) or UUID
+  - Composite primary or foreign keys are not supported
+  - Complex writes (transactions) are not supported
+  - Complex queries calling functions (like "concat" or "sum") are not supported
+  - MySQL storage engine must be either InnoDB or XtraDB
+  - Only MySQL, PostgreSQL and SQLServer support spatial/GIS functionality
+
+### Features
+
+These features match features in v1 (no checkmark means: not yet implemented).
+
+  - [x] Supports POST variables as input (x-www-form-urlencoded)
+  - [x] Supports a JSON object as input
+  - [x] Supports a JSON array as input (batch insert)
+  - [ ] Supports file upload from web forms (multipart/form-data)
+  - [ ] Optional condensed JSON: only first row contains field names
+  - [ ] Sanitize and validate input using callbacks
+  - [ ] Permission system for databases, tables, columns and records
+  - [ ] Multi-tenant database layouts are supported
+  - [x] Multi-domain CORS support for cross-domain requests
+  - [x] Combined requests with support for multiple table names
+  - [x] Search support on multiple criteria
+  - [x] Pagination, seeking, sorting and column selection
+  - [x] Relation detection nested results (belongsTo, hasMany and HABTM)
+  - [x] Atomic increment support via PATCH (for counters)
+  - [x] Binary fields supported with base64 encoding
+  - [x] Spatial/GIS fields and filters supported with WKT
+  - [ ] Unstructured data support through JSON/JSONB
+  - [ ] Generate API documentation using OpenAPI tools
+  - [ ] Authentication via JWT token or username/password
+
+### Extra Features
+
+These features are new and where not included in v1.
+
+  - [x] Does not reflect on every request (better performance)
+  - [x] Complex filters (with both "and" & "or") are supported
+  - [x] Support for input and output of database structure and records
+  - [x] Support for all major database systems (thanks to jOOQ)
+  - [x] Support for boolean and binary data in all database engines
+  - [x] Support for relational data on read (not only on list operation)
 
 ## TreeQL, a pragmatic GraphQL
 
