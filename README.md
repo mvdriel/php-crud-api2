@@ -16,7 +16,7 @@ This is a single file application! Upload "api.php" somewhere and enjoy!
 Contrary to v1 the code is in v2 actually structured in namespaces and files.
 You may compile all files into a single "api.php" using the "build.sh" script.
 
-### Limitations
+## Limitations
 
 These limitation were also present in v1:
 
@@ -27,9 +27,9 @@ These limitation were also present in v1:
   - MySQL storage engine must be either InnoDB or XtraDB
   - Only MySQL, PostgreSQL and SQLServer support spatial/GIS functionality
 
-### Features
+## Features
 
-These features match features in v1 (no checkmark means: not yet implemented).
+These features match features in v1:
 
   - [x] Supports POST variables as input (x-www-form-urlencoded)
   - [x] Supports a JSON object as input
@@ -51,9 +51,11 @@ These features match features in v1 (no checkmark means: not yet implemented).
   - [ ] Generate API documentation using OpenAPI tools
   - [ ] Authentication via JWT token or username/password
 
+ NB: No checkmark means: not yet implemented.
+
 ### Extra Features
 
-These features are new and where not included in v1.
+These features are new and were not included in v1.
 
   - [x] Does not reflect on every request (better performance)
   - [x] Complex filters (with both "and" & "or") are supported
@@ -367,7 +369,7 @@ For spatial support there is an extra set of filters that can be applied on geom
 
 These filters are based on OGC standards and so is the WKT specification in which the geometry columns are represented.
 
-### Cache
+## Cache
 
 There are 4 cache engines that can be configured by the "cacheType" config parameter:
 
@@ -387,7 +389,7 @@ The default engine has no dependencies and will use temporary files in the syste
 You may use the "cachePath" config parameter to specify the file system path for the temporary files or
 in case that you use a non-default "cacheType" the hostname (optionally with port) of the cache server.
 
-### Types
+## Types
 
 These are the supported types with their default length/precision/scale:
 
@@ -421,6 +423,6 @@ binary types:
 other types:
 - geometry /* non-jdbc type, extension with limited support */
 
-### 64 bit integers in JavaScript
+## 64 bit integers in JavaScript
 
 JavaScript does not support 64 bit integers. All numbers are stored as 64 bit floating point values. The mantissa of a 64 bit floating point number is only 53 bit and that is why all integer numbers bigger than 53 bit may cause problems in JavaScript.
