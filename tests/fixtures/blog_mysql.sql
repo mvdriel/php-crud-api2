@@ -151,7 +151,8 @@ DROP TABLE IF EXISTS `kunsthåndværk`;
 CREATE TABLE `kunsthåndværk` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `Umlauts ä_ö_ü-COUNT` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  CONSTRAINT `kunsthåndværk_ibfk_1` UNIQUE (`Umlauts ä_ö_ü-COUNT`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 INSERT INTO `kunsthåndværk` (`id`, `Umlauts ä_ö_ü-COUNT`) VALUES

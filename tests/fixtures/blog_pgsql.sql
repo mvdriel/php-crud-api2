@@ -388,6 +388,13 @@ CREATE INDEX barcodes_product_id_idx ON barcodes USING btree (product_id);
 
 
 --
+-- Name: kunsthåndværk_Umlauts ä_ö_ü-COUNT_idx; Type: INDEX; Schema: public; Owner: postgres; Tablespace:
+--
+
+CREATE INDEX "kunsthåndværk_Umlauts ä_ö_ü-COUNT_idx" ON "kunsthåndværk" USING btree ("Umlauts ä_ö_ü-COUNT");
+
+
+--
 -- Name: comments_post_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -433,6 +440,14 @@ ALTER TABLE ONLY posts
 
 ALTER TABLE ONLY barcodes
     ADD CONSTRAINT barcodes_product_id_fkey FOREIGN KEY (product_id) REFERENCES products(id);
+
+
+--
+-- Name: kunsthåndværk_Umlauts ä_ö_ü-COUNT_uc; Type: UNIQUE CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY "kunsthåndværk"
+    ADD CONSTRAINT "kunsthåndværk_Umlauts ä_ö_ü-COUNT_uc" UNIQUE ("Umlauts ä_ö_ü-COUNT");
 
 
 --
