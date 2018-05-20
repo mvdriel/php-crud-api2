@@ -77,27 +77,27 @@ These limitation were also present in v1:
 
 These features match features in v1:
 
-  - [x] Supports POST variables as input (x-www-form-urlencoded)
-  - [x] Supports a JSON object as input
-  - [x] Supports a JSON array as input (batch insert)
-  - [ ] Supports file upload from web forms (multipart/form-data)
-  - [ ] Optional condensed JSON: only first row contains field names
-  - [ ] Sanitize and validate input using callbacks
-  - [ ] Permission system for databases, tables, columns and records
-  - [ ] Multi-tenant database layouts are supported
-  - [x] Multi-domain CORS support for cross-domain requests
-  - [x] Combined requests with support for multiple table names
-  - [x] Search support on multiple criteria
-  - [x] Pagination, seeking, sorting and column selection
-  - [x] Relation detection nested results (belongsTo, hasMany and HABTM)
-  - [x] Atomic increment support via PATCH (for counters)
-  - [x] Binary fields supported with base64 encoding
-  - [x] Spatial/GIS fields and filters supported with WKT
-  - [ ] Unstructured data support through JSON/JSONB
-  - [ ] Generate API documentation using OpenAPI tools
-  - [ ] Authentication via JWT token or username/password
+  - Supports POST variables as input (x-www-form-urlencoded)
+  - Supports a JSON object as input
+  - Supports a JSON array as input (batch insert)
+  - ~~Supports file upload from web forms (multipart/form-data)~~
+  - ~~Optional condensed JSON: only first row contains field names~~
+  - ~~Sanitize and validate input using callbacks~~
+  - ~~Permission system for databases, tables, columns and records~~
+  - ~~Multi-tenant database layouts are supported~~
+  - Multi-domain CORS support for cross-domain requests
+  - Combined requests with support for multiple table names
+  - Search support on multiple criteria
+  - Pagination, seeking, sorting and column selection
+  - Relation detection nested results (belongsTo, hasMany and HABTM)
+  - Atomic increment support via PATCH (for counters)
+  - Binary fields supported with base64 encoding
+  - Spatial/GIS fields and filters supported with WKT
+  - ~~Unstructured data support through JSON/JSONB~~
+  - ~~Generate API documentation using OpenAPI tools~~
+  - ~~Authentication via JWT token or username/password~~
 
- NB: No checkmark means: not yet implemented.
+ NB: Striken features are not yet implemented (WIP).
 
 ### Extra Features
 
