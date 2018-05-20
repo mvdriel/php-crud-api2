@@ -108,6 +108,7 @@ These features are new and were not included in v1.
   - Support for output of database structure in JSON
   - Support for boolean and binary data in all database engines
   - Support for relational data on read (not only on list operation)
+  - Error reporting in JSON with corresponding HTTP status
 
 ## TreeQL, a pragmatic GraphQL
 
@@ -471,6 +472,30 @@ other types:
 ## 64 bit integers in JavaScript
 
 JavaScript does not support 64 bit integers. All numbers are stored as 64 bit floating point values. The mantissa of a 64 bit floating point number is only 53 bit and that is why all integer numbers bigger than 53 bit may cause problems in JavaScript.
+
+## Errors
+
+The following errors may be reported:
+
+- 1000: Route not found (404 NOT FOUND)
+- 1001: Table not found (404 NOT FOUND)
+- 1002: Argument count mismatch (406 NOT ACCEPTABLE)
+- 1003: Record not found (404 NOT FOUND)
+- 1004: Origin is forbidden (403 FORBIDDEN)
+- 1005: Column not found (404 NOT FOUND)
+- 1008: Cannot read HTTP message (406 NOT ACCEPTABLE)
+- 1009: Duplicate key exception (406 NOT ACCEPTABLE)
+- 1010: Data integrity violation (406 NOT ACCEPTABLE)
+- 9999: Unknown error (500: INTERNAL_SERVER_ERROR)
+
+The following JSON structure is used:
+
+    {
+        "code":1002,
+        "message":"Argument count mismatch in '1'"
+    }
+
+NB: Any non-error response will have status: 200 OK
 
 ## Tests
 
