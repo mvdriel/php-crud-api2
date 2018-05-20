@@ -235,7 +235,6 @@ Examples of filter usage are:
     GET /categories?filter=id,le,1
     GET /categories?filter=id,ngt,2
     GET /categories?filter=id,bt,1,1
-    GET /categories?filter=categories.id,eq,1
 
 Output:
 
