@@ -5,7 +5,7 @@ use Com\Tqdev\CrudApi\Database\GenericDB;
 use Com\Tqdev\CrudApi\Request;
 
 spl_autoload_register(function ($class) {
-    include str_replace('\\', DIRECTORY_SEPARATOR, "..\\src\\$class.php");
+    include str_replace('\\', '/', "src\\$class.php");
 });
 
 function runDir(Api $api, String $dir, String $match): array
@@ -17,7 +17,7 @@ function runDir(Api $api, String $dir, String $match): array
         if ($entry === '.' || $entry === '..') {
             continue;
         }
-        $file = $dir . DIRECTORY_SEPARATOR . $entry;
+        $file = "$dir/$entry";
         if (is_file($file)) {
             if (substr($entry, -4) != '.log') {
                 continue;
@@ -70,10 +70,10 @@ function runTest(Api $api, String $file): int
     return $success;
 }
 
-function loadFixture(Config $config)
+function loadFixture(String $dir, Config $config)
 {
     $driver = $config->getDriver();
-    $filename = 'fixtures' . DIRECTORY_SEPARATOR . "blog_$driver.sql";
+    $filename = "$dir/fixtures/blog_$driver.sql";
     $file = file_get_contents($filename);
     $db = new GenericDB(
         $config->getDriver(),
@@ -105,20 +105,19 @@ function loadFixture(Config $config)
     }
 }
 
-function run(array $drivers, String $match)
+function run(array $drivers, String $dir, String $match)
 {
     foreach ($drivers as $driver) {
         if (!extension_loaded("pdo_$driver")) {
             echo sprintf("%s: skipped, driver not loaded\n", $driver);
             continue;
         }
-        $dir = __DIR__;
         $start = microtime(true);
-        $ini = parse_ini_file(sprintf("config/config_%s.ini", $driver));
+        $ini = parse_ini_file(sprintf("$dir/config/config_%s.ini", $driver));
         $config = new Config($ini);
-        loadFixture($config);
+        loadFixture($dir, $config);
         $api = new Api($config);
-        $stats = runDir($api, $dir, $match);
+        $stats = runDir($api, "$dir/cases", $match);
         $end = microtime(true);
         $time = ($end - $start) * 1000;
         $total = $stats['total'];
@@ -127,4 +126,4 @@ function run(array $drivers, String $match)
     }
 }
 
-run(['mysql', 'pgsql', 'sqlsrv'], '');
+run(['mysql', 'pgsql', 'sqlsrv'], __DIR__ . '/tests', isset($argv[1]) ? $argv[1] : '');
