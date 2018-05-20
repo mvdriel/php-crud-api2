@@ -36,7 +36,7 @@ Edit the following lines in the bottom of the file "api.php":
         'debug' => true,
     ]);
 
-These are all the configuration options and their default values:
+These are all the configuration options and their default value between brackets:
 
 - **driver**: 'mysql' (default), 'pgsql' or 'sqlsrv'
 - **address**: Hostname of the database server ('localhost')
