@@ -50,10 +50,9 @@ These are all the configuration options and their default value between brackets
 - **cacheTime**: Number of seconds the cache is valid (10)
 - **debug**: Show errors in the "X-Debug-Info" header (false)
 
-## Modification
+## Compilation
 
-Contrary to v1 the code is in v2 actually structured in namespaces and files 
-in the "src" directory. You can access it at the following URL:
+The code resides in the "src" directory. You can access it at the URL:
 
     http://localhost:8080/src/data/posts/1
 
