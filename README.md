@@ -288,9 +288,9 @@ These paths have the same root and this request can be written in URL format as:
 Here you are allowed to leave out the intermediate table that binds posts to tags. In this example
 you see all three table relation types (hasMany belongsTo and hasAndBelongsToMany) in effect:
 
-- **post** has many **comments**
-- **comment** belongs to **user**
-- **post** has and belongs to many **tags**
+- "post" has many "comments"
+- "comment" belongs to "user"
+- "post" has and belongs to many "tags"
 
 This may lead to the following JSON data:
 
