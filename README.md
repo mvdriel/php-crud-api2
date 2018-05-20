@@ -60,7 +60,7 @@ You can compile all files into a single "api.php" file using:
 
     php build.php
 
-NB: The script loads the classes in reverse alphabetical order.
+NB: The script appends the classes in alphabetical order (directories first).
 
 ## Limitations
 

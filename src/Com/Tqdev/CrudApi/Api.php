@@ -12,8 +12,8 @@ use Com\Tqdev\CrudApi\Data\DataService;
 use Com\Tqdev\CrudApi\Data\ErrorCode;
 use Com\Tqdev\CrudApi\Meta\MetaService;
 use Com\Tqdev\CrudApi\OpenApi\OpenApiService;
-use Com\Tqdev\CrudApi\Router\CorsMiddleware;
-use Com\Tqdev\CrudApi\Router\GlobRouter;
+use Com\Tqdev\CrudApi\Router\SecurityHeaders;
+use Com\Tqdev\CrudApi\Router\SimpleRouter;
 
 class Api
 {
@@ -34,8 +34,8 @@ class Api
         $cache = CacheFactory::create($config);
         $meta = new MetaService($db, $cache, $config->getCacheTime());
         $responder = new Responder();
-        $router = new GlobRouter($responder);
-        new CorsMiddleware($router, $responder, $config->getAllowedOrigins());
+        $router = new SimpleRouter($responder);
+        new SecurityHeaders($router, $responder, $config->getAllowedOrigins());
         $data = new DataService($db, $meta);
         $openApi = new OpenApiService($meta);
         new DataController($router, $responder, $data);

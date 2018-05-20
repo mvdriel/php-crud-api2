@@ -4,7 +4,7 @@ function runDir(String $base, String $dir, array &$lines): int
 {
     $count = 0;
     $entries = scandir($dir);
-    rsort($entries);
+    sort($entries);
     foreach ($entries as $entry) {
         if ($entry === '.' || $entry === '..') {
             continue;
@@ -57,13 +57,13 @@ function run(String $base, String $dir, String $filename)
     $start = microtime(true);
     addHeader($lines);
     $count = runDir($base, $dir, $lines);
-    file_put_contents($filename . '.tmp', implode("\n", $lines));
-    ob_start();
-    include $filename . '.tmp';
-    ob_end_clean();
-    unlink($filename . '.tmp');
     $data = implode("\n", $lines);
-    file_put_contents($filename, preg_replace('/\n\s*\n\s*\n/', "\n\n", $data));
+    $data = preg_replace('/\n\s*\n\s*\n/', "\n\n", $data);
+    file_put_contents('tmp_' . $filename, $data);
+    ob_start();
+    include 'tmp_' . $filename;
+    ob_end_clean();
+    rename('tmp_' . $filename, $filename);
     $end = microtime(true);
     $time = ($end - $start) * 1000;
     echo sprintf("%d files combined in %d ms into '%s'\n", $count, $time, $filename);
