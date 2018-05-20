@@ -15,8 +15,9 @@ This is the working repo for v2 of [PHP-CRUD-API](https://github.com/mevdschee/p
 
 This is a single file application! Upload "api.php" somewhere and enjoy!
 
-Contrary to v1 the code is in v2 actually structured in namespaces and files.
-You may compile all files into a single "api.php" using the "build.sh" script.
+Contrary to v1 the code is in v2 actually structured in namespaces and files 
+in the "src" directory. You may compile all files into a single "api.php"
+using the "build.php" script.
 
 ## Limitations
 
@@ -428,3 +429,7 @@ other types:
 ## 64 bit integers in JavaScript
 
 JavaScript does not support 64 bit integers. All numbers are stored as 64 bit floating point values. The mantissa of a 64 bit floating point number is only 53 bit and that is why all integer numbers bigger than 53 bit may cause problems in JavaScript.
+
+## Tests
+
+You may test the code using the "test.php" file, it will run the tests from the "tests" directory.
