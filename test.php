@@ -117,7 +117,7 @@ function run(array $drivers, String $dir, String $match)
         $config = new Config($ini);
         loadFixture($dir, $config);
         $api = new Api($config);
-        $stats = runDir($api, "$dir/cases", $match);
+        $stats = runDir($api, "$dir/functional", $match);
         $end = microtime(true);
         $time = ($end - $start) * 1000;
         $total = $stats['total'];
