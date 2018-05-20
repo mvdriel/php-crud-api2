@@ -33,7 +33,6 @@ Edit the following lines in the bottom of the file "api.php":
         'username' => 'xxx',
         'password' => 'xxx',
         'database' => 'xxx',
-        'debug' => true,
     ]);
 
 These are all the configuration options and their default value between brackets:
