@@ -261,7 +261,9 @@ will request all categories "where id > 1 and id < 3". If you wanted "where id =
 
     GET /categories?filter1=id,eq,2&filter2=id,eq,4
     
-As you see we added a number to the "filter" parameter to indicate that "OR" instead of "AND" should be applied. Note that you can also repeat "filter1" and create an "AND" within an "OR". Since you can also go one level deeper by adding a letter (a-f) you can create almost any reasonably complex condition tree.
+As you see we added a number to the "filter" parameter to indicate that "OR" instead of "AND" should be applied.
+Note that you can also repeat "filter1" and create an "AND" within an "OR". Since you can also go one level deeper
+by adding a letter (a-f) you can create almost any reasonably complex condition tree.
 
 NB: You can only filter on the most top level table and filters are only applied on list calls.
 
