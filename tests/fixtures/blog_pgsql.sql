@@ -32,12 +32,6 @@ DROP TABLE IF EXISTS barcodes CASCADE;
 DROP TABLE IF EXISTS "kunsthåndværk" CASCADE;
 
 --
--- Enables the Postgis extension
---
-
-CREATE EXTENSION IF NOT EXISTS postgis;
-
---
 -- Name: categories; Type: TABLE; Schema: public; Owner: postgres; Tablespace:
 --
 
