@@ -23,7 +23,7 @@ Test the script by opening the following URL:
 
     http://localhost:8080/api.php/data/posts/1
 
-Dont forget to modify the configuration in the bottom of the file.
+Dont forget to modify the configuration at the bottom of the file.
 
 ## Configuration
 
