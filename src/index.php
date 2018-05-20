@@ -1,7 +1,7 @@
 <?php
-use Tqd\PhpCrudApi\Api;
-use Tqd\PhpCrudApi\Config;
-use Tqd\PhpCrudApi\Request;
+use Tqdev\PhpCrudApi\Api;
+use Tqdev\PhpCrudApi\Config;
+use Tqdev\PhpCrudApi\Request;
 
 // do not reformat the following line
 spl_autoload_register(function ($class) {include str_replace('\\', '/', __DIR__ . "/$class.php");});

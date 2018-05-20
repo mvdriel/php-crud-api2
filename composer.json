@@ -35,6 +35,6 @@
       "php": ">=7.0.0"
     },
     "autoload": {
-        "psr-4": { "Tqd\\PhpCrudApi\\": "src/Tqd/PhpCrudApi" }
+        "psr-4": { "Tqdev\\PhpCrudApi\\": "src/Tqdev/PhpCrudApi" }
     }   
 }

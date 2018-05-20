@@ -5,7 +5,7 @@
  * https://github.com/mevdschee/php-crud-api
  **/
 
-namespace Tqd\PhpCrudApi;
+namespace Tqdev\PhpCrudApi;
 
 // file: src/Tqd/PhpCrudApi/Cache/Cache.php
 
