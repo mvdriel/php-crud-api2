@@ -4,13 +4,13 @@ use Com\Tqdev\CrudApi\Config;
 use Com\Tqdev\CrudApi\Request;
 
 // do not reformat the following line
-spl_autoload_register(function ($class) {include str_replace('\\', DIRECTORY_SEPARATOR, "src\\$class.php");});
+spl_autoload_register(function ($class) {include str_replace('\\', '/', __DIR__ . "/$class.php");});
 // as it is excluded in the build
 
 $config = new Config([
-    'database' => 'php-crud-api',
     'username' => 'php-crud-api',
     'password' => 'php-crud-api',
+    'database' => 'php-crud-api',
     'cacheType' => 'Redis',
     //'cachePath' => 'tmp',
     //    'debug' => true,

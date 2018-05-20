@@ -15,9 +15,53 @@ This is the working repo for v2 of [PHP-CRUD-API](https://github.com/mevdschee/p
 
 This is a single file application! Upload "api.php" somewhere and enjoy!
 
+For local development you may run PHP's built-in web server:
+
+    php -S localhost:8080
+
+Test the script by opening the following URL:
+
+    http://localhost:8080/api.php/data/posts/1
+
+Dont forget to modify the configuration in the bottom of the file.
+
+## Configuration
+
+Edit the following lines in the bottom of the file "api.php":
+
+    $config = new Config([
+        'username' => 'xxx',
+        'password' => 'xxx',
+        'database' => 'xxx',
+        'debug' => true,
+    ]);
+
+These are all the configuration options and their default values:
+
+- **driver**: 'mysql' (default), 'pgsql' or 'sqlsrv'
+- **address**: Hostname of the database server ('localhost')
+- **port**: TCP port of the database server (defaults to driver default)
+- **username**: Username of the user connecting to the database (no default)
+- **password**: Password of the user connecting to the database (no default)
+- **database**: Database the connecting is made to (no default)
+- **allowedOrigins**: The origins allowed in the CORS headers ('*')
+- **cacheType**: 'TempFile' (default), 'Redis', 'Memcache' or 'Memcached'
+- **cachePath**: Path/address of the cache (defaults to system's "temp" directory)
+- **cacheTime**: Number of seconds the cache is valid (10)
+- **debug**: Show errors in the "X-Debug-Info" header (false)
+
+## Modification
+
 Contrary to v1 the code is in v2 actually structured in namespaces and files 
-in the "src" directory. You may compile all files into a single "api.php"
-using the "build.php" script.
+in the "src" directory. You can access it at the following URL:
+
+    http://localhost:8080/src/data/posts/1
+
+You can compile all files into a single "api.php" file using:
+
+    php build.php
+
+NB: The script loads the classes in reverse alphabetical order.
 
 ## Limitations
 
@@ -60,12 +104,12 @@ These features match features in v1:
 
 These features are new and were not included in v1.
 
-  - [x] Does not reflect on every request (better performance)
-  - [x] Complex filters (with both "and" & "or") are supported
-  - [x] Support for input and output of database structure and records
-  - [x] Support for all major database systems (thanks to jOOQ)
-  - [x] Support for boolean and binary data in all database engines
-  - [x] Support for relational data on read (not only on list operation)
+  - Does not reflect on every request (better performance)
+  - Complex filters (with both "and" & "or") are supported
+  - Support for input and output of database structure and records
+  - Support for all major database systems (thanks to jOOQ)
+  - Support for boolean and binary data in all database engines
+  - Support for relational data on read (not only on list operation)
 
 ## TreeQL, a pragmatic GraphQL
 

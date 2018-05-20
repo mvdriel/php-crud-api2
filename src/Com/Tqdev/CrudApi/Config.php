@@ -7,14 +7,14 @@ class Config
         'driver' => null,
         'address' => 'localhost',
         'port' => null,
-        'database' => null,
         'username' => null,
         'password' => null,
+        'database' => null,
         'allowedOrigins' => '*',
-        'debug' => false,
         'cacheType' => 'TempFile',
         'cachePath' => '',
         'cacheTime' => 10,
+        'debug' => false,
     ];
 
     private function getDefaultDriver(array $values): String
@@ -80,11 +80,6 @@ class Config
         return $this->values['port'];
     }
 
-    public function getDatabase(): String
-    {
-        return $this->values['database'];
-    }
-
     public function getUsername(): String
     {
         return $this->values['username'];
@@ -95,14 +90,14 @@ class Config
         return $this->values['password'];
     }
 
+    public function getDatabase(): String
+    {
+        return $this->values['database'];
+    }
+
     public function getAllowedOrigins(): String
     {
         return $this->values['allowedOrigins'];
-    }
-
-    public function getDebug(): String
-    {
-        return $this->values['debug'];
     }
 
     public function getCacheType(): String
@@ -118,5 +113,10 @@ class Config
     public function getCacheTime(): int
     {
         return $this->values['cacheTime'];
+    }
+
+    public function getDebug(): String
+    {
+        return $this->values['debug'];
     }
 }
