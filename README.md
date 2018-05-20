@@ -215,17 +215,17 @@ On list operations you may apply filters and includes.
 Filters provide search functionality, on list calls, using the "filter" parameter. You need to specify the column
 name, a comma, the match type, another commma and the value you want to filter on. These are supported match types:
 
-    cs: contain string (string contains value)
-    sw: start with (string starts with value)
-    ew: end with (string end with value)
-    eq: equal (string or number matches exactly)
-    lt: lower than (number is lower than value)
-    le: lower or equal (number is lower than or equal to value)
-    ge: greater or equal (number is higher than or equal to value)
-    gt: greater than (number is higher than value)
-    bt: between (number is between two comma separated values)
-    in: in (number or string is in comma separated list of values)
-    is: is null (field contains "NULL" value)
+  - **cs**: contain string (string contains value)
+  - **sw**: start with (string starts with value)
+  - **ew**: end with (string end with value)
+  - **eq**: equal (string or number matches exactly)
+  - **lt**: lower than (number is lower than value)
+  - **le**: lower or equal (number is lower than or equal to value)
+  - **ge**: greater or equal (number is higher than or equal to value)
+  - **gt**: greater than (number is higher than value)
+  - **bt**: between (number is between two comma separated values)
+  - **in**: in (number or string is in comma separated list of values)
+  - **is**: is null (field contains "NULL" value)
 
 You can negate all filters by prepending a 'n' character, so that 'eq' becomes 'neq'. 
 Examples of filter usage are:
@@ -402,17 +402,17 @@ transactions, so they either all succeed or all fail (successful ones get roled 
 
 For spatial support there is an extra set of filters that can be applied on geometry columns and that starting with an "s":
 
-    sco: spatial contains (geometry contains another)
-    scr: spatial crosses (geometry crosses another)
-    sdi: spatial disjoint (geometry is disjoint from another)
-    seq: spatial equal (geometry is equal to another)
-    sin: spatial intersects (geometry intersects another)
-    sov: spatial overlaps (geometry overlaps another)
-    sto: spatial touches (geometry touches another)
-    swi: spatial within (geometry is within another)
-    sic: spatial is closed (geometry is closed and simple)
-    sis: spatial is simple (geometry is simple)
-    siv: spatial is valid (geometry is valid)
+  - **sco**: spatial contains (geometry contains another)
+  - **scr**: spatial crosses (geometry crosses another)
+  - **sdi**: spatial disjoint (geometry is disjoint from another)
+  - **seq**: spatial equal (geometry is equal to another)
+  - **sin**: spatial intersects (geometry intersects another)
+  - **sov**: spatial overlaps (geometry overlaps another)
+  - **sto**: spatial touches (geometry touches another)
+  - **swi**: spatial within (geometry is within another)
+  - **sic**: spatial is closed (geometry is closed and simple)
+  - **sis**: spatial is simple (geometry is simple)
+  - **siv**: spatial is valid (geometry is valid)
 
 These filters are based on OGC standards and so is the WKT specification in which the geometry columns are represented.
 
