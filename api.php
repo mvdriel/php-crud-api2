@@ -5,9 +5,9 @@
  * https://github.com/mevdschee/php-crud-api
  **/
 
-namespace Com\Tqdev\CrudApi;
+namespace Tqd\PhpCrudApi;
 
-// file: src/Com/Tqdev/CrudApi/Cache/Cache.php
+// file: src/Tqd/PhpCrudApi/Cache/Cache.php
 
 interface Cache
 {
@@ -16,7 +16,7 @@ interface Cache
     public function clear(): bool;
 }
 
-// file: src/Com/Tqdev/CrudApi/Cache/CacheFactory.php
+// file: src/Tqd/PhpCrudApi/Cache/CacheFactory.php
 
 class CacheFactory
 {
@@ -49,7 +49,7 @@ class CacheFactory
     }
 }
 
-// file: src/Com/Tqdev/CrudApi/Cache/MemcacheCache.php
+// file: src/Tqd/PhpCrudApi/Cache/MemcacheCache.php
 
 class MemcacheCache implements Cache
 {
@@ -93,7 +93,7 @@ class MemcacheCache implements Cache
     }
 }
 
-// file: src/Com/Tqdev/CrudApi/Cache/MemcachedCache.php
+// file: src/Tqd/PhpCrudApi/Cache/MemcachedCache.php
 
 class MemcacheCached extends MemcacheCache
 {
@@ -108,7 +108,7 @@ class MemcacheCached extends MemcacheCache
     }
 }
 
-// file: src/Com/Tqdev/CrudApi/Cache/NoCache.php
+// file: src/Tqd/PhpCrudApi/Cache/NoCache.php
 
 class NoCache implements Cache
 {
@@ -132,7 +132,7 @@ class NoCache implements Cache
     }
 }
 
-// file: src/Com/Tqdev/CrudApi/Cache/RedisCache.php
+// file: src/Tqd/PhpCrudApi/Cache/RedisCache.php
 
 class RedisCache implements Cache
 {
@@ -169,7 +169,7 @@ class RedisCache implements Cache
     }
 }
 
-// file: src/Com/Tqdev/CrudApi/Cache/TempFileCache.php
+// file: src/Tqd/PhpCrudApi/Cache/TempFileCache.php
 
 class TempFileCache implements Cache
 {
@@ -290,7 +290,7 @@ class TempFileCache implements Cache
     }
 }
 
-// file: src/Com/Tqdev/CrudApi/Controller/CacheController.php
+// file: src/Tqd/PhpCrudApi/Controller/CacheController.php
 
 class CacheController
 {
@@ -311,7 +311,7 @@ class CacheController
 
 }
 
-// file: src/Com/Tqdev/CrudApi/Controller/DataController.php
+// file: src/Tqd/PhpCrudApi/Controller/DataController.php
 
 class DataController
 {
@@ -437,7 +437,7 @@ class DataController
 
 }
 
-// file: src/Com/Tqdev/CrudApi/Controller/MetaController.php
+// file: src/Tqd/PhpCrudApi/Controller/MetaController.php
 
 class MetaController
 {
@@ -486,7 +486,7 @@ class MetaController
 
 }
 
-// file: src/Com/Tqdev/CrudApi/Controller/OpenApiController.php
+// file: src/Tqd/PhpCrudApi/Controller/OpenApiController.php
 
 class OpenApiController
 {
@@ -507,7 +507,7 @@ class OpenApiController
 
 }
 
-// file: src/Com/Tqdev/CrudApi/Controller/Responder.php
+// file: src/Tqd/PhpCrudApi/Controller/Responder.php
 
 class Responder
 {
@@ -526,7 +526,7 @@ class Responder
 
 }
 
-// file: src/Com/Tqdev/CrudApi/Data/Condition/AndCondition.php
+// file: src/Tqd/PhpCrudApi/Data/Condition/AndCondition.php
 
 class AndCondition extends Condition
 {
@@ -561,7 +561,7 @@ class AndCondition extends Condition
     }
 }
 
-// file: src/Com/Tqdev/CrudApi/Data/Condition/ColumnCondition.php
+// file: src/Tqd/PhpCrudApi/Data/Condition/ColumnCondition.php
 
 class ColumnCondition extends Condition
 {
@@ -592,7 +592,7 @@ class ColumnCondition extends Condition
     }
 }
 
-// file: src/Com/Tqdev/CrudApi/Data/Condition/Condition.php
+// file: src/Tqd/PhpCrudApi/Data/Condition/Condition.php
 
 abstract class Condition
 {
@@ -657,7 +657,7 @@ abstract class Condition
 
 }
 
-// file: src/Com/Tqdev/CrudApi/Data/Condition/NoCondition.php
+// file: src/Tqd/PhpCrudApi/Data/Condition/NoCondition.php
 
 class NoCondition extends Condition
 {
@@ -678,7 +678,7 @@ class NoCondition extends Condition
 
 }
 
-// file: src/Com/Tqdev/CrudApi/Data/Condition/NotCondition.php
+// file: src/Tqd/PhpCrudApi/Data/Condition/NotCondition.php
 
 class NotCondition extends Condition
 {
@@ -695,7 +695,7 @@ class NotCondition extends Condition
     }
 }
 
-// file: src/Com/Tqdev/CrudApi/Data/Condition/OrCondition.php
+// file: src/Tqd/PhpCrudApi/Data/Condition/OrCondition.php
 
 class OrCondition extends Condition
 {
@@ -730,13 +730,13 @@ class OrCondition extends Condition
     }
 }
 
-// file: src/Com/Tqdev/CrudApi/Data/Condition/SpatialCondition.php
+// file: src/Tqd/PhpCrudApi/Data/Condition/SpatialCondition.php
 
 class SpatialCondition extends ColumnCondition
 {
 }
 
-// file: src/Com/Tqdev/CrudApi/Data/Record/ErrorDocument.php
+// file: src/Tqd/PhpCrudApi/Data/Record/ErrorDocument.php
 
 class ErrorDocument
 {
@@ -763,7 +763,7 @@ class ErrorDocument
 
 }
 
-// file: src/Com/Tqdev/CrudApi/Data/Record/ListResponse.php
+// file: src/Tqd/PhpCrudApi/Data/Record/ListResponse.php
 
 class ListResponse implements \JsonSerializable
 {
@@ -798,7 +798,7 @@ class ListResponse implements \JsonSerializable
     }
 }
 
-// file: src/Com/Tqdev/CrudApi/Data/ColumnSelector.php
+// file: src/Tqd/PhpCrudApi/Data/ColumnSelector.php
 
 class ColumnSelector
 {
@@ -862,7 +862,7 @@ class ColumnSelector
 
 }
 
-// file: src/Com/Tqdev/CrudApi/Data/DataService.php
+// file: src/Tqd/PhpCrudApi/Data/DataService.php
 
 class DataService
 {
@@ -967,7 +967,7 @@ class DataService
     }
 }
 
-// file: src/Com/Tqdev/CrudApi/Data/ErrorCode.php
+// file: src/Tqd/PhpCrudApi/Data/ErrorCode.php
 
 class ErrorCode
 {
@@ -1027,7 +1027,7 @@ class ErrorCode
 
 }
 
-// file: src/Com/Tqdev/CrudApi/Data/FilterInfo.php
+// file: src/Tqd/PhpCrudApi/Data/FilterInfo.php
 
 class FilterInfo
 {
@@ -1077,7 +1077,7 @@ class FilterInfo
 
 }
 
-// file: src/Com/Tqdev/CrudApi/Data/HabtmValues.php
+// file: src/Tqd/PhpCrudApi/Data/HabtmValues.php
 
 class HabtmValues
 {
@@ -1091,7 +1091,7 @@ class HabtmValues
     }
 }
 
-// file: src/Com/Tqdev/CrudApi/Data/OrderingInfo.php
+// file: src/Tqd/PhpCrudApi/Data/OrderingInfo.php
 
 class OrderingInfo
 {
@@ -1122,7 +1122,7 @@ class OrderingInfo
     }
 }
 
-// file: src/Com/Tqdev/CrudApi/Data/PaginationInfo.php
+// file: src/Tqd/PhpCrudApi/Data/PaginationInfo.php
 
 class PaginationInfo
 {
@@ -1175,7 +1175,7 @@ class PaginationInfo
 
 }
 
-// file: src/Com/Tqdev/CrudApi/Data/PathTree.php
+// file: src/Tqd/PhpCrudApi/Data/PathTree.php
 
 class PathTree
 {
@@ -1219,7 +1219,7 @@ class PathTree
     }
 }
 
-// file: src/Com/Tqdev/CrudApi/Data/RelationIncluder.php
+// file: src/Tqd/PhpCrudApi/Data/RelationIncluder.php
 
 class RelationIncluder
 {
@@ -1491,7 +1491,7 @@ class RelationIncluder
     }
 }
 
-// file: src/Com/Tqdev/CrudApi/Database/ColumnConverter.php
+// file: src/Tqd/PhpCrudApi/Database/ColumnConverter.php
 
 class ColumnConverter
 {
@@ -1553,7 +1553,7 @@ class ColumnConverter
 
 }
 
-// file: src/Com/Tqdev/CrudApi/Database/ColumnsBuilder.php
+// file: src/Tqd/PhpCrudApi/Database/ColumnsBuilder.php
 
 class ColumnsBuilder
 {
@@ -1656,7 +1656,7 @@ class ColumnsBuilder
 
 }
 
-// file: src/Com/Tqdev/CrudApi/Database/ConditionsBuilder.php
+// file: src/Tqd/PhpCrudApi/Database/ConditionsBuilder.php
 
 class ConditionsBuilder
 {
@@ -1849,7 +1849,7 @@ class ConditionsBuilder
     }
 }
 
-// file: src/Com/Tqdev/CrudApi/Database/DataConverter.php
+// file: src/Tqd/PhpCrudApi/Database/DataConverter.php
 
 class DataConverter
 {
@@ -1927,7 +1927,7 @@ class DataConverter
     }
 }
 
-// file: src/Com/Tqdev/CrudApi/Database/GenericDB.php
+// file: src/Tqd/PhpCrudApi/Database/GenericDB.php
 
 class GenericDB
 {
@@ -2142,7 +2142,7 @@ class GenericDB
     }
 }
 
-// file: src/Com/Tqdev/CrudApi/Database/GenericMeta.php
+// file: src/Tqd/PhpCrudApi/Database/GenericMeta.php
 
 class GenericMeta
 {
@@ -2253,7 +2253,7 @@ class GenericMeta
     }
 }
 
-// file: src/Com/Tqdev/CrudApi/Database/TypeConverter.php
+// file: src/Tqd/PhpCrudApi/Database/TypeConverter.php
 
 class TypeConverter
 {
@@ -2410,7 +2410,7 @@ class TypeConverter
     }
 }
 
-// file: src/Com/Tqdev/CrudApi/Meta/Reflection/ReflectedColumn.php
+// file: src/Tqd/PhpCrudApi/Meta/Reflection/ReflectedColumn.php
 
 class ReflectedColumn implements \JsonSerializable
 {
@@ -2568,7 +2568,7 @@ class ReflectedColumn implements \JsonSerializable
     }
 }
 
-// file: src/Com/Tqdev/CrudApi/Meta/Reflection/ReflectedDatabase.php
+// file: src/Tqd/PhpCrudApi/Meta/Reflection/ReflectedDatabase.php
 
 class ReflectedDatabase implements \JsonSerializable
 {
@@ -2634,7 +2634,7 @@ class ReflectedDatabase implements \JsonSerializable
     }
 }
 
-// file: src/Com/Tqdev/CrudApi/Meta/Reflection/ReflectedTable.php
+// file: src/Tqd/PhpCrudApi/Meta/Reflection/ReflectedTable.php
 
 class ReflectedTable implements \JsonSerializable
 {
@@ -2747,7 +2747,7 @@ class ReflectedTable implements \JsonSerializable
     }
 }
 
-// file: src/Com/Tqdev/CrudApi/Meta/MetaService.php
+// file: src/Tqd/PhpCrudApi/Meta/MetaService.php
 
 class MetaService
 {
@@ -2785,7 +2785,7 @@ class MetaService
     }
 }
 
-// file: src/Com/Tqdev/CrudApi/OpenApi/DefaultOpenApiDefinition.php
+// file: src/Tqd/PhpCrudApi/OpenApi/DefaultOpenApiDefinition.php
 
 class DefaultOpenApiDefinition
 {
@@ -2827,7 +2827,7 @@ class DefaultOpenApiDefinition
     ];
 }
 
-// file: src/Com/Tqdev/CrudApi/OpenApi/OpenApiDefinition.php
+// file: src/Tqd/PhpCrudApi/OpenApi/OpenApiDefinition.php
 
 class OpenApiDefinition extends DefaultOpenApiDefinition
 {
@@ -2865,7 +2865,7 @@ class OpenApiDefinition extends DefaultOpenApiDefinition
     }
 }
 
-// file: src/Com/Tqdev/CrudApi/OpenApi/OpenApiService.php
+// file: src/Tqd/PhpCrudApi/OpenApi/OpenApiService.php
 
 class OpenApiService
 {
@@ -2878,14 +2878,14 @@ class OpenApiService
 
 }
 
-// file: src/Com/Tqdev/CrudApi/Router/Handler.php
+// file: src/Tqd/PhpCrudApi/Router/Handler.php
 
 interface Handler
 {
     public function handle(Request $request): Response;
 }
 
-// file: src/Com/Tqdev/CrudApi/Router/Middleware.php
+// file: src/Tqd/PhpCrudApi/Router/Middleware.php
 
 abstract class Middleware implements Handler
 {
@@ -2897,7 +2897,7 @@ abstract class Middleware implements Handler
     }
 }
 
-// file: src/Com/Tqdev/CrudApi/Router/Router.php
+// file: src/Tqd/PhpCrudApi/Router/Router.php
 
 interface Router extends Handler
 {
@@ -2908,7 +2908,7 @@ interface Router extends Handler
     public function route(Request $request): Response;
 }
 
-// file: src/Com/Tqdev/CrudApi/Router/SecurityHeaders.php
+// file: src/Tqd/PhpCrudApi/Router/SecurityHeaders.php
 
 class SecurityHeaders extends Middleware
 {
@@ -2961,7 +2961,7 @@ class SecurityHeaders extends Middleware
     }
 }
 
-// file: src/Com/Tqdev/CrudApi/Router/SimpleRouter.php
+// file: src/Tqd/PhpCrudApi/Router/SimpleRouter.php
 
 class SimpleRouter implements Router
 {
@@ -3037,7 +3037,7 @@ class SimpleRouter implements Router
     }
 }
 
-// file: src/Com/Tqdev/CrudApi/Api.php
+// file: src/Tqd/PhpCrudApi/Api.php
 
 class Api
 {
@@ -3100,7 +3100,7 @@ class Api
     }
 }
 
-// file: src/Com/Tqdev/CrudApi/Config.php
+// file: src/Tqd/PhpCrudApi/Config.php
 
 class Config
 {
@@ -3222,7 +3222,7 @@ class Config
     }
 }
 
-// file: src/Com/Tqdev/CrudApi/Request.php
+// file: src/Tqd/PhpCrudApi/Request.php
 
 class Request
 {
@@ -3381,7 +3381,7 @@ class Request
     }
 }
 
-// file: src/Com/Tqdev/CrudApi/Response.php
+// file: src/Tqd/PhpCrudApi/Response.php
 
 class Response
 {

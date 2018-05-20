@@ -43,7 +43,7 @@ function addHeader(array &$lines)
  * https://github.com/mevdschee/php-crud-api
  **/
 
-namespace Com\Tqdev\CrudApi;
+namespace Tqd\PhpCrudApi;
 
 EOF;
     foreach (explode("\n", $head) as $line) {

@@ -1,8 +1,8 @@
 <?php
-use Com\Tqdev\CrudApi\Api;
-use Com\Tqdev\CrudApi\Config;
-use Com\Tqdev\CrudApi\Database\GenericDB;
-use Com\Tqdev\CrudApi\Request;
+use Tqd\PhpCrudApi\Api;
+use Tqd\PhpCrudApi\Config;
+use Tqd\PhpCrudApi\Database\GenericDB;
+use Tqd\PhpCrudApi\Request;
 
 spl_autoload_register(function ($class) {
     include str_replace('\\', '/', "src\\$class.php");
