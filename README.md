@@ -286,7 +286,7 @@ These paths have the same root and this request can be written in URL format as:
     GET /data/posts?include=comments,users&include=tags
 
 Here you are allowed to leave out the intermediate table that binds posts to tags. In this example
-you see all three table relation types (hasMany belongsTo and hasAndBelongsToMany) in effect:
+you see all three table relation types (hasMany, belongsTo and hasAndBelongsToMany) in effect:
 
 - "post" has many "comments"
 - "comment" belongs to "user"
