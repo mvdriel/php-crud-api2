@@ -105,8 +105,7 @@ These features are new and were not included in v1.
 
   - Does not reflect on every request (better performance)
   - Complex filters (with both "and" & "or") are supported
-  - Support for input and output of database structure and records
-  - Support for all major database systems (thanks to jOOQ)
+  - Support for output of database structure in JSON
   - Support for boolean and binary data in all database engines
   - Support for relational data on read (not only on list operation)
 
@@ -475,4 +474,8 @@ JavaScript does not support 64 bit integers. All numbers are stored as 64 bit fl
 
 ## Tests
 
-You may test the code using the "test.php" file, it will run the tests from the "tests" directory.
+To run the functional tests you may run the following command:
+
+    php test.php
+
+This runs the functional tests from the "tests" directory. It uses the database dumps (fixtures) and database configuration (config) from the corresponding subdirectories.
