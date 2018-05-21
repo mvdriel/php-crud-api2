@@ -1,4 +1,7 @@
 #!/bin/bash
+echo "================================================"
+echo "  Ubuntu 16.04"
+echo "================================================"
 
 echo -n "[1/4] Starting MySQL 5.7 ........ "
 # make sure mysql can create socket and lock
