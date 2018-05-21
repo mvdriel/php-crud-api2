@@ -62,6 +62,8 @@ echo -n "[4/4] Cloning PHP-CRUD-API v2 ... "
 git clone --quiet https://github.com/mevdschee/php-crud-api2.git
 echo "done"
 
+echo "------------------------------------------------"
+
 # run the tests
 cd php-crud-api2
 php test.php
