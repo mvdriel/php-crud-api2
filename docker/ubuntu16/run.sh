@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "- Starting MySQL 5.7"
+echo -n "[1/4] Starting MySQL 5.7 ........ "
 # make sure mysql can create socket and lock
 mkdir /var/run/mysqld && chmod 777 /var/run/mysqld
 # run mysql server
@@ -16,8 +16,9 @@ CREATE USER 'php-crud-api'@'localhost' IDENTIFIED BY 'php-crud-api';
 GRANT ALL PRIVILEGES ON `php-crud-api`.* TO 'php-crud-api'@'localhost' WITH GRANT OPTION;
 FLUSH PRIVILEGES;
 EOF
+echo "ok"
 
-echo "- Starting PostgreSQL 9.5"
+echo -n "[2/4] Starting PostgreSQL 9.5 ... "
 # run postgres server
 nohup su - -c "/usr/lib/postgresql/9.5/bin/postgres -D /etc/postgresql/9.5/main" postgres > /root/postgres.log 2>&1 &
 # wait for postgres to become available
@@ -33,8 +34,9 @@ GRANT ALL PRIVILEGES ON DATABASE "php-crud-api" to "php-crud-api";
 CREATE EXTENSION IF NOT EXISTS postgis;
 \q
 EOF
+echo "ok"
 
-echo "- Starting SQLServer 2017"
+echo -n "[3/4] Starting SQLServer 2017 ... "
 # run sqlserver server
 nohup /opt/mssql/bin/sqlservr --accept-eula > /root/mysql.log 2>&1 &
 # create database and user on postgres
@@ -50,12 +52,13 @@ exec sp_addrolemember 'db_owner', 'php-crud-api';
 GO
 exit
 EOF
+echo "ok"
 
-echo "- Cloning PHP-CRUD-API"
+echo -n "[4/4] Cloning PHP-CRUD-API v2 ... "
 # install software
 git clone --quiet https://github.com/mevdschee/php-crud-api2.git
+echo "ok"
 
-echo "- Running all tests"
 # run the tests
 cd php-crud-api2
 php test.php
