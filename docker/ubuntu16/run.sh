@@ -16,7 +16,7 @@ CREATE USER 'php-crud-api'@'localhost' IDENTIFIED BY 'php-crud-api';
 GRANT ALL PRIVILEGES ON `php-crud-api`.* TO 'php-crud-api'@'localhost' WITH GRANT OPTION;
 FLUSH PRIVILEGES;
 EOF
-echo "ok"
+echo "done"
 
 echo -n "[2/4] Starting PostgreSQL 9.5 ... "
 # run postgres server
@@ -34,7 +34,7 @@ GRANT ALL PRIVILEGES ON DATABASE "php-crud-api" to "php-crud-api";
 CREATE EXTENSION IF NOT EXISTS postgis;
 \q
 EOF
-echo "ok"
+echo "done"
 
 echo -n "[3/4] Starting SQLServer 2017 ... "
 # run sqlserver server
@@ -52,12 +52,12 @@ exec sp_addrolemember 'db_owner', 'php-crud-api';
 GO
 exit
 EOF
-echo "ok"
+echo "done"
 
 echo -n "[4/4] Cloning PHP-CRUD-API v2 ... "
 # install software
 git clone --quiet https://github.com/mevdschee/php-crud-api2.git
-echo "ok"
+echo "done"
 
 # run the tests
 cd php-crud-api2
