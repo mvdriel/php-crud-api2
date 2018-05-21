@@ -1,5 +1,3 @@
-USE [master]
-GO
 CREATE DATABASE [php-crud-api]
 GO
 CREATE LOGIN [php-crud-api] WITH PASSWORD=N'php-crud-api', DEFAULT_DATABASE=[php-crud-api], CHECK_EXPIRATION=OFF, CHECK_POLICY=OFF
