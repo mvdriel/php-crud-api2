@@ -509,7 +509,7 @@ I will try to cover most relevant setups in the "docker" folder of the project.
 
 ### Running
 
-To run the functional tests you may run the following command:
+To run the functional tests locally you may run the following command:
 
     php test.php
 
@@ -517,6 +517,11 @@ This runs the functional tests from the "tests" directory. It uses the database 
 database configuration (config) from the corresponding subdirectories.
 
 ### Docker
+
+Install docker using the following commands and then logout and login for the changes to take effect:
+
+    sudo apt install docker.io
+    sudo usermod -aG docker ${USER}
 
 To run the docker tests run "build_all.sh" and "run_all.sh" from the docker directory. The output should be:
 
