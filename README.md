@@ -504,7 +504,7 @@ I am testing mainly on Ubuntu and I have the following test setups:
   - Ubuntu 16.04 with PHP 7.0, MySQL 5.7, PostgreSQL 9.5 (PostGIS 2.2) and SQL Server 2017
   - Ubuntu 18.04 with PHP 7.2, MySQL 5.7, PostgreSQL 10.3 (PostGIS 2.4)
 
-This should cover most environments, but please notify me of failing tests and report your environment. 
+This cover not all environments (yet), so please notify me of failing tests and report your environment. 
 I will try to cover most relevant setups in the "docker" folder of the project.
 
 ### Running
@@ -513,11 +513,12 @@ To run the functional tests you may run the following command:
 
     php test.php
 
-This runs the functional tests from the "tests" directory. It uses the database dumps (fixtures) and database configuration (config) from the corresponding subdirectories.
+This runs the functional tests from the "tests" directory. It uses the database dumps (fixtures) and
+database configuration (config) from the corresponding subdirectories.
 
 ### Docker
 
-To run the dockers test run "build_all.sh" and "run_all.sh" from the docker directory. The out put should be:
+To run the dockers test run "build_all.sh" and "run_all.sh" from the docker directory. The output should be:
 
     ================================================
      Ubuntu 16.04
@@ -531,3 +532,4 @@ To run the dockers test run "build_all.sh" and "run_all.sh" from the docker dire
     pgsql: 70 tests ran in 404 ms, 0 failed
     sqlsrv: 70 tests ran in 3026 ms, 0 failed
 
+The above test run (including starting up the SQL servers) takes about 16 seconds on my machine.
