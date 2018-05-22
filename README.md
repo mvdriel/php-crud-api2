@@ -499,8 +499,35 @@ NB: Any non-error response will have status: 200 OK
 
 ## Tests
 
+I am testing mainly on Ubuntu and I have the following test setups:
+
+  - Ubuntu 16.04 with PHP 7.0, MySQL 5.7, PostgreSQL 9.5 (PostGIS 2.2) and SQL Server 2017
+  - Ubuntu 18.04 with PHP 7.2, MySQL 5.7, PostgreSQL 10.3 (PostGIS 2.4)
+
+This should cover most environments, but please notify me of failing tests and report your environment. 
+I will try to cover most relevant setups in the "docker" folder of the project.
+
+### Running
+
 To run the functional tests you may run the following command:
 
     php test.php
 
 This runs the functional tests from the "tests" directory. It uses the database dumps (fixtures) and database configuration (config) from the corresponding subdirectories.
+
+### Docker
+
+To run the dockers test run "build_all.sh" and "run_all.sh" from the docker directory. The out put should be:
+
+    ================================================
+     Ubuntu 16.04
+    ================================================
+    [1/4] Starting MySQL 5.7 ........ done
+    [2/4] Starting PostgreSQL 9.5 ... done
+    [3/4] Starting SQLServer 2017 ... done
+    [4/4] Cloning PHP-CRUD-API v2 ... done
+    ------------------------------------------------
+    mysql: 70 tests ran in 641 ms, 0 failed
+    pgsql: 70 tests ran in 404 ms, 0 failed
+    sqlsrv: 70 tests ran in 3026 ms, 0 failed
+
