@@ -1,7 +1,7 @@
 <?php
 namespace Tqdev\PhpCrudApi\Cache;
 
-class MemcacheCached extends MemcacheCache
+class MemcachedCached extends MemcacheCache
 {
     protected function create(): object
     {
