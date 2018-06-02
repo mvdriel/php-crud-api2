@@ -95,7 +95,7 @@ class MemcacheCache implements Cache
 
 // file: src/Tqdev/PhpCrudApi/Cache/MemcachedCache.php
 
-class MemcachedCached extends MemcacheCache
+class MemcachedCache extends MemcacheCache
 {
     protected function create(): object
     {
